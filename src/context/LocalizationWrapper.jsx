@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import enLocale from '../locales/en.json'; // Import English locale
-import frLocale from '../locales/fr.json'; // Import English locale
-import arLocale from '../locales/ar.json'; // Import Arabic locale
+import viLocale from '../locales/vi.json'; // Import English locale
 
 const LocalizationContext = createContext();
 
@@ -21,9 +20,8 @@ export const LocalizationProvider = ({ children }) => {
 
     const messages = {
         en: enLocale,
-        ar: arLocale,
-        fr: frLocale,
-    };
+        vi: viLocale,
+        };
 
     const switchLocale = (newLocale) => {
         setLocale(newLocale);
