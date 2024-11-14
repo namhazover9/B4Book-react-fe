@@ -11,7 +11,6 @@ export default function Home() {
         <div className='flex flex-col gap-y-4' >
             
    
-
         </div>
     )
 }
