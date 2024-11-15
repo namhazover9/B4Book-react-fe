@@ -20,6 +20,9 @@ export default {
       },
       fontFamily: {
         cairoRegular: ['cairo-regular', 'sans-serif'],
+      },
+      borderRadius: {
+        'custom-7px': '7px',
       }
     },
   }
