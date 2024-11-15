@@ -9,6 +9,7 @@ import Bestseller from './BestSelling'
 import Test from './test'
 import Trending from './Trending'
 import BannerSlider from './BannerSlider';
+import FavouriteBook from './FavouriteBook';
 
 
 export default function Home() {
@@ -16,14 +17,17 @@ export default function Home() {
 
     return (
         <div className='flex flex-col gap-y-4' >
+            <BannerSlider/>
+            
+            
 
             <CategorySlider />
 
             <DiscountBanners />
             <TopVendor />
+            <FavouriteBook/>
             <Bestseller />
             <Trending />
-            <BannerSlider />
 
 
         </div>
