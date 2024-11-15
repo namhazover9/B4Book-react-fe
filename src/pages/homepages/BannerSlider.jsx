@@ -52,15 +52,13 @@ export default function BannerSlider() {
     };
 
     return (
-        <div className="relative w-full h-full mt-36">
+        <div className="w-full h-full">
             <div className='relative'>
-                <img src="src/assets/images/bannerslider/rev_home6.png" alt="" className='absolute top-0 left-0 z-20' />
-            </div>
-            <div className="">
+                <img src="src/assets/images/bannerslider/rev_home6.png" alt="" className='absolute top-0 left-0 z-10' />
                 {slides.map((slide, index) => (
                     <div
                         key={slide.id}
-                        className={`absolute top-0 left-0 w-full h-5/6 ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}
+                        className={`absolute top-0 left-0 w-full h-5/6 ${currentSlide === index ? 'opacity-100' : 'opacity-0'}
                             flex items-center justify-between ${slide.color} px-20 py-60`}
                         style={{ transition: 'opacity 0.5s ease-in-out' }}
                     >
@@ -79,8 +77,8 @@ export default function BannerSlider() {
                                 className={`relative transition-all ${currentSlide === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
                                 style={{ transitionDuration: '2s' }}
                             >
-                                <img src="src/assets/images/bannerslider/revslider_vector.png" alt="" className='absolute top-10 left-0 z-0' />
-                                <h1 className='absolute text-5xl font-semibold mb-5 z-10'>{slide.title}</h1>
+                                <img src="src/assets/images/bannerslider/revslider_vector.png" alt="" className='absolute top-10 left-0' />
+                                <h1 className='absolute text-5xl font-semibold mb-5'>{slide.title}</h1>
                             </div>
                             <div
                                 className={`mt-32 transition-all ${currentSlide === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
@@ -102,12 +100,12 @@ export default function BannerSlider() {
                             <div className={`bg-support relative w-full h-full transition-all ${currentSlide === index ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
                                 style={{ transition: 'opacity 1s ease, transform 1s ease' }}
                             >
-                                <img src='src/assets/images/bannerslider/rev_home6_1.png' alt="" className='absolute top-0 left-0 w-3/12'/>
-                                <img src='src/assets/images/bannerslider/rev_home6_2.png' alt="" className='absolute bottom-0 right-0 w-2/12'/>
+                                <img src='src/assets/images/bannerslider/rev_home6_1.png' alt="" className='absolute top-0 left-0 w-3/12' />
+                                <img src='src/assets/images/bannerslider/rev_home6_2.png' alt="" className='absolute bottom-0 right-0 w-2/12' />
                             </div>
                             <div className={`absolute z-50 w-1/3 flex items-center justify-between ml-28 mt-20 transition-all ${currentSlide === index ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} style={{ transition: 'transform 1s ease-out, opacity 1s ease-out' }}>
-                                <img src={slide.decoration.candy} alt="" className='w-3/12'/>
-                                <img src={slide.decoration.giftBox} alt="" className='w-4/12'/>
+                                <img src={slide.decoration.candy} alt="" className='w-3/12' />
+                                <img src={slide.decoration.giftBox} alt="" className='w-4/12' />
                             </div>
                             <div className={`absolute slider-image opacity-100 bottom-10 right-16 w-2/5 flex items-center transition-all ${currentSlide === index ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
                                 style={{ transition: 'transform 1s ease-out, opacity 1s ease-out' }}
@@ -118,15 +116,15 @@ export default function BannerSlider() {
                         </div>
                     </div>
                 ))}
-            </div>
-            <div className="absolute top-96 left-1/2 z-20 mt-14">
-                {slides.map((slide, index) => (
-                    <button
-                        key={slide.id}
-                        onClick={() => changeSlide(index)}
-                        className={`h-3 w-3 mx-2 rounded-full ${currentSlide === index ? 'bg-gray-400' : 'bg-gray-300 transition-all duration-300 hover:bg-teal-700 hover:scale-125'}`}
-                    ></button>
-                ))}
+                <div className="absolute top-96 left-1/2 mt-14">
+                    {slides.map((slide, index) => (
+                        <button
+                            key={slide.id}
+                            onClick={() => changeSlide(index)}
+                            className={`h-3 w-3 mx-2 rounded-full ${currentSlide === index ? 'bg-gray-400' : 'bg-gray-300 transition-all duration-300 hover:bg-teal-700 hover:scale-125'}`}
+                        ></button>
+                    ))}
+                </div>
             </div>
         </div>
     );
