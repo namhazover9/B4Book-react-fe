@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Button, Carousel } from 'antd';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
@@ -14,7 +13,6 @@ import pic9 from '../../assets/images/BestSelling/29.jpg';
 import store1 from '../../assets/images/BestSelling/h6_banner5.jpg';
 
 const BookShowcase = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
     const banner = {
         id: 1,
         sologan: "It all begins with a great book!",
@@ -97,18 +95,6 @@ const BookShowcase = () => {
         },
     ];
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % books.length);
-        }, 4000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const visibleBooks = [
-        ...books.slice(currentIndex, currentIndex + 4),
-        ...books.slice(0, Math.max(0, (currentIndex + 4) - books.length)),
-    ];
-
     return (
         <div className="p-4 bg-white px-20">
             <div className="flex justify-between items-center mb-4">
@@ -120,65 +106,60 @@ const BookShowcase = () => {
             </div>
 
             <div className="flex w-full max-w-6xl mx-auto p-4 gap-4">
-                {/* Books Grid Section */}
                 <div className="w-2/3 overflow-hidden">
-                    <div className="flex gap-4 transition-all duration-[8000ms] ease-in-out">
-                        {visibleBooks.map((book) => (
-                            <div key={book.id} className="w-1/4 group relative">
-                                <div className="relative overflow-hidden rounded-2xl">
-                                    <img
-                                        src={book.image}
-                                        alt={book.title}
-                                        className="w-60 h-70 object-cover transition-all ease-in-out duration-300"
-                                    />
-
-                                    {/* Hover Overlay */}
-                                    <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        {/* Action Buttons Container */}
-                                        <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3">
-                                            <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 shadow-lg">
-                                                <Heart className="w-5 h-5 text-black-500 " />
-                                            </button>
-                                            <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-75 shadow-lg">
-                                                <Eye className="w-5 h-5 text-black-500 " />
-                                            </button>
-                                            <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-150 shadow-lg">
-                                                <ShoppingCart className="w-5 h-6 text-black-500" />
-                                            </button>
+                    <Carousel autoplay dots={false} slidesToShow={4} swipeToSlide autoplaySpeed={3000}>
+                        {books.map((book) => (
+                            <div key={book.id} className="w-1/4 p-2">
+                                <div className="group relative">
+                                    <div className="relative overflow-hidden rounded-2xl">
+                                        <img
+                                            src={book.image}
+                                            className="w-full h-60 object-cover transition-all ease-in-out duration-300"
+                                        />
+                                        <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+                                                <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 shadow-lg">
+                                                    <Heart className="w-5 h-5 text-black-500" />
+                                                </button>
+                                                <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-75 shadow-lg">
+                                                    <Eye className="w-5 h-5 text-black-500" />
+                                                </button>
+                                                <button className="p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-150 shadow-lg">
+                                                    <ShoppingCart className="w-5 h-6 text-black-500" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="mt-3">
-                                    <h3 className="text-lg font-semibold truncate hover:text-red-400">
-                                        <button>{book.title}</button>
-                                    </h3>
-                                    <p className="text-gray-600 text-sm hover:text-red-600">
-                                        <button>{book.author}</button>
-                                    </p>
-                                    <p className="text-red-500 font-bold mt-1">{book.price}</p>
-                                    <div className="flex items-center mt-1">
-                                        {[...Array(5)].map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`text-lg ${i < book.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                                            >
-                                                ★
-                                            </span>
-                                        ))}
-                                        <span className="ml-1 text-gray-500 text-sm">5</span>
+                                    <div className="mt-3">
+                                        <h3 className="text-lg font-semibold truncate hover:text-red-400">
+                                            <button>{book.title}</button>
+                                        </h3>
+                                        <p className="text-gray-600 text-sm hover:text-red-600">
+                                            <button>{book.author}</button>
+                                        </p>
+                                        <p className="text-red-500 font-bold mt-1">{book.price}</p>
+                                        <div className="flex items-center mt-1">
+                                            {[...Array(5)].map((_, i) => (
+                                                <span
+                                                    key={i}
+                                                    className={`text-lg ${i < book.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                >
+                                                    ★
+                                                </span>
+                                            ))}
+                                            <span className="ml-1 text-gray-500 text-sm">5</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </Carousel>
                 </div>
 
-                {/* Static Square Banner Section */}
                 <div className="w-1/3">
                     <div className="relative aspect-square rounded-2xl overflow-hidden">
                         <img src={store1} alt="Banner" className="w-full h-full object-cover" />
-                        {/* Text Overlay Container */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent">
                             <div className="absolute inset-0 flex flex-col justify-start items-start text-white p-6">
                                 <h2 className="text-3xl font-bold mt-7">{banner.title}</h2>
