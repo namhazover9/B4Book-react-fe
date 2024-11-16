@@ -21,9 +21,9 @@ export default function Home() {
             <CategorySlider />
             <DiscountBanners />
             <TopVendor />
-            <FavouriteBook />
+            <FavouriteBook /> */}
             <Trending />
-            <Bestseller /> */}
+            <Bestseller />
             <Post />
         </div>
     )
