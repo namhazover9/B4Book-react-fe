@@ -1,9 +1,45 @@
-import React from 'react'
+import React from "react";
+import { FacebookOutlined, GoogleOutlined } from "@ant-design/icons";
 
-export default function Login() {
-    return (
-        <div className='flex items-center justify-center'>
-            <h1 className='text-6xl text-red-600'>Login</h1>
-        </div>
-    )
-}
+const LoginPage = () => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-bold mb-4">Login to BigFour Books</h1>
+      <form className="space-y-4 w-full max-w-sm">
+        <input
+          type="text"
+          placeholder="Username"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
+        />
+        <button
+          type="submit"
+          className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+        >
+          Login
+        </button>
+      </form>
+      <div className="mt-4 text-sm text-gray-500">
+        <a href="#" className="text-red-500 hover:underline">
+          Forgot Password?
+        </a>
+      </div>
+      <div className="flex items-center justify-center space-x-4 mt-4">
+        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition">
+          <FacebookOutlined className="text-blue-600 mr-2" />
+          Login with Facebook
+        </button>
+        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition">
+          <GoogleOutlined className="text-red-600 mr-2" />
+          Login with Google
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
