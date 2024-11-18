@@ -93,10 +93,6 @@ const ChangeSlider = () => {
             </button>
             <div
                 className="flex space-x-6 overflow-hidden transition duration-150 ease-out hover:ease-in select-none"
-                // onMouseDown={handleMouseDown}
-                // onMouseMove={handleMouseMove}
-                // onMouseUp={handleMouseUp}
-                // onMouseLeave={handleMouseUp}  // Đảm bảo dừng kéo khi chuột ra khỏi vùng
                 onDragStart={(e) => e.preventDefault()}
             >
                 {displayedItems.map((category, index) => (
