@@ -25,7 +25,7 @@ export default function AppRoutes() {
                     {routes_here.map((route, key) => (
                         !isAuthenticated ?
                             <Route key={key} path="/login" element={<Login />} />
-                            :
+                            :                            
                             <Route
                                 // index
                                 key={key}

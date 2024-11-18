@@ -3,7 +3,7 @@ import { Typography, Divider } from 'antd';
 import { BookOutlined, ShopOutlined, GlobalOutlined } from '@ant-design/icons';
 import { Input, Button } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import pic1 from '../../assets/images/AboutUs/About_04.jpg';
+import pic1 from '@/assets/images/AboutUs/About_04.jpg';
 import pic2 from '../../assets/images/AboutUs/About_02.jpg';
 import pic3 from '../../assets/images/AboutUs/About_03.jpg';
 import avt1 from '../../assets/images/AboutUs/test_01.png';
