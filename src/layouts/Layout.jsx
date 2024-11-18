@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Link, useState } from "react";
 import { Button, Select } from "antd";
 import { languages } from "../constants/constants";
 import Translate from "../components/Common/Translate";
@@ -31,7 +31,7 @@ export default function Layout({ children }) {
       <div className="container mx-auto flex items-center justify-between px-6 py-2 text-sm text-gray-600">
         <div className="flex space-x-4">
           <a
-            href="#"
+            href="/aboutUs"
             className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
           >
             About Us
