@@ -1,9 +1,11 @@
-import React, { Link, useState } from "react";
+import React, { useState } from "react";
 import { Button, Select } from "antd";
 import { languages } from "../constants/constants";
 import Translate from "../components/Common/Translate";
 import { useLocalization } from "../context/LocalizationWrapper";
 import Login from "../pages/login/Login";
+import { Link } from "react-router-dom";
+
 import {
   SearchOutlined,
   HeartOutlined,
@@ -35,12 +37,12 @@ export default function Layout({ children }) {
         {/* Top Row - Navigation Links */}
         <div className="container mx-auto flex items-center justify-between px-6 py-2 text-sm text-gray-600">
           <div className="flex space-x-4">
-            <a
-              href="#"
+            <Link
+              to="/aboutus"
               className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
             >
               About Us
-            </a>
+            </Link>
             <a
               href="#"
               className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
@@ -241,9 +243,7 @@ export default function Layout({ children }) {
       {/* Login Popup */}
       {isLoginPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div
-            className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative transform transition-transform duration-500 scale-95 opacity-0 animate-popup"
-          >
+          <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-lg relative transform transition-transform duration-500 scale-95 opacity-0 animate-popup">
             <button
               onClick={toggleLoginPopup}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
