@@ -10,7 +10,7 @@ import Trending from './Trending'
 import BannerSlider from './BannerSlider';
 import FavouriteBook from './FavouriteBook';
 import Post from './Post';
-import Test from './test';
+
 
 
 export default function Home() {
@@ -18,16 +18,14 @@ export default function Home() {
 
     return (
         <div className='flex flex-col gap-y-4' >
-            <Test />
-            <CategorySlider />
-            {/* <BannerSlider />
+            <BannerSlider />
             <CategorySlider />
             <DiscountBanners />
             <TopVendor />
             <FavouriteBook />
             <Trending />
             <Bestseller />
-            <Post /> */}
+            <Post />
         </div>
     )
 }
