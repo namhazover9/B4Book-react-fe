@@ -5,7 +5,6 @@ import Translate from "../components/Common/Translate";
 import { useLocalization } from "../context/LocalizationWrapper";
 import Login from "../pages/login/Login";
 import { Link } from "react-router-dom";
-
 import {
   SearchOutlined,
   HeartOutlined,
@@ -14,6 +13,7 @@ import {
   DownOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
+import Footer from "../components/footer/Footer";
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
@@ -255,6 +255,7 @@ export default function Layout({ children }) {
         </div>
       )}
       {children}
+      <Footer/>
     </div>
   );
 }
