@@ -36,7 +36,7 @@ export default function BannerSlider() {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-        }, 10000000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, [currentSlide]);
@@ -52,7 +52,7 @@ export default function BannerSlider() {
     };
 
     return (
-        <div className="w-full h-full">
+        <div className="h-96 mb-36" >
             <div className='relative'>
                 <img src="src/assets/images/bannerslider/rev_home6.png" alt="" className='absolute top-0 left-0 z-10' />
                 {slides.map((slide, index) => (
