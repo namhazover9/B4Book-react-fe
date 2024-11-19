@@ -95,7 +95,7 @@ const BookShowcase = () => {
         },
     ];
     return (
-        <div className="p-4 bg-white px-20">
+        <div className="p-4 bg-white px-4 sm:px-10 lg:px-20">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-3xl font-bold">Trending Now</h2>
                 <div className="w-1/2 h-px bg-gray-300 my-2 shadow-md"></div>
@@ -104,9 +104,35 @@ const BookShowcase = () => {
                 </button>
             </div>
 
-            <div className="flex w-full max-w-6xl mx-auto p-4 gap-4">
-                <div className="w-2/3 overflow-hidden">
-                    <Carousel autoplay dots={false} slidesToShow={4} swipeToSlide autoplaySpeed={3000}>
+            <div className="flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4">
+                {/* Carousel section */}
+                <div className="lg:w-2/3 overflow-hidden mb-4 lg:mb-0">
+                    <Carousel autoplay dots={false} slidesToShow={4} swipeToSlide autoplaySpeed={3000} responsive={[
+                        {
+                            breakpoint: 0,
+                            settings: {
+                                slidesToShow: 2,
+                            },
+                        },
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: 2,
+                            },
+                        },
+                        {
+                            breakpoint: 915,
+                            settings: {
+                                slidesToShow: 2,
+                            },
+                        },
+                        {
+                            breakpoint: 1280,
+                            settings: {
+                                slidesToShow: 3,
+                            },
+                        },
+                    ]} >
                         {books.map((book) => (
                             <div key={book.id} className="w-1/4 p-2">
                                 <div className="group relative">
@@ -156,16 +182,17 @@ const BookShowcase = () => {
                     </Carousel>
                 </div>
 
-                <div className="w-1/3">
+                {/* Banner section */}
+                <div className="lg:w-1/3 ">
                     <div className="relative aspect-square rounded-2xl overflow-hidden">
                         <img src={store1} alt="Banner" className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent">
                             <div className="absolute inset-0 flex flex-col justify-start items-start text-white p-6">
-                                <h2 className="text-3xl font-bold mt-7">{banner.title}</h2>
+                                <h2 className="text-3xl font-bold mt-7 break-words w-full">{banner.title}</h2>
                                 <div className="text-5xl font-bold mb-4">{banner.detail} Off</div>
                                 <h3 className="text-lg mb-2">{banner.sologan}</h3>
                                 <p className="text-xl text-white/80 hover:text-yellow-400 underline decoration-dotted">
-                                    <button className="hover:underline">{banner.contact}</button>
+                                    <button className="hover:underline md:mb-3">{banner.contact}</button>
                                 </p>
                             </div>
                         </div>
