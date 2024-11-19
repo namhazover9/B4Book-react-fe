@@ -1,7 +1,20 @@
 import React from "react";
 import { FacebookOutlined, GoogleOutlined } from "@ant-design/icons";
+import {userAPI} from "../../hooks/useLogin"; // Đảm bảo đường dẫn đúng
 
 const LoginPage = () => {
+  const handleGoogleLogin = async () => {
+
+
+    try {
+      const response = await userAPI.loginUser(); // Gửi yêu cầu đến API
+      console.log("Đăng nhập thành công:", response.data);
+      // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
+    } catch (error) {
+      console.error("Đăng nhập thất bại:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-4">Login to BigFour Books</h1>
@@ -33,7 +46,10 @@ const LoginPage = () => {
           <FacebookOutlined className="text-blue-600 mr-2" />
           Login with Facebook
         </button>
-        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition">
+        <button
+          onClick={handleGoogleLogin}
+          className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
+        >
           <GoogleOutlined className="text-red-600 mr-2" />
           Login with Google
         </button>
