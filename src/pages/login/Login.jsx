@@ -1,13 +1,21 @@
 import React from "react";
+import { useState } from "react";
 import { FacebookOutlined, GoogleOutlined } from "@ant-design/icons";
 import {userAPI} from "../../hooks/useLogin"; // Đảm bảo đường dẫn đúng
 
+
 const LoginPage = () => {
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    passWord: "",
+  });
   const handleGoogleLogin = async () => {
 
 
     try {
-      const response = await userAPI.loginUser(); // Gửi yêu cầu đến API
+      const response = await userAPI.loginUserGG(); // Gửi yêu cầu đến API
       console.log("Đăng nhập thành công:", response.data);
       // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
     } catch (error) {
@@ -15,18 +23,57 @@ const LoginPage = () => {
     }
   };
 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const loginUser = async () => {
+    try {
+      const response = await userAPI.loginUser({
+        email: formData.email,
+        passWord: formData.passWord,
+      });
+
+      setSuccess(true);
+      setError(null);
+
+      console.log("API Response:", response.data);
+      console.log("ABC: ",formData.email, formData.passWord);
+      window.alert(response?.data?.message);
+    } catch (error) {
+      setSuccess(false);
+      setError("Login failed");
+      window.alert(error.response?.data?.message || "Error login");
+      console.error("API Error:", error);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await loginUser();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-4">Login to BigFour Books</h1>
-      <form className="space-y-4 w-full max-w-sm">
+      <form className="space-y-4 w-full max-w-sm" onSubmit={handleSubmit}>
         <input
           type="text"
+          name="email"
           placeholder="Username"
+          onChange={handleChange}
           className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
         />
         <input
           type="password"
+          name="passWord"
           placeholder="Password"
+          onChange={handleChange}
           className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
         />
         <button
