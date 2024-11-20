@@ -8,8 +8,8 @@ import {
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-8">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+    <footer className="bg-gray-900 text-white px-20 py-8">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center ">
         <div className="mb-4 md:mb-0">
           <h2 className="text-2xl font-bold">BigFour</h2>
           <p className="text-sm">123 Main St, Anytown, CA 12345</p>
@@ -30,7 +30,7 @@ function Footer() {
             </a>
           </div>{" "}
         </div>
-        <div className="flex flex-col md:flex-row space-x-8">
+        <div className="flex flex-col md:flex-row space-x-20">
           <div>
             <h3 className="text-lg font-bold mb-2">Need Help</h3>
             <ul>
@@ -67,7 +67,7 @@ function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold mb-2">Explore</h3>
+            <h3 className="text-lg font-bold mb-2 space-x-20">Explore</h3>
             <ul>
               <li>
                 <a href="#" className="text-sm">
@@ -92,7 +92,7 @@ function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold mb-2">Our Services</h3>
+            <h3 className="text-lg font-bold mb-2 space-x-20">Our Services</h3>
             <ul>
               <li>
                 <a href="#" className="text-sm">

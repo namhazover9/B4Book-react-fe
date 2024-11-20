@@ -30,11 +30,11 @@ const banners = [
 
 const BookSaleBanners = () => {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4  sm:gap-6 p-4 sm:p-8">
+        <div className=" lg:mx-40 lg:px-4  grid grid-cols-1 sm:grid-cols-2 gap-4  sm:gap-6 p-4 sm:p-8">
             {banners.map((banner) => (
                 <div
                     key={banner.id}
-                    className={`relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer  h-64 sm:h-80`}
+                    className={`relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer sm:h-61 lg:h-[250px]`}
                 >
                     {/* Banner Header */}
                     {banner.discount && (
@@ -58,9 +58,9 @@ const BookSaleBanners = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col items-end mt-16 sm:mt-20">
+                    <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col items-end mt-12 sm:mt-2">
                         {/* Ensure content width and alignment */}
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-md text-white text-right">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-md text-white text-right sm:mt:0">
                             {banner.title}
                         </h2>
                         <p className="text-sm sm:text-base md:text-lg opacity-90 max-w-xs sm:max-w-sm md:max-w-md text-white text-right">
@@ -74,6 +74,7 @@ const BookSaleBanners = () => {
                     </div>
                 </div>
             ))}
+
         </div>
     );
 };

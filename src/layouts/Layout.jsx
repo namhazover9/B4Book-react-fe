@@ -5,11 +5,15 @@ import {
   PhoneOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
+import Footer from "../components/footer/Footer";
+import GalleryImage from "../components/footer/GalleryImage";
+import LogoGallery from "../components/footer/LogoGallery";
+import LogoShopBook from "../components/footer/LogoShopbook";
+import Banner from "../components/footer/Banner";
 import { Button, Select, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
-import Footer from '../components/footer/Footer';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
 import Login from '../pages/login/Login';
@@ -47,7 +51,7 @@ export default function Layout({ children }) {
         !buttonRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false);
-        setIsLoginPopupOpen(false);
+        // setIsLoginPopupOpen(false);
       }
     };
 
@@ -186,7 +190,7 @@ export default function Layout({ children }) {
             {['Home', 'Shop', 'Books', 'Pages', 'Blog', 'Contact'].map((item, index) => (
               <a
                 key={index}
-                href='#'
+                href='products'
                 className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
               >
                 <Translate text={item} />
@@ -223,6 +227,10 @@ export default function Layout({ children }) {
         </div>
       )}
       {children}
+      <LogoShopBook />
+      <Banner/>
+      <GalleryImage />
+      <LogoGallery />
       <Footer />
     </div>
   );
