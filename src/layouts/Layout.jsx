@@ -47,7 +47,7 @@ export default function Layout({ children }) {
         !buttonRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false);
-        setIsLoginPopupOpen(false);
+        // setIsLoginPopupOpen(false);
       }
     };
 
