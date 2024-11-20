@@ -1,8 +1,12 @@
 import { apiClient } from "../ApiConfig/apiConfig";
 
-const userAPI = {
+const userAPI = { 
     loginUserGG: () => {
-      return apiClient.get("/auth/google");
+      return apiClient.get("/auth/google/callback");
+    },
+
+    loginUserFB: () => {
+      return apiClient.get("/auth/google/callback");
     },
 
     loginUser: (loginData) => {

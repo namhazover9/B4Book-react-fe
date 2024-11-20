@@ -12,10 +12,8 @@ const LoginPage = () => {
     passWord: "",
   });
   const handleGoogleLogin = async () => {
-
-
     try {
-      const response = await userAPI.loginUserGG(); // Gửi yêu cầu đến API
+      window.location.href = `http://localhost:8000/auth/google`;
       console.log("Đăng nhập thành công:", response.data);
       // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
     } catch (error) {
