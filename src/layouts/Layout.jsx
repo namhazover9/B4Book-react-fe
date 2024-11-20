@@ -14,7 +14,6 @@ import Banner from "../components/footer/Banner";
 import { Button, Select, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
-import Footer from '../components/footer/Footer';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
 import Login from '../pages/login/Login';
