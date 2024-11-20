@@ -13,8 +13,8 @@ const LoginPage = () => {
   });
   const handleGoogleLogin = async () => {
     try {
-      window.location.href = `http://localhost:8000/auth/google`;
-      console.log("Đăng nhập thành công:", response.data);
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
+      console.log("Đăng nhập thành công");
       // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
