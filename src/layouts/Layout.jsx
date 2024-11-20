@@ -72,7 +72,7 @@ export default function Layout({ children }) {
               src="src/assets/images/logo_b4b.png"
               alt="Logo"
             />
-            <h2 className="text-4xl text-black font-bold">BigFour</h2>
+            <h2 className="text-4xl text-black font-bold m-0">BigFour</h2>
           </div>
 
           {/* Search Bar */}
@@ -188,24 +188,24 @@ export default function Layout({ children }) {
 
           {/* Main Navigation */}
           <nav className="flex space-x-6 text-gray-700">
-            <a
-              href="#"
+            <Link
+              to="/"
               className="relative hover:text-red-500 font-bold after:content-['•'] after:absolute after:left-1/2 after:transform after:-translate-x-1/2 after:bottom-[-15px] after:text-red-500 after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300 after:translate-y-2 hover:after:translate-y-0"
             >
               <Translate text="Home" />
-            </a>
+            </Link>
             <a
               href="#"
               className="relative hover:text-red-500 font-bold after:content-['•'] after:absolute after:left-1/2 after:transform after:-translate-x-1/2 after:bottom-[-15px] after:text-red-500 after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300 after:translate-y-2 hover:after:translate-y-0"
             >
               <Translate text="Shop" />
             </a>
-            <a
-              href="#"
+            <Link
+              to="/products"
               className="relative hover:text-red-500 font-bold after:content-['•'] after:absolute after:left-1/2 after:transform after:-translate-x-1/2 after:bottom-[-15px] after:text-red-500 after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300 after:translate-y-2 hover:after:translate-y-0"
             >
               <Translate text="Books" />
-            </a>
+            </Link>
             <a
               href="#"
               className="relative hover:text-red-500 font-bold after:content-['•'] after:absolute after:left-1/2 after:transform after:-translate-x-1/2 after:bottom-[-15px] after:text-red-500 after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-300 after:translate-y-2 hover:after:translate-y-0"
