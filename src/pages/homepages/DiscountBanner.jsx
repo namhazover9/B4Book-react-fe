@@ -30,18 +30,18 @@ const banners = [
 
 const BookSaleBanners = () => {
     return (
-        <div className="grid grid-cols-2 gap-8 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4  sm:gap-6 p-4 sm:p-8">
             {banners.map((banner) => (
                 <div
                     key={banner.id}
-                    className={`relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer p-2.5 h-70`}
+                    className={`relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer  h-64 sm:h-80`}
                 >
                     {/* Banner Header */}
                     {banner.discount && (
                         <div className="absolute top-4 left-4 z-10">
-                            <div className="bg-pink-500 rounded-full p-4 text-center w-24 h-24 flex flex-col justify-center">
-                                <div className="text-sm text-white">Sale</div>
-                                <div className="text-2xl font-bold text-white">{banner.discount}</div>
+                            <div className="bg-pink-500 rounded-full p-3 sm:p-4 text-center w-20 sm:w-24 h-20 sm:h-24 flex flex-col justify-center">
+                                <div className="text-xs sm:text-sm text-white">Sale</div>
+                                <div className="text-xl sm:text-2xl font-bold text-white">{banner.discount}</div>
                             </div>
                         </div>
                     )}
@@ -57,12 +57,17 @@ const BookSaleBanners = () => {
                         <div className={`absolute inset-0 ${banner.overlayColor} ${banner.overlayOpacity}`}></div>
                     </div>
 
-                    {/* Content - Right-aligned */}
-                    <div className="relative z-10 p-8 flex flex-col items-end ">
-                        <h2 className="text-4xl font-bold mb-4 text-white text-left">{banner.title}</h2>
-                        <p className="text-lg opacity-90 text-white text-left">{banner.subtitle}</p>
+                    {/* Content */}
+                    <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col items-end mt-16 sm:mt-20">
+                        {/* Ensure content width and alignment */}
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-md text-white text-right">
+                            {banner.title}
+                        </h2>
+                        <p className="text-sm sm:text-base md:text-lg opacity-90 max-w-xs sm:max-w-sm md:max-w-md text-white text-right">
+                            {banner.subtitle}
+                        </p>
                         {banner.buttonText && (
-                            <button className="bg-white text-amber-500 px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition-colors">
+                            <button className="bg-white text-amber-500 px-4 sm:px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition-colors mt-4">
                                 {banner.buttonText}
                             </button>
                         )}
@@ -74,3 +79,6 @@ const BookSaleBanners = () => {
 };
 
 export default BookSaleBanners;
+
+
+

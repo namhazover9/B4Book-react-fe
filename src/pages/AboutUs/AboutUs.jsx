@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Divider } from 'antd';
+import { Typography, Divider, Carousel } from 'antd';
 import { BookOutlined, ShopOutlined, GlobalOutlined } from '@ant-design/icons';
 import { Input, Button } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ import avt1 from '../../assets/images/AboutUs/test_01.png';
 import avt2 from '../../assets/images/AboutUs/test_02.png';
 import avt3 from '../../assets/images/AboutUs/test_03.png';
 import avt4 from '../../assets/images/AboutUs/h2_img.png';
-import logo from '../../assets/images/AboutUs/About_01_1.png';
+import logo from '../../assets/images/AboutUs/logo_b4b.png';
 
 
 
@@ -29,7 +29,7 @@ const AboutUs = () => {
                     </div>
                 </div>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                    We are the premier books publishing chain in the Southwestern United States with more than 500 Book stores in 75 states.
+                    We are a team of 7 members and 1 mentor, we have tried to complete this website.
                 </p>
             </div>
 
@@ -42,7 +42,7 @@ const AboutUs = () => {
                     <div className="p-6 bg-white rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-4 text-green-700">RETAIL STORES</h3>
                         <p className="text-gray-600">
-                            Modern libraries and digital media facilities are equipped with innovative resources to support research and learning activities, staffed with dedicated staff.
+                            Mauris tempus erat laoreet turpis lobortis, eu tincidunt erat fermentum. Aliquam non tincidunt urna. Integer tincidunt nec nisl vitae ullamcorper. Proin sed ultrices erat.
                         </p>
                     </div>
 
@@ -50,7 +50,7 @@ const AboutUs = () => {
                     <div className="p-6 bg-white rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-4 text-green-700">E-COMMERCE AND INTERNET SERVICES</h3>
                         <p className="text-gray-600">
-                            Digital libraries provide huge digital collections with comprehensive catalogs all at users' fingertips. Online resources support student and faculty collaboration.
+                            In the digital age, more and more websites are about E-commerce, it is quite popular these days, and our team is trying to make a mark with UI-UX.
                         </p>
                     </div>
 
@@ -58,7 +58,7 @@ const AboutUs = () => {
                     <div className="p-6 bg-white rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-4 text-green-700">WHOLESALE DISTRIBUTION</h3>
                         <p className="text-gray-600">
-                            We provide a wide range of books, magazines, journals, digital content and specialty products directly to institutions and retail partners nationwide.
+                            This website is a trading platform to help sellers and customers buy products here, we seek income by taking revenue and commission percentage through products.
                         </p>
                     </div>
                 </div>
@@ -107,68 +107,70 @@ const AboutUs = () => {
 
             <div className="mb-16">
                 <div className='flex justify-between items-center'>
-                    <h2 className="text-3xl font-bold text-left mb-12">What Client Says</h2>
-                    <div className="w-1/2 h-px bg-gray-300 my-2 shadow-md"></div>
+                    <h2 className="text-3xl font-bold text-left mt-4 ">What Client Says</h2>
+                    <div className="w-2/3 h-px bg-gray-300 my-2 shadow-md" />
                 </div>
-                <div className="grid md:grid-cols-3 gap-6">
-                    {/* Testimonial 1 */}
-                    <div className="bg-white p-6 rounded-xl shadow">
-                        <div className="flex items-center mb-4">
-                            <img
-                                src={avt1}
-                                alt="John Doe"
-                                className="w-10 h-10 rounded-full mr-3"
-                            />
-                            <div>
-                                <h4 className="font-semibold">JOHN DOE</h4>
-                                <p className="text-gray-500 text-sm">@johndoe</p>
+                <div className="gap-12">
+                    <Carousel autoplay slidesToShow={3} swipeToSlide>
+                        {/* Testimonial 1 */}
+                        <div className="bg-white p-6 rounded-xl ">
+                            <div className="flex items-center mb-4">
+                                <img
+                                    src={avt1}
+                                    alt="John Doe"
+                                    className="w-10 h-10 rounded-full mr-3"
+                                />
+                                <div>
+                                    <h4 className="font-semibold">JOHN DOE</h4>
+                                    <p className="text-gray-500 text-sm">@johndoe</p>
+                                </div>
                             </div>
+                            <p className="text-gray-600 italic">
+                                "I am so happy to find a site where I can shop for unusual items. The packaging was perfect too, and my book arrived on time in perfect condition."
+                            </p>
                         </div>
-                        <p className="text-gray-600 italic">
-                            "I am so happy to find a site where I can shop for unusual items. The packaging was perfect too, and my book arrived on time in perfect condition."
-                        </p>
-                    </div>
 
-                    {/* Testimonial 2 */}
-                    <div className="bg-white p-6 rounded-xl shadow">
-                        <div className="flex items-center mb-4">
-                            <img
-                                src={avt2}
-                                alt="Ray Right"
-                                className="w-10 h-10 rounded-full mr-3"
-                            />
-                            <div>
-                                <h4 className="font-semibold">RAY RIGHT</h4>
-                                <p className="text-gray-500 text-sm">@right</p>
+                        {/* Testimonial 2 */}
+                        <div className="bg-white p-6 rounded-xl">
+                            <div className="flex items-center mb-4">
+                                <img
+                                    src={avt2}
+                                    alt="Ray Right"
+                                    className="w-10 h-10 rounded-full mr-3"
+                                />
+                                <div>
+                                    <h4 className="font-semibold">RAY RIGHT</h4>
+                                    <p className="text-gray-500 text-sm">@right</p>
+                                </div>
                             </div>
+                            <p className="text-gray-600 italic">
+                                "This is the best book store! The prices are great, and there is always something new to browse on. You can find just what you are looking for."
+                            </p>
                         </div>
-                        <p className="text-gray-600 italic">
-                            "This is the best book store! The prices are great, and there is always something new to browse on. You can find just what you are looking for."
-                        </p>
-                    </div>
 
-                    {/* Testimonial 3 */}
-                    <div className="bg-white p-6 rounded-xl shadow">
-                        <div className="flex items-center mb-4">
-                            <img
-                                src={avt3}
-                                alt="Josh K"
-                                className="w-10 h-10 rounded-full mr-3"
-                            />
-                            <div>
-                                <h4 className="font-semibold">JOSH K</h4>
-                                <p className="text-gray-500 text-sm">@joshk</p>
+                        {/* Testimonial 3 */}
+                        <div className="bg-white p-6 rounded-xl ">
+                            <div className="flex items-center mb-4">
+                                <img
+                                    src={avt3}
+                                    alt="Josh K"
+                                    className="w-10 h-10 rounded-full mr-3"
+                                />
+                                <div>
+                                    <h4 className="font-semibold">JOSH K</h4>
+                                    <p className="text-gray-500 text-sm">@joshk</p>
+                                </div>
                             </div>
+                            <p className="text-gray-600 italic">
+                                "I am so happy to find a site where I can shop for unusual items. The packaging was perfect too, and my book arrived on time in perfect condition."
+                            </p>
                         </div>
-                        <p className="text-gray-600 italic">
-                            "I am so happy to find a site where I can shop for unusual items. The packaging was perfect too, and my book arrived on time in perfect condition."
-                        </p>
-                    </div>
+                    </Carousel>
                 </div>
             </div>
 
             {/* Join Community Section */}
-            <div className="bg-emerald-100 rounded-2xl p-8 mb-16">
+            <div className="bg-emerald-100 rounded-3xl p-8 mb-16">
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     <div className="md:w-1/2 mb-6 md:mb-0">
                         <h2 className="text-2xl font-bold mb-4">Join the community</h2>
@@ -184,7 +186,7 @@ const AboutUs = () => {
                             <Button
                                 type="primary"
                                 icon={<SendOutlined />}
-                                className="bg-red-500 hover:bg-red-600 border-none"
+                                className="bg-red-500 hover:bg-green-600 border-none"
                             >
                                 Subscribe
                             </Button>
