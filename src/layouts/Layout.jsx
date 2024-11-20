@@ -14,6 +14,10 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import Footer from "../components/footer/Footer";
+import GalleryImage from "../components/footer/GalleryImage";
+import LogoGallery from "../components/footer/LogoGallery";
+import LogoShopBook from "../components/footer/LogoShopbook";
+import Banner from "../components/footer/Banner";
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
@@ -255,7 +259,11 @@ export default function Layout({ children }) {
         </div>
       )}
       {children}
-      <Footer/>
+      <LogoShopBook />
+      <Banner/>
+      <GalleryImage />
+      <LogoGallery />
+      <Footer />
     </div>
   );
 }
