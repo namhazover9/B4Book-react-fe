@@ -186,7 +186,7 @@ export default function Layout({ children }) {
             {['Home', 'Shop', 'Books', 'Pages', 'Blog', 'Contact'].map((item, index) => (
               <a
                 key={index}
-                href='#'
+                href='products'
                 className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
               >
                 <Translate text={item} />
