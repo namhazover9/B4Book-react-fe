@@ -5,7 +5,7 @@ const Login = lazy(() => import('@pages/login/Login'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
 const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
-const Product = lazy(() => import('@pages/AdminRole/Product'));
+const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -41,8 +41,8 @@ export const routes_here = [
   },
   {
     path: '/products',
-    element: <Product />,
-    layout: 'admin',
+    element: <ProductPage />,
+    layout: 'user',
     isPrivate: true,
   },
   // {

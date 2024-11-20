@@ -3,35 +3,36 @@
 @tailwind utilities;
 
 @layer components {
-    /* ****************************
+  /* ****************************
     Common Buttons
     **************************** */
-    .primary-btn {
-        @apply bg-[#4E31AA] border-[#4E31AA] text-[#FFFFFF] text-[14px] font-semibold rounded-[4px] hover:shadow-none;
-      }
-      .primary-btn-cancel {
-        @apply border-[#EF2F88] text-[#EF2F88] text-[14px] font-semibold rounded-[4px] hover:shadow-none bg-transparent;
-      }
-      .seconday-btn {
-        @apply border-[#727272] text-[#727272] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
-      }
-      .ternary-btn {
-        @apply border-[#4E31AA] text-[#4E31AA] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
-      }
-    
+  .primary-btn {
+    @apply bg-[#4E31AA] border-[#4E31AA] text-[#FFFFFF] text-[14px] font-semibold rounded-[4px] hover:shadow-none;
+  }
+  .primary-btn-cancel {
+    @apply border-[#EF2F88] text-[#EF2F88] text-[14px] font-semibold rounded-[4px] hover:shadow-none bg-transparent;
+  }
+  .seconday-btn {
+    @apply border-[#727272] text-[#727272] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+  }
+  .ternary-btn {
+    @apply border-[#4E31AA] text-[#4E31AA] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+  }
 
-
-    /* ****************************
+  /* ****************************
     website fonts
     **************************** */
-   
-    @font-face {
-      font-family: "cairo-regular";
-      src: url(../assets/fonts/Cairo-Regular.ttf)  format('truetype');
-    }
-   
-  }
 
-  body{
-    background-color: white;
+  @font-face {
+    font-family: "cairo-regular";
+    src: url(../assets/fonts/Cairo-Regular.ttf) format("truetype");
   }
+}
+
+body {
+  background-color: white;
+}
+
+.choice-icon-tnvd {
+  @apply hover:bg-slate-200 hover:shadow-inner transition-all duration-200 ease-in p-2 rounded-full
+}
