@@ -57,10 +57,10 @@ const BlogSection = () => {
     ];
 
     return (
-        <div className="w-full bg-gray-50">
-            <div className="max-w-6xl mx-auto px-4 py-8">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-4xl font-black">Latest Blog Post</h2>
+        <div className="w-full bg-white px-4 sm:px-10 lg:px-20">
+            <div className='max-w-6xl mx-auto px-4 py-5'>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-3xl font-bold">Blog Posts</h2>
                     <button className="bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium">
                         View All <ArrowRightOutlined className="w-4 h-4" />
                     </button>
