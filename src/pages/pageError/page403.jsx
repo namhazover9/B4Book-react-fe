@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaHome, FaLock } from 'react-icons/fa';
+import { HomeOutlined, LockOutlined } from '@ant-design/icons';
 
 const ForbiddenPage = () => {
   useEffect(() => {
@@ -8,7 +8,7 @@ const ForbiddenPage = () => {
   }, []);
 
   const navigationLinks = [
-    { title: 'Return Home', icon: <FaHome className='mr-2' />, path: '/' },
+    { title: 'Return Home', icon: <HomeOutlined className='mr-2' />, path: '/' },
     // { title: 'Popular Pages', icon: <FaCompass className='mr-2' />, path: '/popular' },
     // { title: 'Search Site', icon: <FaSearch className='mr-2' />, path: '/search' },
   ];
@@ -37,7 +37,7 @@ const ForbiddenPage = () => {
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
           >
-            <FaLock className='text-red-500 text-4xl' />
+            <LockOutlined className='text-red-500 text-4xl' />
           </motion.div>
         </div>
 

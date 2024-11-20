@@ -1,12 +1,13 @@
-import React, { Suspense } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Layout from '@layouts/Layout';
-import AdminLayout from '../layouts/AdminLayout';
-import { routes_here } from './routes';
 import ScrollTop from '@components/ScrollTop';
-import NotFoundPage from '../pages/pageError/page404';
-import ForbiddenPage from '../pages/pageError/page403';
+import Layout from '@layouts/Layout';
+import React, { Suspense, useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import LoadingSpinner from '../components/loading';
+import { userAPI } from '../hooks/useLogin';
+import AdminLayout from '../layouts/AdminLayout';
+import ForbiddenPage from '../pages/pageError/page403';
+import NotFoundPage from '../pages/pageError/page404';
+import { routes_here } from './routes';
 
 const layoutMap = {
   admin: AdminLayout,
@@ -15,8 +16,32 @@ const layoutMap = {
 };
 
 const AppRoutes = () => {
-  const isAuthenticated = true;
-  const userRole = 'user';
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [userRole, setUserRole] = useState('user');
+
+  // useEffect(() => {
+  //   const checkGoogleToken = async () => {
+  //     try {
+  //       const response = await userAPI.loginUserGG();
+  //       if (response.data.isValid) {
+  //         setIsAuthenticated(true);
+  //         setUserRole(response.data.role);
+  //       } else {
+  //         setIsAuthenticated(false);
+  //         setUserRole('guest');
+  //       }
+  //     } catch (error) {
+  //       console.error('Token verification failed:', error);
+  //       setIsAuthenticated(false);
+  //       setUserRole('guest');
+  //     }
+  //   };
+
+  //   checkGoogleToken();
+  // }, []);
+
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('userRole:', userRole);
 
   const hasAccess = (layout) => {
     if (layout === 'admin' && userRole !== 'admin') return false;

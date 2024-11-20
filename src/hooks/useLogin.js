@@ -4,10 +4,10 @@ const userAPI = {
     loginUser: () => {
       return apiClient.get("/auth/google");
     },
-  };
-  
 
-export {
-  userAPI,
-  
-};
+    // verifyGoogleToken: () => {
+    //   return apiClient.get('/auth/verifyGoogleToken');
+    // },
+  };
+
+export { userAPI };
