@@ -1,13 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import banner1 from '../../assets/images/DiscountBanner/h6_banner1.jpg';
-import banner2 from '../../assets/images/DiscountBanner/h6_banner2.jpg';
+
 
 const banners = [
   {
     id: 1,
     bgColor: 'bg-purple-500',
-    imageSrc: banner1,
+    imageSrc: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180518/h6_banner1_yb5q2s.jpg",
     title: 'Books Make Great Gifts',
     subtitle: 'Why not send the gift of a book to family & friends.',
     discount: '20%',
@@ -18,7 +17,7 @@ const banners = [
   {
     id: 2,
     bgColor: 'bg-amber-500',
-    imageSrc: banner2,
+    imageSrc: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180518/h6_banner2_lsrmvm.jpg",
     title: 'Sale 10% Off',
     subtitle: 'It all begins with a great book!',
     discount: null,

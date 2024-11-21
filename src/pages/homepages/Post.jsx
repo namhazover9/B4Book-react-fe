@@ -1,31 +1,25 @@
 import React from 'react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import post1 from '../../assets/images/PostImage/post1.jpg';
-import post2 from '../../assets/images/PostImage/post2.jpg';
-import post3 from '../../assets/images/PostImage/post3.jpg';
-import post4 from '../../assets/images/PostImage/post4.jpg';
-import post5 from '../../assets/images/PostImage/post5.jpg';
-import post6 from '../../assets/images/PostImage/post6.jpg';
-import post7 from '../../assets/images/PostImage/post7.jpg';
+
 
 const BlogSection = () => {
   const blogPosts = [
     {
       date: 'NOVEMBER 14, 2022',
       title: '5 Attractive Bookstore WordPress Themes',
-      image: post1,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180590/post7_i7kh1e.jpg",
       category: '',
     },
     {
       date: 'OCTOBER 11, 2022',
       title: '7 Books to Combat Racism',
-      image: post2,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180589/post6_kespla.jpg",
       category: '',
     },
     {
       date: 'OCTOBER 11, 2022',
       title: 'Top 5 Tarot Decks for the Tarot World Summit',
-      image: post3,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180588/post5_u4s77o.jpg",
       category: '',
     },
   ];
@@ -34,7 +28,7 @@ const BlogSection = () => {
     date: 'OCTOBER 11, 2022',
     author: 'BY ADMIN',
     title: 'Behind the Scenes with Author Victoria Aveyard',
-    image: post6,
+    image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180587/post4_kusrmw.jpg",
     category: 'CULTURAL',
   };
 
@@ -42,17 +36,17 @@ const BlogSection = () => {
     {
       date: 'OCTOBER 11, 2022',
       title: "Oprah's Latest Book Club Pick is Being...",
-      image: post5,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180586/post3_hvzkvk.jpg",
     },
     {
       date: 'OCTOBER 11, 2022',
       title: 'Top 10 Books to Make It a Great Year',
-      image: post7,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180585/post2_svruw0.jpg",
     },
     {
       date: 'OCTOBER 11, 2022',
       title: 'Author Special: A Q&A with Brené Brown',
-      image: post4,
+      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180563/post1_lyamwc.jpg",
     },
   ];
 
