@@ -18,7 +18,7 @@ const LoginPage = () => {
     try {
       window.open('http://localhost:8000/auth/google', "_self");
       console.log("Đăng nhập thành công");
-      window.alert("Đăng nhập thành công");
+      window.alert("Login Success!");
 
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
@@ -29,7 +29,7 @@ const LoginPage = () => {
     try {
       window.open('http://localhost:8000/auth/facebook', "_self")
       console.log("Đăng nhập thành công");
-      window.alert("Đăng nhập thành công");
+      window.alert("Login Success!");
       // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
