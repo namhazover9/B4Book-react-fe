@@ -28,7 +28,7 @@ const BookShowcase = () => {
       author: 'Warren Graham',
       price: '$741.23',
       rating: 4,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/21_kjp6wa.jpg",
+      image: pic1,
     },
     {
       id: 2,
@@ -36,7 +36,7 @@ const BookShowcase = () => {
       author: 'Ernesto Wade',
       price: '$664.55',
       rating: 5,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/20_txzybe.jpg",
+      image: pic2,
     },
     {
       id: 3,
@@ -44,7 +44,7 @@ const BookShowcase = () => {
       author: 'Ernesto Wade',
       price: '$72.99',
       rating: 4,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/24_eih5ix.jpg",
+      image: pic3,
     },
     {
       id: 4,
@@ -52,7 +52,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$914.53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/16_mqugur.jpg",
+      image: pic4,
     },
     {
       id: 5,
@@ -60,7 +60,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$94.53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180414/12_t7bhsr.jpg",
+      image: pic5,
     },
     {
       id: 6,
@@ -68,7 +68,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$114',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180414/7_mjr7p8.jpg",
+      image: pic6,
     },
     {
       id: 7,
@@ -76,7 +76,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180414/1_mzvygt.jpg",
+      image: pic7,
     },
     {
       id: 8,
@@ -84,7 +84,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180413/13_yzom8v.jpg",
+      image: pic8,
     },
     {
       id: 9,
@@ -92,7 +92,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180413/15_rmgxro.jpg",
+      image: pic9,
     },
   ];
   return (
