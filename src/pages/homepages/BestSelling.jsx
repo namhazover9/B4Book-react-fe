@@ -2,7 +2,16 @@
 import { Button, Carousel } from 'antd';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-
+import pic1 from '../../assets/images/BestSelling/20.jpg';
+import pic2 from '../../assets/images/BestSelling/21.jpg';
+import pic3 from '../../assets/images/BestSelling/24.jpg';
+import pic4 from '../../assets/images/BestSelling/20.jpg';
+import pic5 from '../../assets/images/BestSelling/25.jpg';
+import pic6 from '../../assets/images/BestSelling/26.jpg';
+import pic7 from '../../assets/images/BestSelling/27.jpg';
+import pic8 from '../../assets/images/BestSelling/28.jpg';
+import pic9 from '../../assets/images/BestSelling/29.jpg';
+import store1 from '../../assets/images/BestSelling/h6_banner5.jpg';
 
 const BookShowcase = () => {
   const banner = {
@@ -19,7 +28,7 @@ const BookShowcase = () => {
       author: 'Warren Graham',
       price: '$741.23',
       rating: 4,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180419/32_gd4vff.jpg",
+      image: pic1,
     },
     {
       id: 2,
@@ -27,7 +36,7 @@ const BookShowcase = () => {
       author: 'Ernesto Wade',
       price: '$664.55',
       rating: 5,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180420/33_yosj09.jpg",
+      image: pic2,
     },
     {
       id: 3,
@@ -35,7 +44,7 @@ const BookShowcase = () => {
       author: 'Ernesto Wade',
       price: '$72.99',
       rating: 4,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180419/31_wdusoj.jpg",
+      image: pic3,
     },
     {
       id: 4,
@@ -43,7 +52,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$914.53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180419/30_krapkw.jpg",
+      image: pic4,
     },
     {
       id: 5,
@@ -51,7 +60,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$94.53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/29_jg8pks.jpg",
+      image: pic5,
     },
     {
       id: 6,
@@ -59,7 +68,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$114',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/28_bmjler.jpg",
+      image: pic6,
     },
     {
       id: 7,
@@ -67,7 +76,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/27_chngm3.jpg",
+      image: pic7,
     },
     {
       id: 8,
@@ -75,7 +84,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/25_zd6lvq.jpg",
+      image: pic8,
     },
     {
       id: 9,
@@ -83,7 +92,7 @@ const BookShowcase = () => {
       author: 'Enrique Wallace',
       price: '$53',
       rating: 3,
-      image: "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/26_tonwdt.jpg",
+      image: pic9,
     },
   ];
 
