@@ -102,8 +102,8 @@ export default function Layout({ children }) {
             style={{ cursor: 'pointer' }}
           >
             {/* Logo */}
-            <img className='w-28 h-28' src='src/assets/images/logo_b4b.png' alt='Logo' />
-            <h2 className='text-4xl text-black font-bold'>BigFour</h2>
+            <img className='w-28 h-28' src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png' alt='Logo' />
+            <h2 className='text-4xl text-black font-bold m-0'>BigFour</h2>
           </div>
 
           {/* Search Bar */}

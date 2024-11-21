@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaHome, FaLock } from 'react-icons/fa';
-
+import { HomeOutlined } from '@ant-design/icons';
 const ForbiddenPage = () => {
   useEffect(() => {
     document.title = '403 Forbidden - Access Denied';
   }, []);
 
   const navigationLinks = [
-    { title: 'Return Home', icon: <FaHome className='mr-2' />, path: '/' },
+    { title: 'Return Home', icon: <HomeOutlined className='mr-2' />, path: '/' },
     // { title: 'Popular Pages', icon: <FaCompass className='mr-2' />, path: '/popular' },
     // { title: 'Search Site', icon: <FaSearch className='mr-2' />, path: '/search' },
   ];

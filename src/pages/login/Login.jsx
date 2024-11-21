@@ -20,7 +20,15 @@ const LoginPage = () => {
       console.error("Đăng nhập thất bại:", error);
     }
   };
-
+  const handleFacebookLogin = async () => {
+    try {
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/facebook`;
+      console.log("Đăng nhập thành công");
+      // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
+    } catch (error) {
+      console.error("Đăng nhập thất bại:", error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -87,7 +95,8 @@ const LoginPage = () => {
         </a>
       </div>
       <div className="flex items-center justify-center space-x-4 mt-4">
-        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition">
+        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
+        onClick={handleFacebookLogin}>
           <FacebookOutlined className="text-blue-600 mr-2" />
           Login with Facebook
         </button>
