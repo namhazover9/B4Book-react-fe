@@ -105,7 +105,7 @@ const favouriteBooks = [
 // Sort books by rating in descending order
 const sortedBooks = [...favouriteBooks].sort((a, b) => b.rating - a.rating);
 
-// console.log(sortedBooks); 
+// console.log(sortedBooks);
 
 export default function FavouriteBook() {
   return (
