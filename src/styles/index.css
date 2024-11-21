@@ -3,35 +3,84 @@
 @tailwind utilities;
 
 @layer components {
-    /* ****************************
+  /* ****************************
     Common Buttons
     **************************** */
-    .primary-btn {
-        @apply bg-[#4E31AA] border-[#4E31AA] text-[#FFFFFF] text-[14px] font-semibold rounded-[4px] hover:shadow-none;
-      }
-      .primary-btn-cancel {
-        @apply border-[#EF2F88] text-[#EF2F88] text-[14px] font-semibold rounded-[4px] hover:shadow-none bg-transparent;
-      }
-      .seconday-btn {
-        @apply border-[#727272] text-[#727272] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
-      }
-      .ternary-btn {
-        @apply border-[#4E31AA] text-[#4E31AA] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
-      }
-    
+  .primary-btn {
+    @apply bg-[#4E31AA] border-[#4E31AA] text-[#FFFFFF] text-[14px] font-semibold rounded-[4px] hover:shadow-none;
+  }
+  .primary-btn-cancel {
+    @apply border-[#EF2F88] text-[#EF2F88] text-[14px] font-semibold rounded-[4px] hover:shadow-none bg-transparent;
+  }
+  .seconday-btn {
+    @apply border-[#727272] text-[#727272] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+  }
+  .ternary-btn {
+    @apply border-[#4E31AA] text-[#4E31AA] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+  }
 
-
-    /* ****************************
+  /* ****************************
     website fonts
     **************************** */
-   
-    @font-face {
-      font-family: "cairo-regular";
-      src: url(../assets/fonts/Cairo-Regular.ttf)  format('truetype');
-    }
-   
-  }
 
-  body{
-    background-color: white;
+  @font-face {
+    font-family: "cairo-regular";
+    src: url(../assets/fonts/Cairo-Regular.ttf) format("truetype");
   }
+}
+
+body {
+  background-color: white;
+}
+
+.rep-banner-xl-tnvd {
+  @apply xl:h-5/6 xl:px-20 xl:py-60
+}
+
+.rep-bg-support-lg-tnvd {
+  @apply lg:ml-10
+}
+
+.rep-bg-support-xl-tnvd {
+  @apply xl:h-auto xl:ml-20
+}
+
+.rep-bg-support-2xl-tnvd {
+  @apply 2xl:w-4/5 2xl:ml-36
+}
+
+.rep-title-xl-tnvd {
+  @apply xl:text-5xl xl:mb-5  
+}
+
+.rep-minibg-md-tnvd {
+  @apply md:w-4/5
+}
+
+.rep-minibg-lg-tnvd {
+  @apply lg:w-8/12 lg:ml-24
+}
+
+.rep-minibg-xl-tnvd {
+  @apply xl:w-3/4
+}
+
+.rep-minibg-2xl-tnvd {
+  @apply 2xl:w-2/3 2xl:h-96
+}
+
+.rep-imgbook-sm-tnvd {
+  @apply sm:mt-0 sm:ml-10
+}
+
+.rep-imgbook-lg-tnvd {
+  @apply lg:w-3/4 
+}
+
+.rep-imgbook-xl-tnvd {
+  @apply xl:w-11/12 xl:h-auto xl:ml-8 
+}
+
+.rep-imgbook-2xl-tnvd {
+  @apply 2xl:w-3/4 2xl:ml-10
+}
