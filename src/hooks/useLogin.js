@@ -13,10 +13,7 @@ const userAPI = {
       return apiClient.post("/loginWithPassword", loginData);
     },
   };
-  
 
-
-export {
-  userAPI,
   
-};
+  
+export { userAPI };
