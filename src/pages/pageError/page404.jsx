@@ -1,13 +1,13 @@
+import { HomeOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { HomeOutlined } from '@ant-design/icons';
 const NotFoundPage = () => {
   useEffect(() => {
     document.title = '404 - Page Not Found';
   }, []);
 
   const navigationLinks = [
-    { title: 'Return Home', icon: <HomeOutlined  className='mr-2' />, path: '/' },
+    { title: 'Return Home', icon: <HomeOutlined className='mr-2' />, path: '/' },
     // { title: 'Popular Pages', icon: <FaCompass className='mr-2' />, path: '/popular' },
     // { title: 'Search Site', icon: <FaSearch className='mr-2' />, path: '/search' },
   ];
