@@ -9,6 +9,7 @@ import pic8 from '../../assets/images/BestSelling/28.jpg';
 import pic9 from '../../assets/images/FavouriteBook/34.jpg';
 import pic10 from '../../assets/images/FavouriteBook/35.jpg';
 import pic11 from '../../assets/images/FavouriteBook/36.jpg';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
 const favouriteBooks = [
   {
@@ -108,12 +109,12 @@ const sortedBooks = [...favouriteBooks].sort((a, b) => b.rating - a.rating);
 
 export default function FavouriteBook() {
   return (
-    <div className='bg-white container mx-auto'>
-      <div className='flex justify-between items-center mx-8 my-4'>
-        <h2 className='text-3xl font-bold'>Our Favourite Reads</h2>
-        <div className='w-1/2 h-px bg-gray-300 my-2 shadow-md'></div>
-        <button className='bg-red-400 text-white px-3 py-1.5 rounded-full text-sm hover:bg-red-500 transition-colors'>
-          View All
+    <div className='bg-white container mx-auto px-5'>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-3xl font-bold">Our Favourite Reads</h2>
+        <div className="hidden xl:block w-[700px] h-px bg-gray-300 shadow-md"></div>
+        <button className="bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium">
+          View All <ArrowRightOutlined className="w-4 h-4" />
         </button>
       </div>
       <div className='container mx-auto mt-6 mb-2 border border-solid rounded-lg'>

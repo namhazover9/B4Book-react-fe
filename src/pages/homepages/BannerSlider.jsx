@@ -54,9 +54,8 @@ export default function BannerSlider() {
     };
 
     return (
-        <div className="h-96 mb-36" >
+        <div className="relative w-full h-full mb-96" >
             <div className='relative'>
-
                 <img src="src/assets/images/bannerslider/rev_home6.png" alt="" className='absolute w-1/6 sm:w-1/12 top-0 left-0 z-20' />
                 <img src='src/assets/images/bannerslider/rev_home6_1.png' alt="" className='sm:hidden absolute w-1/5 top-80 right-0 z-20' />
             </div>

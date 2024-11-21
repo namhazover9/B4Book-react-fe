@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaHome, FaLock } from 'react-icons/fa';
+import { HomeOutlined, LockOutlined } from '@ant-design/icons';
 
 const ForbiddenPage = () => {
   useEffect(() => {
@@ -8,7 +8,7 @@ const ForbiddenPage = () => {
   }, []);
 
   const navigationLinks = [
-    { title: 'Return Home', icon: <FaHome className='mr-2' />, path: '/' },
+    { title: 'Return Home', icon: <HomeOutlined className='mr-2' />, path: '/' },
     // { title: 'Popular Pages', icon: <FaCompass className='mr-2' />, path: '/popular' },
     // { title: 'Search Site', icon: <FaSearch className='mr-2' />, path: '/search' },
   ];
@@ -21,7 +21,7 @@ const ForbiddenPage = () => {
         transition={{ duration: 0.5 }}
         className='max-w-lg w-full bg-white rounded-2xl shadow-xl p-8 text-center'
       >
-        <div className='relative mb-8'>
+        <div className='relative mb-8 flex items-center justify-center'>
           <img
             src='images.unsplash.com/photo-1624969862644-791f3dc98927'
             alt='Security Shield'
@@ -29,15 +29,15 @@ const ForbiddenPage = () => {
             onError={(e) => {
               e.target.src =
                 "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23ccc' d='M12 2L2 7v10c0 5 10 10 10 10s10-5 10-10V7L12 2z'/%3E%3C/svg%3E";
-              e.target.className = 'w-48 h-48 mx-auto';
+              e.target.className = 'w-1/2 h-auto mx-auto';
             }}
           />
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+            // transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            className='absolute top-1/2'
           >
-            <FaLock className='text-red-500 text-4xl' />
+            <LockOutlined className='text-red-500 text-5xl -mt-2' />
           </motion.div>
         </div>
 

@@ -33,7 +33,7 @@ body {
   background-color: white;
 }
 
-
+/* Banner Slider */
 .rep-banner-xl-tnvd {
   @apply xl:h-5/6 xl:px-20 xl:py-60
 }
@@ -84,9 +84,12 @@ body {
 
 .rep-imgbook-2xl-tnvd {
   @apply 2xl:w-3/4 2xl:ml-10
+}
+
+/* Favourite Books */
 
 
+/* Shop Page */
 .choice-icon-tnvd {
   @apply hover:bg-slate-200 hover:shadow-inner transition-all duration-200 ease-in p-2 rounded-full
-
 }

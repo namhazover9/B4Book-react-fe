@@ -1,6 +1,6 @@
+import { HomeOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { FaHome } from 'react-icons/fa';
 
 const NotFoundPage = () => {
   useEffect(() => {
@@ -8,7 +8,7 @@ const NotFoundPage = () => {
   }, []);
 
   const navigationLinks = [
-    { title: 'Return Home', icon: <FaHome className='mr-2' />, path: '/' },
+    { title: 'Return Home', icon: <HomeOutlined className='mr-2' />, path: '/' },
     // { title: 'Popular Pages', icon: <FaCompass className='mr-2' />, path: '/popular' },
     // { title: 'Search Site', icon: <FaSearch className='mr-2' />, path: '/search' },
   ];
