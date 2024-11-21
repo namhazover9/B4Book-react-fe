@@ -110,11 +110,11 @@ const sortedBooks = [...favouriteBooks].sort((a, b) => b.rating - a.rating);
 export default function FavouriteBook() {
   return (
     <div className='bg-white container mx-auto px-5'>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-bold">Our Favourite Reads</h2>
-        <div className="hidden xl:block w-[700px] h-px bg-gray-300 shadow-md"></div>
-        <button className="bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium">
-          View All <ArrowRightOutlined className="w-4 h-4" />
+      <div className='flex justify-between items-center mb-4'>
+        <h2 className='text-3xl font-bold'>Our Favourite Reads</h2>
+        <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
+        <button className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+          View All <ArrowRightOutlined className='w-4 h-4' />
         </button>
       </div>
       <div className='container mx-auto mt-6 mb-2 border border-solid rounded-lg'>

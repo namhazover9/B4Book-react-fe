@@ -5,12 +5,12 @@ import {
   PhoneOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-} from "@ant-design/icons";
-import Footer from "../components/footer/Footer";
-import GalleryImage from "../components/footer/GalleryImage";
-import LogoGallery from "../components/footer/LogoGallery";
-import LogoShopBook from "../components/footer/LogoShopbook";
-import Banner from "../components/footer/Banner";
+} from '@ant-design/icons';
+import Footer from '../components/footer/Footer';
+import GalleryImage from '../components/footer/GalleryImage';
+import LogoGallery from '../components/footer/LogoGallery';
+import LogoShopBook from '../components/footer/LogoShopbook';
+import Banner from '../components/footer/Banner';
 import { Button, Select, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
@@ -171,10 +171,11 @@ export default function Layout({ children }) {
                   <a
                     key={index}
                     href='#'
-                    className={`flex items-center px-4 py-2 text-sm ${category.active
+                    className={`flex items-center px-4 py-2 text-sm ${
+                      category.active
                         ? 'text-red-500 font-semibold bg-gray-50'
                         : 'text-gray-700 hover:bg-gray-100'
-                      } transition duration-300`}
+                    } transition duration-300`}
                   >
                     <span className='mr-2'>{category.icon}</span>
                     {category.text}

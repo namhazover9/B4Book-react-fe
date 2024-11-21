@@ -1,9 +1,9 @@
 import AppRoutes from '@routes/AppRoutes';
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
-import '@styles/index.css'
+import '@styles/index.css';
 import { LocalizationProvider } from './context/LocalizationWrapper';
 
 const queryClient = new QueryClient();
@@ -17,5 +17,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </BrowserRouter>
       </LocalizationProvider>
     </QueryClientProvider>
-  </React.StrictMode>
-)
+  </React.StrictMode>,
+);
