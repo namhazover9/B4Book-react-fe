@@ -109,17 +109,17 @@ const sortedBooks = [...favouriteBooks].sort((a, b) => b.rating - a.rating);
 
 export default function FavouriteBook() {
   return (
-    <div className='bg-white container mx-auto px-5'>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-bold">Our Favourite Reads</h2>
+    <div className='bg-white w-full mt-5 px-5 sm:px-10 lg:px-20'>
+      <div className="flex justify-between items-center mx-4">
+        <p className="m-0 text-3xl font-bold">Our Favourite Reads</p>
         <div className="hidden xl:block w-[700px] h-px bg-gray-300 shadow-md"></div>
         <button className="bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium">
           View All <ArrowRightOutlined className="w-4 h-4" />
         </button>
       </div>
-      <div className='container mx-auto mt-6 mb-2 border border-solid rounded-lg'>
-        <div className='flex justify-center m-2 space-x-4'>
-          <div className='w-1/4'>
+      <div className='mx-4 mt-6 mb-2 border border-solid rounded-lg'>
+        <div className='flex justify-center m-2 sm:flex-row-reverse'>
+          <div className='hidden sm:block w-1/4 sm:w-1/2 lg:w-1/3 xl:w-1/4'>
             {sortedBooks.slice(2, 6).map((book) => (
               <div key={book.title} className='mt-2'>
                 <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-lg mb-3'>
@@ -144,47 +144,51 @@ export default function FavouriteBook() {
           </div>
 
           {/* Center Books (1st and 2nd Highest Rated) */}
-          <div className='w-2/4 flex justify-center space-x-3'>
-            <div className='w-1/2'>
-              <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md mb-4'>
-                <div className='overflow-hidden rounded-lg mb-4 h-full'>
+          <div className='sm:w-2/4 flex flex-col justify-center xl:flex-row lg:w-1/3 xl:w-2/4 2xl:space-x-3 xl:-ml-1'>
+            <div className='lg:w-11/12 sm:ml-2 sm:mt-2 xl:mb-4'>
+              <div className='bg-white py-3 sm:p-3 flex items-center justify-around sm:block rounded-lg transition duration-500 ease-in-out hover:shadow-md mb-4 sm:m-0'>
+                <div className='overflow-hidden rounded-lg sm:mb-4 h-full w-1/2 sm:w-3/4 lg:w-full'>
                   <img
                     src={sortedBooks[0].image}
                     alt={sortedBooks[0].title}
                     className='w-full h-full object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
                   />
                 </div>
-                <h2 className='text-xl font-bold mb-2'>{sortedBooks[0].title}</h2>
-                <p className='text-gray-600 mb-2'>{sortedBooks[0].author}</p>
-                <div className='flex items-center mb-2'>
-                  <div className='text-yellow-500 mr-2'>★★★★★</div>
-                  <span className='text-gray-600'>{sortedBooks[0].rating}</span>
+                <div className="w-1/3 sm:w-full">
+                  <h2 className='text-xl font-bold mb-2'>{sortedBooks[0].title}</h2>
+                  <p className='text-gray-600 mb-2'>{sortedBooks[0].author}</p>
+                  <div className='flex items-center mb-2'>
+                    <div className='text-yellow-500 mr-2'>★★★★★</div>
+                    <span className='text-gray-600'>{sortedBooks[0].rating}</span>
+                  </div>
+                  <p className='m-0 text-red-500 text-lg font-bold'>{sortedBooks[0].price}</p>
                 </div>
-                <p className='text-red-500 text-lg font-bold'>{sortedBooks[0].price}</p>
               </div>
             </div>
-            <div className='jamb bg-slate-200 w-px h-3/4'></div>
-            <div className='w-1/2'>
-              <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md mb-4'>
-                <div className='overflow-hidden rounded-lg mb-4 h-full'>
+            <div className='sm:hidden jamb bg-slate-200 w-px h-3/4'></div>
+            <div className='lg:w-11/12 sm:ml-2 xl:mt-2 xl:ml-1'>
+              <div className='bg-white py-3 sm:p-3 flex items-center justify-around sm:block rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'>
+                <div className='overflow-hidden rounded-lg sm:mb-4 h-full w-1/2 sm:w-3/4 lg:w-full'>
                   <img
                     src={sortedBooks[1].image}
                     alt={sortedBooks[1].title}
                     className='w-full h-full object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
                   />
                 </div>
-                <h2 className='text-lg font-bold mb-2'>{sortedBooks[1].title}</h2>
-                <p className='text-gray-600 mb-2'>{sortedBooks[1].author}</p>
-                <div className='flex items-center mb-2'>
-                  <div className='text-yellow-500 mr-2'>★★★★★</div>
-                  <span className='text-gray-600'>{sortedBooks[1].rating}</span>
+                <div className="w-1/3 sm:w-full">
+                  <h2 className='text-xl font-bold mb-2'>{sortedBooks[1].title}</h2>
+                  <p className='text-gray-600 mb-2'>{sortedBooks[1].author}</p>
+                  <div className='flex items-center mb-2'>
+                    <div className='text-yellow-500 mr-2'>★★★★★</div>
+                    <span className='text-gray-600'>{sortedBooks[1].rating}</span>
+                  </div>
+                  <p className='m-0 text-red-500 text-lg font-bold'>{sortedBooks[1].price}</p>
                 </div>
-                <p className='text-red-500 text-lg font-bold'>{sortedBooks[1].price}</p>
               </div>
             </div>
           </div>
 
-          <div className='w-1/4'>
+          <div className='hidden lg:block w-1/4 lg:w-1/3 xl:w-1/4'>
             {sortedBooks.slice(6, 10).map((book) => (
               <div key={book.title} className='mt-2'>
                 <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-lg mb-3'>

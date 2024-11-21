@@ -22,7 +22,7 @@ export default function Home() {
       <TopVendor />
       <FavouriteBook />
       <DiscountBanners />
-      <TopVendor />
+      {/* <TopVendor /> */}
       <Trending />
       <Bestseller />
       <Post />
