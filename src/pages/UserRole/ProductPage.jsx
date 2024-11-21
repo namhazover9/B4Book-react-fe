@@ -207,7 +207,7 @@ export default function ProductPage() {
   const [selectedAuthors, setSelectedAuthors] = useState([]);
   const [filterBooks, setFilterBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [priceRange, setPriceRange] = useState([0, 50]);
+  const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
   const booksPerPage = 8;
 
@@ -321,27 +321,31 @@ export default function ProductPage() {
 
   const filterBooksList = (categories, authors, price = priceRange) => {
     const filteredBooks = bookList.filter((book) => {
-      console.log(book);
+      
+      // Kiểm tra Category
       const categoryMatch = categories.length
         ? categories.some((category) => {
-          return book.category.includes(category);
-        })
+            return Array.isArray(book.category)
+              ? book.category.some((cat) => cat.includes(category))
+              : book.category.includes(category);
+          })
         : true;
-
-      console.log(categoryMatch);
-
+  
+      // Kiểm tra Author
       const authorMatch = authors.length ? authors.includes(book.author) : true;
-
+  
+      // Kiểm tra Price
       const priceMatch = book.price >= price[0] && book.price <= price[1];
-
+  
       return categoryMatch && authorMatch && priceMatch;
     });
-
-    console.log(filteredBooks);
-
+  
+    console.log('Filtered Books:', filteredBooks);
+  
     setFilterBooks(filteredBooks);
     setCurrentPage(1);
   };
+  
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -437,7 +441,7 @@ export default function ProductPage() {
               <Slider
                 range
                 defaultValue={priceRange}
-                max={50}
+                max={200000}
                 onChange={handleSliderChange}
                 onChangeComplete={handleSliderAfterChange}
                 disabled={disabled}
