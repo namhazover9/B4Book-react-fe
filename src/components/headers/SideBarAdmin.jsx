@@ -92,7 +92,7 @@ export default function SideBarAdmin() {
     return (
         <div className='flex h-screen select-none'>
             <div
-                className={`transition-all duration-500 ease-in-out ${collapsed ? 'w-16' : 'w-64'
+                className={`transition-all duration-200 ease-in-out ${collapsed ? 'w-16' : 'w-64'
                     }`}
             >
                 <Button
@@ -112,9 +112,10 @@ export default function SideBarAdmin() {
                 />
             </div>
             <div
-                className={`flex-1 transition-all duration-400 ease-in-out ${collapsed ? 'ml-4' : 'ml-18'
+                className={`flex-1 transition-all duration-200 ease-in-out ${collapsed ? 'ml-4' : 'ml-18'
                     }`}
             >
+
             </div>
 
 

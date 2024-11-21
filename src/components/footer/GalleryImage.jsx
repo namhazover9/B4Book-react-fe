@@ -49,7 +49,7 @@ function ImageGallery() {
             key={index}
             src={image.src}
             alt={image.alt}
-            className="cursor-pointer hover:scale-90 transition-all ease-in-out duration-300 w-1/6"
+            className="cursor-pointer transition-all ease-in-out duration-300 w-1/6"
           />
         ))}
       </div>
