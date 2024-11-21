@@ -15,14 +15,12 @@ export default function Home() {
   // testBackendConnection();
   return (
     <div className="flex flex-col gap-y-4">
-      {/*       
+
       <BannerSlider />
       <CategorySlider />
       <DiscountBanners />
       <TopVendor />
-      <FavouriteBook /> */}
-      <DiscountBanners />
-      <TopVendor />
+      <FavouriteBook />
       <Trending />
       <Bestseller />
       <Post />
