@@ -9,47 +9,18 @@ const LoginPage = () => {
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    passWord: ""
+    passWord: "",
   });
-  localStorage.setItem("verifyToken", formData.email);
   const handleGoogleLogin = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/google`,
-        {
-          method: "GET",
-          // credentials: "include" // Đảm bảo cookie được gửi cùng request nếu có
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const { verifyToken, message } = data;
-
-        // Lưu verifyToken vào localStorage
-        localStorage.setItem("verifyToken", verifyToken);
-
-        console.log(message); // Log thông báo từ server
-        setSuccess(true);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Có lỗi xảy ra khi đăng nhập.");
-      }
-    } catch (error) {
-      console.error("Đăng nhập thất bại:", error);
-      setError("Không thể kết nối tới server.");
-    }
-  };
-
-  const handleFacebookLogin = async () => {
-    try {
-      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/facebook`;
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
       console.log("Đăng nhập thành công");
       // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
     } catch (error) {
       console.error("Đăng nhập thất bại:", error);
     }
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -116,8 +87,7 @@ const LoginPage = () => {
         </a>
       </div>
       <div className="flex items-center justify-center space-x-4 mt-4">
-        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
-        onClick={handleFacebookLogin}>
+        <button className="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition">
           <FacebookOutlined className="text-blue-600 mr-2" />
           Login with Facebook
         </button>
