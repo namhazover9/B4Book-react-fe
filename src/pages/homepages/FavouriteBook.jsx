@@ -1,14 +1,14 @@
 import pic1 from '../../assets/images/BestSelling/32.jpg';
 import pic2 from '../../assets/images/BestSelling/33.jpg';
-import pic3 from '../../assets/images/FavouriteBook/26.jpg';
-import pic4 from '../../assets/images/FavouriteBook/27.jpg';
-import pic5 from '../../assets/images/FavouriteBook/30.jpg';
+import pic3 from '../../assets/images/BestSelling/28.jpg';
+import pic4 from '../../assets/images/BestSelling/28.jpg';
+import pic5 from '../../assets/images/BestSelling/28.jpg';
 import pic6 from '../../assets/images/BestSelling/29.jpg';
-import pic7 from '../../assets/images/FavouriteBook/31.jpg';
+import pic7 from '../../assets/images/BestSelling/28.jpg';
 import pic8 from '../../assets/images/BestSelling/28.jpg';
-import pic9 from '../../assets/images/FavouriteBook/34.jpg';
-import pic10 from '../../assets/images/FavouriteBook/35.jpg';
-import pic11 from '../../assets/images/FavouriteBook/36.jpg';
+import pic9 from '../../assets/images/BestSelling/28.jpg';
+import pic10 from '../../assets/images/BestSelling/28.jpg';
+import pic11 from '../../assets/images/BestSelling/28.jpg';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
 const favouriteBooks = [
