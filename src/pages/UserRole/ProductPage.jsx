@@ -1,216 +1,37 @@
 import React, { useState } from 'react';
-import { BarsOutlined, QrcodeOutlined, ReadOutlined, UserOutlined } from '@ant-design/icons';
+import { BarsOutlined, EyeOutlined, HeartOutlined, QrcodeOutlined, ReadOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
-
-import pic1 from '../../assets/images/BestSelling/32.jpg';
-import pic2 from '../../assets/images/BestSelling/33.jpg';
-import pic3 from '../../assets/images/FavouriteBook/26.jpg';
-import pic4 from '../../assets/images/FavouriteBook/27.jpg';
-import pic5 from '../../assets/images/FavouriteBook/30.jpg';
-import pic6 from '../../assets/images/BestSelling/29.jpg';
-import pic7 from '../../assets/images/FavouriteBook/31.jpg';
-import pic8 from '../../assets/images/BestSelling/28.jpg';
-import pic9 from '../../assets/images/FavouriteBook/34.jpg';
-import pic10 from '../../assets/images/FavouriteBook/35.jpg';
-import pic11 from '../../assets/images/FavouriteBook/36.jpg';
-import bookNotImage from '../../assets/images/FavouriteBook/VuHoangNam.jpg';
-
-const book_list = [
-  {
-    title: 'The Great Gatsby',
-    description: 'A novel about the American dream',
-    price: 45.99,
-    author: 'F. Scott Fitzgerald',
-    publisher: 'Scribner',
-    ISBN: 9780743273565,
-    language: 'English',
-    publicDate: '2004-09-30',
-    stock: 120,
-    imageUrl: pic1,
-    category: ['Classic', 'Fiction'],
-  },
-  {
-    title: 'To Kill a Mockingbird',
-    description: 'A story about racial inequality and moral growth',
-    price: 20.99,
-    author: 'Harper Lee',
-    publisher: 'J.B. Lippincott & Co.',
-    ISBN: 9780061120084,
-    language: 'English',
-    publicDate: '1960-07-11',
-    stock: 80,
-    imageUrl: pic2,
-    category: ['Classic', 'Historical', 'Drama'],
-  },
-  {
-    title: '1984',
-    description: 'A dystopian social science fiction novel',
-    price: 29.99,
-    author: 'George Orwell',
-    publisher: 'Secker & Warburg',
-    ISBN: 9780451524935,
-    language: 'English',
-    publicDate: '1949-06-08',
-    stock: 150,
-    imageUrl: pic3,
-    category: ['Dystopian', 'Classic', 'Political Fiction'],
-  },
-  {
-    title: 'Pride and Prejudice',
-    description: 'A romantic novel that critiques the British landed gentry',
-    price: 9.99,
-    author: 'Jane Austen',
-    publisher: 'T. Egerton, Whitehall',
-    ISBN: 9780141199078,
-    language: 'English',
-    publicDate: '1813-01-28',
-    stock: 100,
-    imageUrl: pic4,
-    category: ['Classic', 'Romance'],
-  },
-  {
-    title: 'Moby Dick',
-    description: 'A novel about the voyage of the whaling ship Pequod',
-    price: 8.5,
-    author: 'Herman Melville',
-    publisher: 'Harper & Brothers',
-    ISBN: 9781503280786,
-    language: 'English',
-    publicDate: '1851-10-18',
-    stock: 50,
-    imageUrl: pic5,
-    category: ['Adventure', 'Classic'],
-  },
-  {
-    title: 'The Catcher in the Rye',
-    description: 'A story about adolescent alienation and rebellion',
-    price: 12.09,
-    author: 'J.D. Salinger',
-    publisher: 'Little, Brown and Company',
-    ISBN: 9780316769488,
-    language: 'English',
-    publicDate: '1951-07-16',
-    stock: 90,
-    imageUrl: pic5,
-    category: ['Classic', 'Young Adult'],
-  },
-  {
-    title: 'War and Peace',
-    description: 'A historical novel that intertwines stories of several families',
-    price: 19.99,
-    author: 'Leo Tolstoy',
-    publisher: 'The Russian Messenger',
-    ISBN: 9781853260629,
-    language: 'English',
-    publicDate: '1869-01-01',
-    stock: 60,
-    imageUrl: pic7,
-    category: ['Classic', 'Historical'],
-  },
-  {
-    title: 'The Hobbit',
-    description: 'A fantasy novel and prelude to The Lord of the Rings',
-    price: 14.99,
-    author: 'J.R.R. Tolkien',
-    publisher: 'George Allen & Unwin',
-    ISBN: 9780547928227,
-    language: 'English',
-    publicDate: '1937-09-21',
-    stock: 200,
-    imageUrl: pic8,
-    category: ['Fantasy', 'Adventure'],
-  },
-  {
-    title: 'Jane Eyre',
-    description: 'A novel following the experiences of its eponymous heroine',
-    price: 10.5,
-    author: 'Charlotte Brontë',
-    publisher: 'Smith, Elder & Co.',
-    ISBN: 9780141441146,
-    language: 'English',
-    publicDate: '1847-10-16',
-    stock: 75,
-    imageUrl: pic9,
-    category: ['Classic', 'Romance'],
-  },
-  {
-    title: 'The Odyssey',
-    description: 'An epic poem attributed to Homer',
-    price: 13.0,
-    author: 'Homer',
-    publisher: 'Ancient Greece',
-    ISBN: 9780140268867,
-    language: 'English',
-    publicDate: '-800-01-01',
-    stock: 130,
-    imageUrl: pic10,
-    category: ['Epic', 'Classic', 'Mythology'],
-  },
-  {
-    title: 'Brave New World',
-    description: 'A dystopian novel that explores futuristic society',
-    price: 12.49,
-    author: 'Aldous Huxley',
-    publisher: 'Chatto & Windus',
-    ISBN: 9780060850524,
-    language: 'English',
-    publicDate: '1932-08-01',
-    stock: 95,
-    imageUrl: pic4,
-    category: ['Dystopian', 'Science Fiction', 'Classic'],
-  },
-  {
-    title: 'Wuthering Heights',
-    description: 'A story of intense, tragic love',
-    price: 10.99,
-    author: 'Emily Brontë',
-    publisher: 'Thomas Cautley Newby',
-    ISBN: 9780141439556,
-    language: 'English',
-    publicDate: '1847-12-01',
-    stock: 85,
-    imageUrl: pic11,
-    category: ['Classic', 'Romance', 'Drama'],
-  },
-  {
-    title: 'Great Expectations',
-    description: 'The story of an orphan named Pip',
-    price: 8.5,
-    author: 'Charles Dickens',
-    publisher: 'Chapman & Hall',
-    ISBN: 9780141439563,
-    language: 'English',
-    publicDate: '1861-08-01',
-    stock: 110,
-    imageUrl: pic7,
-    category: ['Classic', 'Bildungsroman'],
-  },
-  {
-    title: 'Frankenstein',
-    description:
-      "A story about the consequences of scientific overreach. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-    price: 9.99,
-    author: 'J.R.R. Tolkien 99999999999999999999999999999999999999',
-    publisher: 'Lackington, Hughes, Harding, Mavor & Jones',
-    ISBN: 9780486282114,
-    language: 'English',
-    publicDate: '1818-01-01',
-    stock: 140,
-    imageUrl: undefined,
-    category: ['Classic', 'Horror', 'Science Fiction 99999999999999999999999999999999'],
-  },
-];
+import { useEffect } from 'react';
 
 export default function ProductPage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAuthors, setSelectedAuthors] = useState([]);
-  const [filterBooks, setFilterBooks] = useState(book_list);
+  const [filterBooks, setFilterBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [priceRange, setPriceRange] = useState([0, 50]);
+  const [priceRange, setPriceRange] = useState([0, 200000]);
+  const [bookList, setBookList] = useState([]);
   const booksPerPage = 8;
 
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch("https://b4book-node-be.onrender.com/products/");
+        if (!response.ok) {
+          throw new Error("Failed to fetch books");
+        }
+        const data = await response.json();
+        setBookList(data);
+        setFilterBooks(data);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
   // Filter Category
-  const uniqueCategories = book_list.reduce((categories, book) => {
+  const uniqueCategories = bookList.reduce((categories, book) => {
     book.category.forEach((cat) => {
       if (!categories.includes(cat)) {
         categories.push(cat);
@@ -242,7 +63,7 @@ export default function ProductPage() {
   ];
 
   // Filter Author
-  const uniqueAuthors = book_list.reduce((authors, book) => {
+  const uniqueAuthors = bookList.reduce((authors, book) => {
     if (!authors.includes(book.author)) {
       authors.push(book.author);
     }
@@ -300,21 +121,32 @@ export default function ProductPage() {
   };
 
   const filterBooksList = (categories, authors, price = priceRange) => {
-    const filteredBooks = book_list.filter((book) => {
+    const filteredBooks = bookList.filter((book) => {
+
+      // Kiểm tra Category
       const categoryMatch = categories.length
-        ? categories.some((category) => book.category.includes(category))
+        ? categories.some((category) => {
+          return Array.isArray(book.category)
+            ? book.category.some((cat) => cat.includes(category))
+            : book.category.includes(category);
+        })
         : true;
 
+      // Kiểm tra Author
       const authorMatch = authors.length ? authors.includes(book.author) : true;
 
+      // Kiểm tra Price
       const priceMatch = book.price >= price[0] && book.price <= price[1];
 
       return categoryMatch && authorMatch && priceMatch;
     });
 
+    console.log('Filtered Books:', filteredBooks);
+
     setFilterBooks(filteredBooks);
     setCurrentPage(1);
   };
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -410,9 +242,9 @@ export default function ProductPage() {
               <Slider
                 range
                 defaultValue={priceRange}
-                max={50}
+                max={200000}
                 onChange={handleSliderChange}
-                onAfterChange={handleSliderAfterChange}
+                onChangeComplete={handleSliderAfterChange}
                 disabled={disabled}
               />
               <div className='flex justify-between mt-2'>
@@ -513,9 +345,9 @@ export default function ProductPage() {
                   </h2>
                 </div>
               ) : (
-                <div className='grid grid-cols-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
                   {currentBooks.map((book, index) => {
-                    const imageUrl = book.imageUrl ? book.imageUrl : bookNotImage;
+                    const imageUrl = book.images[0] ? book.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
 
                     return (
                       <div className='flex justify-between items-center' key={index}>
@@ -523,15 +355,31 @@ export default function ProductPage() {
                           id={index}
                           className='bg-white w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md mb-4'
                         >
-                          <div className='overflow-hidden rounded-lg mb-4'>
+                          <div className='relative group overflow-hidden rounded-lg mb-4'>
                             <img
                               src={imageUrl}
                               alt={book.title}
-                              className='w-full h-auto object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
+                              className='w-full h-96 object-cover'
                             />
+                            <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                              <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
+                                <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
+                                  <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                                <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
+                                  <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                                <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
+                                  <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <p className='text-xl font-bold mb-2 truncate'>{book.title}</p>
-                          <p className='text-gray-600 mb-2 truncate'>{book.author}</p>
+                          <p className='text-2xl font-bold mb-2 truncate'>{book.title}</p>
+                          <div className="flex justify-between mb-2 items-center mr-5">
+                            <p className='text-lg text-gray-600 truncate'>{book.author}</p>
+                            <p className='text-md text-gray-600 italic truncate'>{book.category}</p>
+                          </div>
                           <div className='flex items-center mb-2'>
                             <div className='text-yellow-500 mr-2'>★★★★★</div>
                             <span className='text-gray-600 truncate'>{book.stock}</span>
@@ -556,7 +404,7 @@ export default function ProductPage() {
               ) : (
                 <div className='flex flex-col'>
                   {currentBooks.map((book, index) => {
-                    const imageUrl = book.imageUrl ? book.imageUrl : bookNotImage;
+                    const imageUrl = book.images[0] ? book.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
 
                     return (
                       <div className='mx-6'>
@@ -564,12 +412,26 @@ export default function ProductPage() {
                           className='flex items-center w-3/4 rounded-lg transition-all hover:shadow-md duration-500 ease-in-out'
                           key={index}
                         >
-                          <div className='overflow-hidden w-1/3 m-3'>
+                          <div className='relative group overflow-hidden w-1/3 m-3'>
                             <img
                               src={imageUrl}
                               alt={book.title}
-                              className='w-full h-auto object-cover transform transition-transform duration-500 ease-in-out hover:scale-105 rounded-lg'
+                              // className='w-full h-auto object-cover transform transition-transform duration-500 ease-in-out hover:scale-105 rounded-lg'
+                              className='w-full h-auto object-cover'
                             />
+                            <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                              <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
+                                <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
+                                  <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                                <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
+                                  <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                                <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
+                                  <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                           <div id={index} className='w-3/4 ml-2 flex flex-col justify-center'>
                             <p className='text-xl font-bold mb-2 truncate'>{book.title}</p>

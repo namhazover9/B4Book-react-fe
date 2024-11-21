@@ -18,4 +18,10 @@ export default {
       // Add more aliases as needed
     ],
   },
+  proxy: {
+    '/': {
+      target: 'http://localhost:8000',
+      changeOrigin: true,
+    },
+  },
 };
