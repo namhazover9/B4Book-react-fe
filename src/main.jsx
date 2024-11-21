@@ -1,21 +1,22 @@
 import AppRoutes from '@routes/AppRoutes';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 import '@styles/index.css';
+import { Provider } from 'react-redux';
 import { LocalizationProvider } from './context/LocalizationWrapper';
+import configStore from './configs/configureStore';
 
-const queryClient = new QueryClient();
+const store = configStore();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <LocalizationProvider>
+    <LocalizationProvider>
+      <Provider store={store}>
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
-      </LocalizationProvider>
-    </QueryClientProvider>
+      </Provider>
+    </LocalizationProvider>
   </React.StrictMode>,
 );

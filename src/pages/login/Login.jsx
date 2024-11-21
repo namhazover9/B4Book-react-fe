@@ -1,103 +1,170 @@
-import { useState } from 'react';
-import { FacebookOutlined, GoogleOutlined } from '@ant-design/icons';
-import { userAPI } from '../../hooks/useLogin'; // Đảm bảo đường dẫn đúng
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+import { Button, message, Tooltip } from 'antd';
+import { FastField, Form, Formik } from 'formik';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import authReducers from '../../reducers/auth';
 
-const LoginPage = () => {
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [formData, setFormData] = useState({
+import CheckboxField from '../../components/Field/CheckboxField';
+import InputField from '../../components/Field/InputField';
+import LoginGoogle from '../../components/LoginGoogle';
+import constants from '../../constants/constants';
+import loginApi from '../../hooks/useLogin';
+
+function Login() {
+  const navigate = useNavigate();
+  const windowWidth = window.screen.width;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisableLogin, setIsDisableLogin] = useState(false);
+  const dispatch = useDispatch();
+
+  // Xử lý khi đăng nhập thành công
+  const onLoginSuccess = async (data) => {
+    try {
+      setIsSubmitting(false);
+      message.success('Đăng nhập thành công');
+      localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
+      if (process.env.NODE_ENV === 'production')
+        localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      dispatch(authReducers.setIsAuth(true));
+      setTimeout(() => {
+        navigate(-1);
+      }, constants.DELAY_TIME);
+    } catch (error) {
+      message.error('Lỗi đăng nhập.');
+    }
+  };
+
+  // Đăng nhập
+  const onLogin = async (account) => {
+    try {
+      setIsSubmitting(true);
+      const result = await loginApi.postLogin({ account });
+      if (result.status === 200) {
+        onLoginSuccess(result.data);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      if (error.response) {
+        const { failedLoginTimes } = error.response.data;
+        const messageError = error.response.data.message;
+        if (failedLoginTimes >= constants.MAX_FAILED_LOGIN_TIMES) {
+          message.error(
+            'Vượt quá số lần đăng nhập.\nKiểm tra email hoặc nhấn "Quên mật khẩu"',
+            4,
+          );
+          setIsDisableLogin(true);
+        } else {
+          message.error(messageError);
+        }
+      } else {
+        message.error('Đăng nhập thất bại');
+      }
+    }
+  };
+
+  // Giá trị khởi tạo cho Formik
+  const initialValue = {
     email: '',
-    passWord: '',
+    password: '',
+    keepLogin: false,
+  };
+
+  // Xác thực form bằng Yup
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .trim()
+      .required('* Email bạn là gì ?')
+      .email('* Email không hợp lệ !'),
+    password: Yup.string()
+      .trim()
+      .required('* Mật khẩu của bạn là gì ?'),
   });
-  const handleGoogleLogin = async () => {
-    try {
-      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
-      console.log('Đăng nhập thành công');
-      // Thực hiện thêm, ví dụ: lưu thông tin người dùng hoặc chuyển hướng
-    } catch (error) {
-      console.error('Đăng nhập thất bại:', error);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const loginUser = async () => {
-    try {
-      const response = await userAPI.loginUser({
-        email: formData.email,
-        passWord: formData.passWord,
-      });
-
-      setSuccess(true);
-      setError(null);
-
-      console.log('API Response:', response.data);
-      console.log('ABC: ', formData.email, formData.passWord);
-      window.alert(response?.data?.message);
-    } catch (error) {
-      setSuccess(false);
-      setError('Login failed');
-      window.alert(error.response?.data?.message || 'Error login');
-      console.error('API Error:', error);
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await loginUser();
-  };
 
   return (
-    <div className='flex flex-col items-center justify-center'>
-      <h1 className='text-2xl font-bold mb-4'>Login to BigFour Books</h1>
-      <form className='space-y-4 w-full max-w-sm' onSubmit={handleSubmit}>
-        <input
-          type='text'
-          name='email'
-          placeholder='Username'
-          onChange={handleChange}
-          className='w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none'
-        />
-        <input
-          type='password'
-          name='passWord'
-          placeholder='Password'
-          onChange={handleChange}
-          className='w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none'
-        />
-        <button
-          type='submit'
-          className='w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition'
-        >
-          Login
-        </button>
-      </form>
-      <div className='mt-4 text-sm text-gray-500'>
-        <a href='#' className='text-red-500 hover:underline'>
-          Forgot Password?
-        </a>
-      </div>
-      <div className='flex items-center justify-center space-x-4 mt-4'>
-        <button className='flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition'>
-          <FacebookOutlined className='text-blue-600 mr-2' />
-          Login with Facebook
-        </button>
-        <button
-          onClick={handleGoogleLogin}
-          className='flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition'
-        >
-          <GoogleOutlined className='text-red-600 mr-2' />
-          Login with Google
-        </button>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h1 className="text-xl font-bold underline underline-offset-4 mb-5">Đăng nhập</h1>
+      <Formik
+        initialValues={initialValue}
+        validationSchema={validationSchema}
+        onSubmit={onLogin}>
+        {(formikProps) => {
+          const suffixColor = 'rgba(0, 0, 0, 0.25)';
+          return (
+            <Form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+              <div className="mb-4">
+                <FastField
+                  name="email"
+                  component={InputField}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  placeholder="Email *"
+                  size="large"
+                  suffix={
+                    <Tooltip title="Email của bạn">
+                      <InfoCircleOutlined
+                        style={{
+                          color: suffixColor,
+                        }}
+                      />
+                    </Tooltip>
+                  }
+                />
+              </div>
+              <div className="mb-4">
+                <FastField
+                  name="password"
+                  component={InputField}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  type="password"
+                  placeholder="Mật khẩu *"
+                  size="large"
+                  autocomplete="on"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <FastField name="keepLogin" component={CheckboxField}>
+                  <b>Duy trì đăng nhập</b>
+                </FastField>
+                <Link
+                  to={constants.ROUTES.FORGOT_PASSWORD}
+                  className="text-blue-500 font-medium">
+                  <b>Quên mật khẩu ?</b>
+                </Link>
+              </div>
+              <Button
+                className="w-full py-2 mb-4 bg-blue-500 text-white rounded-lg"
+                size="large"
+                type="primary"
+                htmlType="submit"
+                disabled={isDisableLogin}
+                loading={isSubmitting}>
+                Đăng nhập
+              </Button>
+              <div className="text-center text-gray-500 mb-4">HOẶC</div>
+              <LoginGoogle
+                title={windowWidth > 375 ? 'Đăng nhập với Gmail' : 'Gmail'}
+              />
+              <div className="text-center mt-4">
+                Bạn chưa có tài khoản?
+                <Link to={constants.ROUTES.SIGNUP} className="text-blue-500 ml-1">
+                  Đăng ký
+                </Link>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
-};
+}
 
-export default LoginPage;
+export default Login;

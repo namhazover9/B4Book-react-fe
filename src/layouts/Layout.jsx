@@ -16,7 +16,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
-import Login from '../pages/login/Login';
+import LoginPage from '../components/modallogin/Login';
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
@@ -240,7 +240,7 @@ export default function Layout({ children }) {
             >
               ✕
             </button>
-            <Login />
+            <LoginPage />
           </div>
         </div>
       )}

@@ -1,11 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import { Button, Carousel } from 'antd';
-import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import pic1 from '../../assets/images/BestSelling/20.jpg';
+import { Carousel } from 'antd';
+import { Eye, Heart, ShoppingCart } from 'lucide-react';
+import { default as pic1, default as pic4 } from '../../assets/images/BestSelling/20.jpg';
 import pic2 from '../../assets/images/BestSelling/21.jpg';
 import pic3 from '../../assets/images/BestSelling/24.jpg';
-import pic4 from '../../assets/images/BestSelling/20.jpg';
 import pic5 from '../../assets/images/BestSelling/25.jpg';
 import pic6 from '../../assets/images/BestSelling/26.jpg';
 import pic7 from '../../assets/images/BestSelling/27.jpg';
