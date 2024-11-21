@@ -20,8 +20,6 @@ export default function Home() {
       <DiscountBanners />
       <TopVendor />
       <FavouriteBook />
-      <DiscountBanners />
-      <TopVendor />
       <Trending />
       <Bestseller />
       <Post />

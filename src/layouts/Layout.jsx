@@ -129,9 +129,9 @@ export default function Layout({ children }) {
               <Button onClick={toggleLoginPopup} ref={dropdownRef}>
                 Login
               </Button>
-              <a href='#' className=''>
+              <Link to='/cart' className='hover:text-red-500'>
                 <ShoppingCartOutlined className='text-2xl hover:text-red-500' />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function Layout({ children }) {
           </div>
 
           {/* Main Navigation */}
-          <nav className='flex space-x-8 text-base font-medium'>
+          {/* <nav className='flex space-x-8 text-base font-medium'>
             {['Home', 'Shop', 'Books', 'Pages', 'Blog', 'Contact'].map((item, index) => (
               <a
                 key={index}
@@ -194,6 +194,24 @@ export default function Layout({ children }) {
                 className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
               >
                 <Translate text={item} />
+              </a>
+            ))}
+          </nav> */}
+          <nav className='flex space-x-8 text-base font-medium'>
+            {[
+              { name: 'Home', path: '/' },
+              { name: 'Shop', path: 'products' },
+              { name: 'Books', path: '/' },
+              { name: 'Pages', path: '/' },
+              { name: 'Blog', path: '/' },
+              { name: 'Contact', path: '/' },
+            ].map((item, index) => (
+              <a
+                key={index}
+                href={item.path} // Sử dụng đường dẫn của từng mục
+                className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
+                <Translate text={item.name} />
               </a>
             ))}
           </nav>
