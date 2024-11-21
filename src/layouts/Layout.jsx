@@ -171,11 +171,12 @@ export default function Layout({ children }) {
                   <a
                     key={index}
                     href='#'
-                    className={`flex items-center px-4 py-2 text-sm ${
-                      category.active
-                        ? 'text-red-500 font-semibold bg-gray-50'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    } transition duration-300`}
+
+                    className={`flex items-center px-4 py-2 text-sm ${category.active
+                      ? 'text-red-500 font-semibold bg-gray-50'
+                      : 'text-gray-700 hover:bg-gray-100'
+                      } transition duration-300`}
+
                   >
                     <span className='mr-2'>{category.icon}</span>
                     {category.text}

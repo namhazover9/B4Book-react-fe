@@ -73,7 +73,9 @@ const CarouselComponent = () => {
   );
 
   return (
-    <div className='w-full mx-auto py-4 relative'>
+
+    <div className="w-full mx-auto py-4 relative mt-36">
+
       <Carousel
         ref={carouselRef}
         dots={false}
