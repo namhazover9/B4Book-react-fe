@@ -1,7 +1,6 @@
 import { HomeOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-
 const NotFoundPage = () => {
   useEffect(() => {
     document.title = '404 - Page Not Found';

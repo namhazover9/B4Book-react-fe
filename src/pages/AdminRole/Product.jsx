@@ -1,13 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Product = () => {
-
-
-    return (
-        <div className='flex gap-y-4' >
-            Product
-        </div>
-    );
+  return <div className='flex gap-y-4'>Product</div>;
 };
 
 export default Product;

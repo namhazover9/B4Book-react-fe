@@ -1,5 +1,3 @@
-import React from 'react';
-
 const logos = [
   {
     src: './src/assets/images/LogoShopBook/brand_1.svg',

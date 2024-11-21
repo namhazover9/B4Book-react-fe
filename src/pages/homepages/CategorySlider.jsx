@@ -54,7 +54,7 @@ const CarouselComponent = () => {
         resetAutoSlide();
         onClick();
       }}
-      className="absolute left-0 top-1/2 transform -translate-y-14 z-10 p-2 rounded-full hover:text-red-500 text-6xl"
+      className='absolute left-0 top-1/2 transform -translate-y-14 z-10 p-2 rounded-full hover:text-red-500 text-6xl'
     >
       ❮
     </button>
@@ -66,14 +66,16 @@ const CarouselComponent = () => {
         resetAutoSlide();
         onClick();
       }}
-      className="absolute right-0 top-1/2 transform -translate-y-14 z-10 p-2 rounded-full hover:text-red-500 text-6xl"
+      className='absolute right-0 top-1/2 transform -translate-y-14 z-10 p-2 rounded-full hover:text-red-500 text-6xl'
     >
       ❯
     </button>
   );
 
   return (
-    <div className="w-full mx-auto py-4 relative">
+
+    <div className="w-full mx-auto py-4 relative mt-36">
+
       <Carousel
         ref={carouselRef}
         dots={false}
@@ -81,7 +83,7 @@ const CarouselComponent = () => {
         arrows
         draggable
         slidesToShow={6}
-        className="overflow-hidden"
+        className='overflow-hidden'
         prevArrow={<CustomPrevArrow />}
         nextArrow={<CustomNextArrow />}
         beforeChange={resetAutoSlide}
@@ -117,17 +119,17 @@ const CarouselComponent = () => {
         ]}
       >
         {categories.map((category, index) => (
-          <div key={index} className="flex justify-center my-6 px-2 select-none py-6">
-            <div className="text-center">
-              <div className="relative group isolate">
-                <div className="absolute inset-0 rounded-full bg-gray-200 w-36 h-36 md:w-48 md:h-48 m-auto transition-all duration-500 group-hover:bg-red-500 group-hover:-translate-y-8 z-[-1] translate-y-4" />
+          <div key={index} className='flex justify-center my-6 px-2 select-none py-6'>
+            <div className='text-center'>
+              <div className='relative group isolate'>
+                <div className='absolute inset-0 rounded-full bg-gray-200 w-36 h-36 md:w-48 md:h-48 m-auto transition-all duration-500 group-hover:bg-red-500 group-hover:-translate-y-8 z-[-1] translate-y-4' />
                 <img
                   src={category.img}
                   alt={category.label}
-                  className="mx-auto w-40 h-40 md:w-48 md:h-48  object-cover transition-all duration-500 group-hover:-translate-y-4 cursor-pointer"
+                  className='mx-auto w-40 h-40 md:w-48 md:h-48  object-cover transition-all duration-500 group-hover:-translate-y-4 cursor-pointer'
                 />
               </div>
-              <p className="mt-2 md:mt-4 text-base md:text-lg font-semibold text-gray-800">
+              <p className='mt-2 md:mt-4 text-base md:text-lg font-semibold text-gray-800'>
                 {category.label}
               </p>
             </div>
