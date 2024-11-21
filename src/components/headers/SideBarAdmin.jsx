@@ -85,28 +85,40 @@ const items = [
 ];
 
 export default function SideBarAdmin() {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-  return (
-    <div className='flex h-screen select-none'>
-      <div className={`transition-all duration-500 ease-in-out ${collapsed ? 'w-16' : 'w-64'}`}>
-        <Button onClick={toggleCollapsed} className='mb-4'>
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </Button>
-        <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode='inline'
-          inlineCollapsed={collapsed}
-          items={items}
-          className='h-screen'
-        />
-      </div>
-      <div
-        className={`flex-1 transition-all duration-400 ease-in-out ${collapsed ? 'ml-4' : 'ml-18'}`}
-      ></div>
-    </div>
-  );
-}
+    const [collapsed, setCollapsed] = useState(false);
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
+    return (
+        <div className='flex h-screen select-none'>
+            <div
+                className={`transition-all duration-200 ease-in-out ${collapsed ? 'w-16' : 'w-64'
+                    }`}
+            >
+                <Button
+
+                    onClick={toggleCollapsed}
+                    className='mb-4'
+                >
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                </Button>
+                <Menu
+                    defaultSelectedKeys={['1']}
+                    defaultOpenKeys={['sub1']}
+                    mode="inline"
+                    inlineCollapsed={collapsed}
+                    items={items}
+                    className='h-screen'
+                />
+            </div>
+            <div
+                className={`flex-1 transition-all duration-200 ease-in-out ${collapsed ? 'ml-4' : 'ml-18'
+                    }`}
+            >
+
+            </div>
+
+
+        </div>
+    );
+};

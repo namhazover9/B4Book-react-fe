@@ -1,9 +1,9 @@
 import { apiClient } from "../ApiConfig/apiConfig";
 
 const userAPI = { 
-    loginUserGG: () => {
-      return apiClient.get("/auth/google/callback");
-    },
+    // loginUserGG: () => {
+    //   return apiClient.get("/auth/google/callback");
+    // },
 
     loginUserFB: () => {
       return apiClient.get("/auth/google/callback");
@@ -13,10 +13,7 @@ const userAPI = {
       return apiClient.post("/loginWithPassword", loginData);
     },
   };
-  
 
-
-export {
-  userAPI,
   
-};
+  
+export { userAPI };
