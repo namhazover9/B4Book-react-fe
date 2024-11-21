@@ -1,25 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import pic1 from '../../assets/images/BestSelling/32.jpg';
-import pic2 from '../../assets/images/BestSelling/33.jpg';
-import pic3 from '../../assets/images/BestSelling/9.jpg';
-import store1 from '../../assets/images/BestSelling/store-7.jpg';
 
-import pic4 from '../../assets/images/BestSelling/1.jpg';
-import pic5 from '../../assets/images/BestSelling/15.jpg';
-import pic6 from '../../assets/images/BestSelling/29.jpg';
-import store2 from '../../assets/images/BestSelling/store-8.jpg';
-
-import pic7 from '../../assets/images/BestSelling/4.jpg';
-import pic8 from '../../assets/images/BestSelling/28.jpg';
-import pic9 from '../../assets/images/BestSelling/21.jpg';
-import store3 from '../../assets/images/BestSelling/store-9.jpg';
-
-import pic10 from '../../assets/images/BestSelling/16.jpg';
-import pic11 from '../../assets/images/BestSelling/20.jpg';
-import pic12 from '../../assets/images/BestSelling/7.jpg';
-import store4 from '../../assets/images/BestSelling/store-5.jpg';
 
 const vendors = [
   {
@@ -28,7 +10,7 @@ const vendors = [
     products: 4,
     rating: 3,
     storeImage: store1,
-    images: [pic1, pic2, pic3],
+    images: ["https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180413/4_yi0red.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180420/33_yosj09.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180419/31_wdusoj.jpg"],
   },
   {
     id: 2,
@@ -36,7 +18,7 @@ const vendors = [
     products: 9,
     rating: 4,
     storeImage: store2,
-    images: [pic4, pic5, pic6],
+    images: ["https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180419/30_krapkw.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/29_jg8pks.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/28_bmjler.jpg"],
   },
   {
     id: 3,
@@ -44,7 +26,7 @@ const vendors = [
     products: 6,
     rating: 5,
     storeImage: store3,
-    images: [pic7, pic8, pic9],
+    images: ["https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180416/27_chngm3.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/25_zd6lvq.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/26_tonwdt.jpg"],
   },
   {
     id: 4,
@@ -52,7 +34,7 @@ const vendors = [
     products: 10,
     rating: 4,
     storeImage: store4,
-    images: [pic10, pic11, pic12],
+    images: ["https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/21_kjp6wa.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/20_txzybe.jpg", "https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180415/24_eih5ix.jpg"],
   },
 ];
 
