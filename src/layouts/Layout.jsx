@@ -96,15 +96,14 @@ export default function Layout({ children }) {
 
         <div className='w-full h-[0.5px] bg-gray-300'></div>
 
-        <div className='container mx-auto flex flex-wrap items-center justify-between px-4 sm:px-6 py-4'>
+        <div className='container mx-auto flex sm:flex-wrap flex-col sm:flex-row items-center justify-between px-4'>
           {/* Left side - Logo and main navigation */}
           <div
             className='flex items-center space-x-2 cursor-pointer'
-            onClick={handleLogoClick}
-          >
+            onClick={handleLogoClick}>
             {/* Logo */}
-            <img className='w-28 h-28' src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png' alt='Logo' />
-            <h2 className='text-4xl text-black font-bold m-0'>BigFour</h2>
+            <img className='sm:w-28 sm:h-28  w-20 h-20' src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png' alt='Logo' />
+            <h2 className='sm:text-4xl text-black font-bold m-0 text-2xl'>BigFour</h2>
           </div>
 
           {/* Search Bar */}
@@ -138,15 +137,15 @@ export default function Layout({ children }) {
           </div>
         </div>
 
-        <div className='w-full h-[0.5px] bg-gray-300'></div>
+        <div className='w-full h-[0.5px] bg-gray-300 sm: mt-4'></div>
 
         {/* Secondary navigation row */}
         <div className='flex flex-wrap justify-between px-4 sm:px-10 py-4 bg-gray-50 shadow-md border rounded-lg'>
           {/* Categories Dropdown */}
-          <div className='relative w-full sm:w-auto' ref={dropdownRef}>
+          <div className='relative w-full sm:w-auto mb-4 sm:mb-0 sm:flex' ref={dropdownRef}>
             <button
               ref={buttonRef} // Gán ref cho button
-              className='w-full sm:w-auto flex items-center bg-red-500 text-white font-semibold text-sm sm:text-lg px-4 sm:px-6 py-2 rounded-full shadow hover:bg-red-600 transition duration-300'
+              className='w-full sm:w-auto flex items-center justify-between bg-red-500 text-white font-semibold text-sm sm:text-lg px-4 sm:px-6 py-2 rounded-full shadow hover:bg-red-600 transition duration-300'
               onClick={toggleDropdown}
             >
               <MenuUnfoldOutlined className='text-xl sm:text-2xl mr-2' />
@@ -201,7 +200,7 @@ export default function Layout({ children }) {
             ))}
           </nav> */}
 
-          <nav className='w-full sm:w-auto flex flex-wrap justify-center space-x-2 sm:space-x-8 text-sm sm:text-base font-medium'>
+          <nav className='w-full flex items-center sm:w-auto flex flex-wrap justify-between space-x-2 sm:space-x-8 text-sm sm:text-base font-medium'>
             {[
               { name: 'Home', path: '/' },
               { name: 'Shop', path: 'products' },
@@ -221,13 +220,13 @@ export default function Layout({ children }) {
           </nav>
 
           {/* Contact Info */}
-          <div className='flex flex-wrap items-center space-x-4 mt-4 sm:mt-0'>
+          <div className='xl:flex items-center space-x-4 mt-4 sm:mt-0 hidden sm:block '>
             <Tooltip title='Call Us' placement='bottom'>
               <a href='#' className='text-gray-600 hover:text-red-500 transition duration-300'>
                 <PhoneOutlined className='text-lg sm:text-2xl' />
               </a>
             </Tooltip>
-            <div className='flex flex-col items-start'>
+            <div className='flex flex-col items-start '>
               <span className='text-sm sm:text-lg font-semibold'>Contact Us</span>
               <span className='text-xs sm:text-sm'>Call: 123-456-789</span>
             </div>
