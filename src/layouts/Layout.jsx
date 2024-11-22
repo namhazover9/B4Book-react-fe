@@ -7,10 +7,6 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import Footer from "../components/footer/Footer";
-import GalleryImage from "../components/footer/GalleryImage";
-import LogoGallery from "../components/footer/LogoGallery";
-import LogoShopBook from "../components/footer/LogoShopbook";
-import Banner from "../components/footer/Banner";
 import { Button, Select, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
@@ -227,10 +223,6 @@ export default function Layout({ children }) {
         </div>
       )}
       {children}
-      <LogoShopBook />
-      <Banner/>
-      <GalleryImage />
-      <LogoGallery />
       <Footer />
     </div>
   );
