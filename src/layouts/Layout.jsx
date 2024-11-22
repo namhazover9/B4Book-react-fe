@@ -1,54 +1,36 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-  DownOutlined,
-  MenuUnfoldOutlined,
-  PhoneOutlined,
-  SearchOutlined,
-  ShoppingCartOutlined,
-} from '@ant-design/icons';
+import { useState } from 'react';
+import { MenuUnfoldOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
 import GalleryImage from '../components/footer/GalleryImage';
 import LogoGallery from '../components/footer/LogoGallery';
 import LogoShopBook from '../components/footer/LogoShopbook';
 import Banner from '../components/footer/Banner';
-import { Button, Select, Tooltip } from 'antd';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import LoginPage from '../components/modallogin/Login';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
-import LoginPage from '../components/modallogin/Login';
+
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current path
-  const handleChange = (value) => {
-    switchLocale(value);
-  };
+  const location = useLocation();
+
   const toggleLoginPopup = () => {
     setIsLoginPopupOpen(!isLoginPopupOpen);
   };
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prevState) => !prevState);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
+
+  const handleChange = (value) => {
+    switchLocale(value);
+  };
+
   const menuItems = [
     { name: 'Home', path: '/' },
     { name: 'Shop', path: '/products' },
@@ -57,92 +39,122 @@ export default function Layout({ children }) {
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
+
   return (
     <div className='font-cairoRegular'>
       <header className='bg-white shadow-md w-full'>
-        {/* Top Row - Navigation Links */}
-        <div className='text-base sm:text-lg md:text-xl lg:text-2xl'>
-          <div className='container mx-auto flex flex-wrap justify-between px-4 sm:px-6 py-2 text-sm text-gray-600'>
-            <div className='flex flex-wrap space-x-4'>
-              <Link
-                to='/aboutus'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                About Us
-              </Link>
-              <a
-                href='#'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                My Account
-              </a>
-              <a
-                href='#'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                Wishlist
-              </a>
-              <a href='#' className='hover:text-red-500'>
-                Order Tracking
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className='w-full h-[0.5px] bg-gray-300'></div>
-        {/* Main Navigation Bar */}
-        <div className='container mx-auto flex sm:flex-wrap flex-col sm:flex-row items-center justify-between px-4'>
-          {/* Left side - Logo and main navigation */}
+        {/* Main Container */}
+        <div className='container mx-auto flex justify-between items-center px-4 py-2'>
+          {/* Logo */}
           <div className='flex items-center space-x-2 cursor-pointer' onClick={() => navigate('/')}>
-            {/* Logo */}
             <img
-              className='sm:w-28 sm:h-28 w-20 h-20'
+              className='w-20 h-20'
               src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png'
               alt='Logo'
             />
-            <h2 className='sm:text-4xl text-black font-bold m-0 text-2xl'>BigFour</h2>
+            <h2 className='text-2xl font-bold'>BigFour</h2>
           </div>
-          <nav className='w-full flex items-center sm:w-auto flex-wrap justify-between space-x-2 sm:space-x-8 text-sm sm:text-base font-medium'>
-            {menuItems.map((item, index) => (
+
+          {/* Mobile View - Sidebar and Shopping Cart */}
+          <div className='block sm:hidden flex items-center space-x-4'>
+            <Link to='/cart' className='hover:text-red-500'>
+              <ShoppingCartOutlined className='text-2xl text-red-400 ' />
+            </Link>
+            <MenuUnfoldOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+          </div>
+
+          {/* Navbar - Hidden on smaller screens */}
+          <nav className='hidden sm:flex space-x-4'>
+            {menuItems.map((item) => (
               <Link
-                key={index}
+                key={item.path}
                 to={item.path}
-                className={`relative font-bold transition duration-300
-        ${location.pathname === item.path ? 'text-red-500 after:w-full' : 'text-gray-700 after:w-0'}
-        hover:text-red-500
-        after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
+                className={`relative font-bold transition duration-300 ${
+                  location.pathname === item.path ? 'text-red-500 after:w-full' : 'text-gray-700 after:w-0'
+                } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
             ))}
           </nav>
+
           {/* Right side - Search bar, icons, and language switch */}
-          <div className='flex items-center space-x-4 mt-4 mb-4 sm:mt-0 sm:mb-0'>
-          <Select
-              className='w-20 sm:w-28'
+          <div className='hidden sm:flex items-center space-x-4'>
+            {/* Language Switcher */}
+            <Select
+              className='w-28'
               defaultValue={localStorage.getItem('locale') ?? 'en'}
               onChange={handleChange}
               options={languages}
             />
-            <div className='flex items-center space-x-4 '>
-              <button
-                className='text-xs text-white border-2 bg-red-500 rounded-md px-4 py-2 sm:text-sm sm:text-white sm:border-2 sm:bg-red-500 sm:rounded-md sm:px-4 sm:py-2 hover:bg-red-400 hover:text-white '
-                onClick={toggleLoginPopup}
-                ref={dropdownRef}
-              >
-                Login
-              </button>
-              <Link to='/cart' className='hover:text-red-500'>
-                <ShoppingCartOutlined className='text-xl text-red-400 sm:text-2xl sm:text-red-400 hover:text-white hover:bg-red-500 hover:p-2 p-2 hover:rounded-full' />
-              </Link>
-            </div>
+            {/* Login Button */}
+            <button
+              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+              onClick={toggleLoginPopup}
+            >
+              Login
+            </button>
+            {/* Shopping Cart */}
+            <Link to='/cart' className='hover:text-red-500'>
+              <ShoppingCartOutlined className='text-2xl text-red-400 hover:bg-red-500 hover:text-white p-2 rounded-full' />
+            </Link>
           </div>
         </div>
-        <div className='w-full h-[0.5px] bg-gray-300 sm:mb-2'></div>
       </header>
+
+      {/* Sidebar Overlay */}
+      <div
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
+        } sm:hidden`}
+        onClick={toggleSidebar} // Close sidebar when clicking outside
+      ></div>
+
+      {/* Sidebar - Only visible when open */}
+      <div
+        className={`fixed inset-y-0 left-0 w-64 bg-white h-full flex flex-col p-4 z-50 transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 sm:hidden`}
+      >
+        <div className='flex justify-between'>
+          <div className='text-xl font-bold'>Menu</div>
+          <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+        </div>
+        <nav className='mt-4'>
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={toggleSidebar} // Close sidebar when a menu item is clicked
+              className='block py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <Translate text={item.name} />
+            </Link>
+          ))}
+          {/* Language Switcher */}
+          <Select
+            className='w-full mt-4'
+            defaultValue={localStorage.getItem('locale') ?? 'en'}
+            onChange={handleChange}
+            options={languages}
+          />
+          {/* Login Button */}
+          <button
+            className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
+            onClick={() => {
+              toggleLoginPopup();
+              toggleSidebar(); // Close sidebar on login click
+            }}
+          >
+            Login
+          </button>
+        </nav>
+      </div>
+
       {/* Login Popup */}
       {isLoginPopupOpen && (
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 select-none'>
-          <div className='bg-white w-9/12 sm:w-1/2 max-w-md p-6 rounded-lg shadow-lg'>
+          <div className='bg-white w-9/12 sm:w-1/2 max-w-md p-6 rounded-lg shadow-lg relative'>
             <button
               onClick={toggleLoginPopup}
               className='absolute top-4 right-4 text-gray-500 hover:text-gray-800'
@@ -153,6 +165,7 @@ export default function Layout({ children }) {
           </div>
         </div>
       )}
+
       {/* Page Content */}
       {children}
       <LogoShopBook />
