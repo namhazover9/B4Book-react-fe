@@ -3,10 +3,7 @@ import { MenuUnfoldOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-de
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
-import GalleryImage from '../components/footer/GalleryImage';
-import LogoGallery from '../components/footer/LogoGallery';
-import LogoShopBook from '../components/footer/LogoShopbook';
-import Banner from '../components/footer/Banner';
+
 import LoginPage from '../components/modallogin/Login';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
@@ -37,7 +34,7 @@ export default function Layout({ children }) {
     { name: 'Books', path: '/books' },
     { name: 'Pages', path: '/pages' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'About Us', path: '/aboutus' },
   ];
 
   return (
@@ -46,13 +43,13 @@ export default function Layout({ children }) {
         {/* Main Container */}
         <div className='container mx-auto flex justify-between items-center px-4 py-2'>
           {/* Logo */}
-          <div className='flex items-center space-x-2 cursor-pointer' onClick={() => navigate('/')}>
+          <div className='flex items-center cursor-pointer' onClick={() => navigate('/')}>
             <img
               className='w-20 h-20'
               src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png'
               alt='Logo'
             />
-            <h2 className='text-2xl font-bold'>BigFour</h2>
+            <h2 className='text-2xl font-bold m-0'>BigFour</h2>
           </div>
 
           {/* Mobile View - Sidebar and Shopping Cart */}
@@ -64,13 +61,13 @@ export default function Layout({ children }) {
           </div>
 
           {/* Navbar - Hidden on smaller screens */}
-          <nav className='hidden sm:flex space-x-4'>
+          <nav className='hidden sm:flex space-x-12'>
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`relative font-bold transition duration-300 ${
-                  location.pathname === item.path ? 'text-red-500 after:w-full' : 'text-gray-700 after:w-0'
+                  location.pathname === item.path ? 'text-red-500 text-lg after:w-full' : 'text-gray-700 text-lg after:w-0'
                 } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
@@ -112,7 +109,7 @@ export default function Layout({ children }) {
 
       {/* Sidebar - Only visible when open */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-white h-full flex flex-col p-4 z-50 transform ${
+        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 sm:hidden`}
       >
@@ -168,10 +165,7 @@ export default function Layout({ children }) {
 
       {/* Page Content */}
       {children}
-      <LogoShopBook />
-      <Banner />
-      <GalleryImage />
-      <LogoGallery />
+
       <Footer />
     </div>
   );

@@ -10,6 +10,10 @@ import Trending from './Trending';
 import BannerSlider from './BannerSlider';
 import FavouriteBook from './FavouriteBook';
 import Post from './Post';
+import GalleryImage from '../../components/footer/GalleryImage';
+import LogoGallery from '../../components/footer/LogoGallery';
+import LogoShopBook from '../../components/footer/LogoShopbook';
+import Banner from '../../components/footer/Banner';
 
 export default function Home() {
   // testBackendConnection();
@@ -23,6 +27,10 @@ export default function Home() {
       <Trending />
       <Bestseller />
       <Post />
+      <LogoShopBook />
+      <Banner />
+      <GalleryImage />
+      <LogoGallery />
     </div>
   );
 }
