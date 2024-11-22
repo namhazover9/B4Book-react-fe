@@ -1,4 +1,4 @@
-import pic1 from '../../assets/images/BestSelling/32.jpg ';
+import pic1 from '../../assets/images/BestSelling/32.jpg';
 import pic2 from '../../assets/images/BestSelling/33.jpg';
 import pic3 from '../../assets/images/BestSelling/28.jpg';
 import pic4 from '../../assets/images/BestSelling/28.jpg';
