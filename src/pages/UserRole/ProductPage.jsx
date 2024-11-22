@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BarsOutlined, EyeOutlined, HeartOutlined, QrcodeOutlined, ReadOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
 import { useEffect } from 'react';
+import productsApi from '../../hooks/useProductsApi';
 
 export default function ProductPage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -12,23 +13,28 @@ export default function ProductPage() {
   const [bookList, setBookList] = useState([]);
   const booksPerPage = 8;
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchBooks = async () => {
+      setLoading(true);
       try {
-        const response = await fetch("https://b4book-node-be.onrender.com/products/");
-        if (!response.ok) {
-          throw new Error("Failed to fetch books");
-        }
-        const data = await response.json();
+        const response = await productsApi.getAllProducts();
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch books");
+        // }
+        const data = await response.data;
         setBookList(data);
         setFilterBooks(data);
       } catch (error) {
         console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchBooks();
   }, []);
+  
 
   // Filter Category
   const uniqueCategories = bookList.reduce((categories, book) => {
