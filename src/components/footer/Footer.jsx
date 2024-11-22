@@ -1,3 +1,6 @@
+import React from 'react';
+import footer from '../../assets/images/footer_img.png';
+import logo from '../../assets/images/logo_b4b.png';
 import {
   FacebookOutlined,
   TwitterOutlined,
@@ -5,128 +8,77 @@ import {
   MailOutlined,
 } from '@ant-design/icons';
 
-function Footer() {
+const Footer = () => {
   return (
-    <footer className='bg-gray-900 text-white px-20 py-8'>
-      <div className='container mx-auto flex flex-col md:flex-row justify-between items-center '>
-        <div className='mb-4 md:mb-0'>
-          <h2 className='text-2xl font-bold'>BigFour</h2>
-          <p className='text-sm'>123 Main St, Anytown, CA 12345</p>
-          <p className='text-sm'>+(84)-1800-4635</p>
-          <p className='text-sm'>contact@example.com</p>
-          <div className='mt-4'>
-            <a href='#' className='text-gray-400 mr-2'>
-              <FacebookOutlined />
-            </a>
-            <a href='#' className='text-gray-400 mr-2'>
-              <TwitterOutlined />
-            </a>
-            <a href='#' className='text-gray-400 mr-2'>
-              <InstagramOutlined />
-            </a>
-            <a href='#' className='text-gray-400'>
-              <MailOutlined />
-            </a>
-          </div>{' '}
-        </div>
-        <div className='flex flex-col md:flex-row space-x-20'>
-          <div>
-            <h3 className='text-lg font-bold mb-2'>Need Help</h3>
-            <ul>
-              <li>
-                <a href='#' className='text-sm'>
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Returns
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Product Recalls
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Accessibility
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Store Pickup
-                </a>
-              </li>
+    <footer className='bg-gray-100 p-8 '>
+      <div className='flex justify-center items-center'>
+        <div className='container md:flex lg:flex mx-auto sm:grid-cols-4 sm:gap-4'>
+          {/* Logo và thông tin liên hệ */}
+          <div className='col-span-1 sm:mb-4 w-2/5 sm:w-full md:w-full'>
+            <div className='container flex flex-col sm:flex-row items-center space-x-1 '>
+              <img src={logo} alt='Logo' className='w-20 h-20 sm:justify-center' />
+              <span className='text-3xl font-bold text-gray-800 container'>Big Four</span>
+            </div>
+            <p className='mt-1 text-gray-600'>Got Questions? Call us 24/7!</p>
+            <p className='text-xl font-semibold text-red-500'>+84 - 1800 - 4635</p>
+            <div className='flex space-x-3 mt-4'>
+              <a href='#' className='text-gray-500'>
+                <FacebookOutlined />
+              </a>
+              <a href='#' className='text-gray-500'>
+                <TwitterOutlined />
+              </a>
+              <a href='#' className='text-gray-500'>
+                <InstagramOutlined />
+              </a>
+              <a href='#' className='text-gray-500'>
+                <MailOutlined />
+              </a>
+            </div>
+          </div>
+          {/* Thông tin liên hệ */}
+          <div className='col-span-1 sm:mb-4 hidden sm:hidden md:hidden lg:block w-1/5'>
+            <h3 className='text-lg font-semibold text-gray-800'>Contact Info</h3>
+            <p className='text-gray-600'>1418 River Drive, Suite 35</p>
+            <p className='text-gray-600'>Cottonhall, CA 9622</p>
+            <p className='text-gray-600 mt-2'>Monday – Friday: 9:00–20:00</p>
+            <p className='text-gray-600'>Saturday: 11:00–15:00</p>
+            <p className='text-gray-600 mt-2'>contact@example.com</p>
+          </div>
+
+          {/* Liên kết Explore */}
+          <div className='col-span-1 sm:mb-4 hidden sm:hidden md:hidden lg:block w-1/5'>
+            <h3 className='text-lg font-semibold text-gray-800'>Explore</h3>
+            <ul className='mt-2 space-y-2 text-gray-600'>
+              <li>About us</li>
+              <li>Sitemap</li>
+              <li>Bookmarks</li>
+              <li>Sign in/Join</li>
             </ul>
           </div>
-          <div>
-            <h3 className='text-lg font-bold mb-2 space-x-20'>Explore</h3>
-            <ul>
-              <li>
-                <a href='#' className='text-sm'>
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Sitemap
-                </a>
-              </li>
-              <li>
-                <a href='#' className='sm'>
-                  Bookmarks
-                </a>
-              </li>
-              <li>
-                <a href='#' className='sm'>
-                  Sign In
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className='text-lg font-bold mb-2 space-x-20'>Our Services</h3>
-            <ul>
-              <li>
-                <a href='#' className='text-sm'>
-                  Action
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Comedy
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Drama
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Horror
-                </a>
-              </li>
-              <li>
-                <a href='#' className='text-sm'>
-                  Kids
-                </a>
-              </li>
+
+          {/* Liên kết Our Service */}
+          <div className='col-span-1 sm:mb-4 hidden sm:hidden md:hidden lg:block w-1/5'>
+            <h3 className='text-lg font-semibold text-gray-800'>Our Service</h3>
+            <ul className='mt-2 space-y-2 text-gray-600'>
+              <li>Help Center</li>
+              <li>Returns</li>
+              <li>Product Recalls</li>
+              <li>Accessibility</li>
+              <li>Contact Us</li>
+              <li>Store Pickup</li>
             </ul>
           </div>
         </div>
       </div>
-      <div className='mt-8 border-t border-gray-700 py-4 text-center'>
-        <p className='text-sm'>&copy; 2022 Bookory. All rights reserved.</p>
+      <div className='container mx-auto flex flex-col-reverse sm:flex-row mt-8 items-center justify-between'>
+        <p className='text-gray-600 text-sm text-center mt-4'>
+          Copyright © 2024 <span className='text-red-500'>Big Four</span>. All rights reserved.
+        </p>
+        <img src={footer} alt='Payment Methods' className='w-50' />
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

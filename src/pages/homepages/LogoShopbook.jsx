@@ -23,16 +23,18 @@ const logos = [
 ];
 function LogoShopBook() {
   return (
-    <div className='flex flex-wrap justify-center items-center p-4 space-x-4 md:space-x-8'>
-      {logos.map((logo, index) => (
-        <div key={index} className='relative'>
-          <img
-            src={logo.src}
-            alt={logo.alt}
-            className='mx-auto max-w-full h-auto object-cover rounded-lg hover:scale-110 transition duration-300'
-          />
-        </div>
-      ))}
+    <div className='w-full overflow-x-auto md:overflow-visible'>
+      <div className='flex items-center gap-4 md:gap-8 sm:gap-4 py-4 px-2 min-w-max md:min-w-0 sm:min-w-0 md:justify-center sm:justify-center'>
+        {logos.map((logo, index) => (
+          <div key={index} className='flex-shrink-0 md:flex-shrink sm:flex-shrink'>
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              className='mx-auto max-w-full h-auto w-auto object-containhover:scale-110 transition duration-300'
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

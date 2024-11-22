@@ -6,24 +6,24 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
-import Footer from '../components/footer/Footer';
-import GalleryImage from '../components/footer/GalleryImage';
-import LogoGallery from '../components/footer/LogoGallery';
-import LogoShopBook from '../components/footer/LogoShopbook';
-import Banner from '../components/footer/Banner';
 import { Button, Select, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
 import Login from '../pages/login/Login';
+import Footer from '../components/footer/Footer';
+import PopupCart from '../pages/UserRole/PopupCart';
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
+
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
+  const cartSidebarRef = useRef(null);
 
   const handleChange = (value) => {
     switchLocale(value);
@@ -37,26 +37,34 @@ export default function Layout({ children }) {
     setIsDropdownOpen((prevState) => !prevState);
   };
 
+  const toggleCartSidebar = () => {
+    setIsCartSidebarOpen(!isCartSidebarOpen);
+  };
+
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate('/');
   };
 
+  // Đóng dropdown nếu click ra ngoài
   useEffect(() => {
     const handleOutsideClick = (event) => {
+      // Dropdown
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
         !buttonRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false);
-        // setIsLoginPopupOpen(false);
+      }
+      // Sidebar
+      if (cartSidebarRef.current && !cartSidebarRef.current.contains(event.target)) {
+        setIsCartSidebarOpen(false);
       }
     };
 
     document.addEventListener('mousedown', handleOutsideClick);
-
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
@@ -66,78 +74,75 @@ export default function Layout({ children }) {
     <div className='font-cairoRegular'>
       <header className='bg-white shadow-md w-full'>
         {/* Top Row - Navigation Links */}
-        <div className="text-base sm:text-lg md:text-xl lg:text-2xl">
-          <div className='container mx-auto flex flex-wrap justify-between px-4 sm:px-6 py-2 text-sm text-gray-600'>
-            <div className='flex flex-wrap space-x-4'>
-              <Link
-                to='/aboutus'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                About Us
-              </Link>
-              <a
-                href='#'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                My Account
-              </a>
-              <a
-                href='#'
-                className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-              >
-                Wishlist
-              </a>
-              <a href='#' className='hover:text-red-500'>
-                Order Tracking
-              </a>
-            </div>
+        <div className='container mx-auto flex items-center justify-between px-6 py-2 text-sm text-gray-600'>
+          <div className='flex space-x-4'>
+            <Link
+              to='/aboutus'
+              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
+            >
+              About Us
+            </Link>
+            <a
+              href='#'
+              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
+            >
+              My Account
+            </a>
+            <a
+              href='#'
+              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
+            >
+              Wishlist
+            </a>
+            <a href='#' className='hover:text-red-500'>
+              Order Tracking
+            </a>
           </div>
         </div>
 
         <div className='w-full h-[0.5px] bg-gray-300'></div>
 
-        <div className='container mx-auto flex flex-wrap items-center justify-between px-4 sm:px-6 py-4'>
+        <div className='container mx-auto flex items-center justify-between px-20'>
           {/* Left side - Logo and main navigation */}
           <div
-            className='flex items-center space-x-2 cursor-pointer'
+            className='flex items-center'
             onClick={handleLogoClick}
+            style={{ cursor: 'pointer' }}
           >
             {/* Logo */}
-            <img className='w-28 h-28' src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png' alt='Logo' />
-            <h2 className='text-4xl text-black font-bold m-0'>BigFour</h2>
+            <img className='w-28 h-28' src='src/assets/images/logo_b4b.png' alt='Logo' />
+            <h2 className='text-4xl text-black font-bold'>BigFour</h2>
           </div>
 
           {/* Search Bar */}
-          <div className='flex w-full sm:w-1/3 items-center border rounded-full px-2 sm:px-3 py-2 sm:py-3 bg-gray-100'>
+          <div className='flex items-center border rounded-full px-3 py-3 bg-gray-100 w-1/3'>
             <input
               type='text'
               placeholder='Search products...'
-              className='flex-grow outline-none bg-transparent text-sm sm:text-base text-gray-700 px-2'
+              className='flex-grow outline-none bg-transparent text-gray-700 px-2'
             />
-            <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
+            <SearchOutlined className='text-white cursor-pointer text-1xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110 hover:shadow-lg' />
           </div>
 
           {/* Right side - Search bar, icons, and language switch */}
-          <div className='flex space-x-4 mt-4 sm:mt-0 '>
+          <div className='flex items-center space-x-4 '>
             {/* Language Selector */}
             <Select
-              className='w-20 sm:w-28'
               defaultValue={localStorage.getItem('locale') ?? 'en'}
               onChange={handleChange}
               options={languages}
             />
             {/* Icons */}
             <div className='flex items-center space-x-4 text-gray-700 '>
-              <Button className='text-xs sm:text-sm' onClick={toggleLoginPopup} ref={dropdownRef}>
+              <Button onClick={toggleLoginPopup} ref={dropdownRef}>
                 Login
               </Button>
-              <Link to='/cart' className='hover:text-red-500'>
-                <ShoppingCartOutlined className='text-xl sm:text-2xl hover:text-red-500' />
-              </Link>
+              <a href='#' onClick={toggleCartSidebar}>
+                <ShoppingCartOutlined className='text-2xl hover:text-red-500' />
+              </a>
             </div>
           </div>
         </div>
-
         <div className='w-full h-[0.5px] bg-gray-300'></div>
 
         {/* Secondary navigation row */}
@@ -173,12 +178,11 @@ export default function Layout({ children }) {
                   <a
                     key={index}
                     href='#'
-
-                    className={`flex items-center px-4 py-2 text-sm ${category.active
-                      ? 'text-red-500 font-semibold bg-gray-50'
-                      : 'text-gray-700 hover:bg-gray-100'
-                      } transition duration-300`}
-
+                    className={`flex items-center px-4 py-2 text-sm ${
+                      category.active
+                        ? 'text-red-500 font-semibold bg-gray-50'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    } transition duration-300`}
                   >
                     <span className='mr-2'>{category.icon}</span>
                     {category.text}
@@ -234,25 +238,31 @@ export default function Layout({ children }) {
           </div>
         </div>
       </header>
-      {/* Login Popup */}
-      {isLoginPopupOpen && (
-        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 select-none'>
-          <div className='bg-white w-9/12 sm:w-1/2 max-w-md p-6 rounded-lg shadow-lg'>
-            <button
-              onClick={toggleLoginPopup}
-              className='absolute top-4 right-4 text-gray-500 hover:text-gray-800'
-            >
-              ✕
-            </button>
-            <Login />
-          </div>
+
+      {/* Cart Sidebar */}
+      <div
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform ${
+          isCartSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        } z-50`}
+        ref={cartSidebarRef}
+      >
+        <div className='flex items-center justify-between p-4 border-b border-gray-300'>
+          <h2 className='text-lg font-semibold'>
+            <Link to={'/cart'} onClick={toggleCartSidebar}>
+              Shopping Cart
+            </Link>
+          </h2>
+          <button onClick={toggleCartSidebar} className='text-gray-500 hover:text-gray-800'>
+            ✕
+          </button>
         </div>
-      )}
+        <div className='p-4'>
+          <PopupCart />
+        </div>
+      </div>
+
       {children}
-      <LogoShopBook />
-      <Banner />
-      <GalleryImage />
-      <LogoGallery />
+
       <Footer />
     </div>
   );

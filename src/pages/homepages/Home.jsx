@@ -10,12 +10,16 @@ import Trending from './Trending';
 import BannerSlider from './BannerSlider';
 import FavouriteBook from './FavouriteBook';
 import Post from './Post';
+import GalleryImage from './GalleryImage';
+import LogoGallery from './LogoGallery';
+import LogoShopBook from './LogoShopbook';
+import Banner from './Banner';
 
 export default function Home() {
   // testBackendConnection();
   return (
     <div className='flex flex-col gap-y-4'>
-      <BannerSlider />
+      {/* <BannerSlider />
       <CategorySlider />
       <DiscountBanners />
       <TopVendor />
@@ -23,6 +27,10 @@ export default function Home() {
       <Trending />
       <Bestseller />
       <Post />
+      <LogoShopBook />
+      <Banner />
+      <GalleryImage />
+      <LogoGallery /> */}
     </div>
   );
 }
