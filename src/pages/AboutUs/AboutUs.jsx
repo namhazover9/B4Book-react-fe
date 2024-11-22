@@ -3,14 +3,7 @@ import { Typography, Divider, Carousel } from 'antd';
 import { BookOutlined, ShopOutlined, GlobalOutlined } from '@ant-design/icons';
 import { Input, Button } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
-import pic1 from '@/assets/images/AboutUs/About_04.jpg';
-import pic2 from '../../assets/images/AboutUs/About_02.jpg';
-import pic3 from '../../assets/images/AboutUs/About_03.jpg';
-import avt1 from '../../assets/images/AboutUs/test_01.png';
-import avt2 from '../../assets/images/AboutUs/test_02.png';
-import avt3 from '../../assets/images/AboutUs/test_03.png';
-import avt4 from '../../assets/images/AboutUs/h2_img.png';
-import logo from '../../assets/images/AboutUs/logo_b4b.png';
+
 
 const AboutUs = () => {
   return (
@@ -20,7 +13,7 @@ const AboutUs = () => {
         <h1 className='text-4xl font-bold mb-6'>About Us</h1>
         <div className='w-60 h-60 mx-auto mb-6'>
           <div className='rounded-full bg-gray-100 p-4 flex items-center justify-center'>
-            <img src={logo} className='object-cover w-full h-full' />
+            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180483/logo_b4b_ny2iyg.png" className='object-cover w-full h-full' />
           </div>
         </div>
         <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
@@ -67,10 +60,10 @@ const AboutUs = () => {
       {/* Image Gallery */}
       <div className='grid md:grid-cols-2 gap-20 mb-16'>
         <div className='relative h-120 overflow-hidden rounded-xl'>
-          <img src={pic2} alt='Bookstore interior' className='object-cover w-140 h-120' />
+          <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180475/About_02_dwf0p3.png" alt='Bookstore interior' className='object-cover w-140 h-120' />
         </div>
         <div className='relative h-120 overflow-hidden rounded-lg '>
-          <img src={pic3} alt='Reader by the window' className='object-cover w-120 h-120' />
+          <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180476/About_03_c8osgb.png" alt='Reader by the window' className='object-cover w-120 h-120' />
         </div>
       </div>
       {/* Quote Section */}
@@ -109,7 +102,7 @@ const AboutUs = () => {
             {/* Testimonial 1 */}
             <div className='bg-white p-6 rounded-xl '>
               <div className='flex items-center mb-4'>
-                <img src={avt1} alt='John Doe' className='w-10 h-10 rounded-full mr-3' />
+                <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180484/test_01_est97g.png" alt='John Doe' className='w-10 h-10 rounded-full mr-3' />
                 <div>
                   <h4 className='font-semibold'>JOHN DOE</h4>
                   <p className='text-gray-500 text-sm'>@johndoe</p>
@@ -124,7 +117,7 @@ const AboutUs = () => {
             {/* Testimonial 2 */}
             <div className='bg-white p-6 rounded-xl'>
               <div className='flex items-center mb-4'>
-                <img src={avt2} alt='Ray Right' className='w-10 h-10 rounded-full mr-3' />
+                <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180484/test_02_mgwiqv.png" alt='Ray Right' className='w-10 h-10 rounded-full mr-3' />
                 <div>
                   <h4 className='font-semibold'>RAY RIGHT</h4>
                   <p className='text-gray-500 text-sm'>@right</p>
@@ -139,7 +132,7 @@ const AboutUs = () => {
             {/* Testimonial 3 */}
             <div className='bg-white p-6 rounded-xl '>
               <div className='flex items-center mb-4'>
-                <img src={avt3} alt='Josh K' className='w-10 h-10 rounded-full mr-3' />
+                <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180486/test_03_qcn72j.png" alt='Josh K' className='w-10 h-10 rounded-full mr-3' />
                 <div>
                   <h4 className='font-semibold'>JOSH K</h4>
                   <p className='text-gray-500 text-sm'>@joshk</p>
@@ -179,7 +172,7 @@ const AboutUs = () => {
             </div>
           </div>
           <div className='md:w-1/3'>
-            <img src={avt4} alt='Join community illustration' className='w-full h-auto' />
+            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180482/h2_img_iliqr2.png" alt='Join community illustration' className='w-full h-auto' />
           </div>
         </div>
       </div>
