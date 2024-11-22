@@ -8,9 +8,12 @@ const loginApi = {
     const url = LOGIN_API_ENDPOINT;
     return axiosClient.post(url, account);
   },
-
+  verifyUser: (account) => {
+    const url = LOGIN_API_ENDPOINT + '/verify';
+    return axiosClient.post(url, account);
+  },
   postLoginWithGoogle: (accessToken) => {
-    const url = LOGIN_API_ENDPOINT + '/gg';
+    const url = LOGIN_API_ENDPOINT + '/auth/google';
     return axiosClient.post(url, accessToken);
   },
 
