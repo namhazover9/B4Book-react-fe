@@ -8,10 +8,47 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     passWord: '',
+    verifyToken: '',
   });
-  const handleGoogleLogin = async () => {
+
+  const verifyUser = async () => {
+    try {
+        const queryParams = new URLSearchParams(window.location.search);
+        const verifyToken = queryParams.get("verifyToken");
+        if (verifyToken) {
+          localStorage.setItem("verifyToken", verifyToken);
+          window.history.replaceState({}, document.title, "/");
+          const response =  loginApi.verifyUser({
+            verifyToken: formData.verifyToken,
+          });
+          setSuccess(true);
+          setError(null);
+          if(response?.data?.message === "verify success"){
+            localStorage.setItem("token", response?.data?.token);
+            console.log("11111",response?.data?.token);
+            window.location.href = "/";
+          }
+        }
+    }catch(error) {
+      setSuccess(false);
+        setError("Login failed");
+        window.alert(error.response?.data?.message || "Error login");
+        console.error("API Error:", error);
+    }
+   }
+   const handleGoogleLogin = async () => {
     try {
       window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
+      
+      console.log('Đăng nhập thành công');
+    } catch (error) {
+      console.error('Đăng nhập thất bại:', error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/facebook`;
       console.log('Đăng nhập thành công');
     } catch (error) {
       console.error('Đăng nhập thất bại:', error);
@@ -38,7 +75,12 @@ const LoginPage = () => {
 
       console.log('API Response:', response.data);
       console.log('ABC: ', formData.email, formData.passWord);
-      window.alert(response?.data?.message);
+      if(response?.data?.message == "Login success"){
+      formData.verifyToken = response.data.verifyToken;
+      localStorage.setItem('verifyToken', formData.verifyToken);
+      console.log(formData.verifyToken);
+      window.location.href = '/';
+      }
     } catch (error) {
       setSuccess(false);
       setError('Login failed');
@@ -83,7 +125,10 @@ const LoginPage = () => {
         </a>
       </div>
       <div className='flex items-center justify-center space-x-4 mt-4'>
-        <button className='flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition'>
+        <button 
+        onClick={handleFacebookLogin}
+        className='flex items-center px-4 py-2 border rounded-lg hover:bg-gray-100 transition'
+        >
           <FacebookOutlined className='text-blue-600 mr-2' />
           Login with Facebook
         </button>
