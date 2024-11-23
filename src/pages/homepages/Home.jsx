@@ -19,7 +19,7 @@ export default function Home() {
   // testBackendConnection();
   return (
     <div className='flex flex-col gap-y-4'>
-      {/* <BannerSlider />
+      <BannerSlider />
       <CategorySlider />
       <DiscountBanners />
       <TopVendor />
@@ -30,7 +30,7 @@ export default function Home() {
       <LogoShopBook />
       <Banner />
       <GalleryImage />
-      <LogoGallery /> */}
+      <LogoGallery />
     </div>
   );
 }
