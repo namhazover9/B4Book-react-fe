@@ -8,7 +8,7 @@ const banners = [
     id: 1,
     bgColor: 'bg-purple-500',
     imageSrc: banner1,
-    title: 'Books Make Great Gifts',
+    title: 'Books Great Gifts',
     subtitle: 'Why not send the gift of a book to family & friends.',
     discount: '20%',
     overlayColor: 'bg-purple-500',
@@ -34,12 +34,12 @@ const BookSaleBanners = () => {
       {banners.map((banner) => (
         <div
           key={banner.id}
-          className={`relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer sm:h-61 lg:h-[250px]`}
+          className={`container relative ${banner.bgColor} rounded-3xl overflow-hidden group cursor-pointer  lg:h-[250px]`}
         >
           {/* Banner Header */}
           {banner.discount && (
             <div className='absolute top-4 left-4 z-10'>
-              <div className='bg-pink-500 rounded-full p-3 sm:p-4 text-center w-20 sm:w-24 h-20 sm:h-24 flex flex-col justify-center'>
+              <div className='bg-pink-500 rounded-full p-3 sm:p-4 text-center w-20 sm:w-20 h-20 sm:h-24 flex flex-col justify-center'>
                 <div className='text-xs sm:text-sm text-white'>Sale</div>
                 <div className='text-xl sm:text-2xl font-bold text-white'>{banner.discount}</div>
               </div>
@@ -60,16 +60,16 @@ const BookSaleBanners = () => {
           </div>
 
           {/* Content */}
-          <div className='relative z-10 p-4 sm:p-6 md:p-8 flex flex-col items-end mt-12 sm:mt-2'>
+          <div className='relative z-10 p-4 sm:p-6 md:p-8 flex flex-col justify-center items-end my-4 sm:m-0'>
             {/* Ensure content width and alignment */}
-            <h2 className='text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-md text-white text-right sm:mt:0'>
+            <h2 className='text-2xl sm:text-3xl md:text-3xl font-bold mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-md text-white text-right sm:mt:0'>
               {banner.title}
             </h2>
             <p className='text-sm sm:text-base md:text-lg opacity-90 max-w-xs sm:max-w-sm md:max-w-md text-white text-right'>
               {banner.subtitle}
             </p>
             {banner.buttonText && (
-              <button className='bg-white text-amber-500 px-4 sm:px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition-colors mt-4'>
+              <button className='bg-white text-amber-500 px-4 sm:px-6 py-2 rounded-full  font-medium hover:bg-opacity-90 transition-colors sm:mt-2'>
                 {banner.buttonText}
               </button>
             )}

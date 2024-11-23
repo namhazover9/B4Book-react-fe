@@ -67,7 +67,9 @@ export default function Layout({ children }) {
                 key={item.path}
                 to={item.path}
                 className={`relative font-bold transition duration-300 ${
-                  location.pathname === item.path ? 'text-red-500 text-lg after:w-full' : 'text-gray-700 text-lg after:w-0'
+                  location.pathname === item.path
+                    ? 'text-red-500 text-lg after:w-full'
+                    : 'text-gray-700 text-lg after:w-0'
                 } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
