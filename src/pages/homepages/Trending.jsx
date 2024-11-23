@@ -157,8 +157,8 @@ const BookShowcase = () => {
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600'>
-                        <button>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
+                        <button className='truncate block w-full'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
