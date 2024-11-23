@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { BarsOutlined, EyeOutlined, HeartOutlined, QrcodeOutlined, ReadOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BarsOutlined, EyeOutlined, HeartOutlined, QrcodeOutlined, ReadOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
 import { useEffect } from 'react';
+import productsApi from '../../hooks/useProductsApi';
 
 export default function ProductPage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -12,23 +13,28 @@ export default function ProductPage() {
   const [bookList, setBookList] = useState([]);
   const booksPerPage = 8;
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchBooks = async () => {
+      setLoading(true);
       try {
-        const response = await fetch("https://b4book-node-be.onrender.com/products/");
-        if (!response.ok) {
-          throw new Error("Failed to fetch books");
-        }
-        const data = await response.json();
+        const response = await productsApi.getAllProducts();
+        // if (!response.ok) {
+        //   throw new Error("Failed to fetch books");
+        // }
+        const data = await response.data;
         setBookList(data);
         setFilterBooks(data);
       } catch (error) {
         console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchBooks();
   }, []);
+  
 
   // Filter Category
   const uniqueCategories = bookList.reduce((categories, book) => {
@@ -183,75 +189,123 @@ export default function ProductPage() {
   };
 
   return (
-    <div>
-      <div className='header my-5 bg-slate-200 p-10 flex justify-between items-center'>
-        <h1 className='text-2xl font-medium'>List Books</h1>
-        <div className='w-1/12 flex justify-between items-center'>
-          <a href='/#' className='m-0 underline transition duration-200 hover:text-red-500'>
-            Home
-          </a>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth='1.5'
-            stroke='currentColor'
-            className='size-6 mx-1'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
-            />
-          </svg>
-          <span>Books</span>
+    <div className='container mx-auto'>
+      <div className='header my-5 bg-slate-200 p-5 sm:p-10 flex justify-center sm:justify-between items-center'>
+        <h1 className='hidden sm:block text-2xl text-red-500 font-medium'><span className='text-lg text-black sm:hidden md:block'>Welcome to</span> Books Page!</h1>
+        <div className='flex w-4/5 py-1 sm:w-1/2 md:w-2/3 items-center border rounded-full px-2 sm:px-3 sm:py-3 bg-gray-100'>
+          <input
+            type='text'
+            placeholder='Search products...'
+            className='flex-grow outline-none bg-transparent text-sm sm:text-base text-gray-700 px-2'
+          />
+          <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
         </div>
       </div>
-      <div className='flex justify-between'>
-        <div className='list-books w-1/6 flex flex-col'>
+      <div className='flex flex-col lg:flex-row justify-between md:items-center lg:items-start'>
+        <div className='mx-5 lg:mx-0 list-books lg:w-1/6 flex flex-col md:w-11/12 md:mx-52'>
           <div className='genre'>
-            <Menu
-              className='h-80 overflow-y-auto'
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              mode='inline'
-              items={categorys}
-              onClick={onCategoryChange}
-            />
+            <div className="genre-ipad hidden lg:block">
+              <Menu
+                className='h-80 overflow-y-auto'
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode='inline'
+                items={categorys}
+                onClick={onCategoryChange}
+              />
+            </div>
+            <div className="genre-phone lg:hidden">
+              <Select
+                prefix="Category"
+                defaultValue={[]}
+                mode="multiple"
+                className='w-full md:w-5/6'
+                onChange={(values) => {
+                  setSelectedCategories(values);
+                  filterBooksList(values, selectedAuthors);
+                }}
+                options={uniqueCategories.map((category) => ({
+                  label: category,
+                  value: category,
+                }))}
+              />
+            </div>
           </div>
-          <br />
-          <br />
-          <div className='author'>
-            <Menu
-              className='h-80 overflow-y-auto'
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              mode='inline'
-              items={authors}
-              onClick={onAuthorChange}
-            />
+          <div className='author my-2'>
+            <div className="author-ipad hidden lg:block">
+              <Menu
+                className='h-80 overflow-y-auto'
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode='inline'
+                items={authors}
+                onClick={onAuthorChange}
+              />
+            </div>
+            <div className="author-phone lg:hidden">
+              <Select
+                prefix="Author"
+                defaultValue={[]}
+                mode="multiple"
+                className='w-full md:w-5/6'
+                onChange={(values) => {
+                  setSelectedAuthors(values);
+                  filterBooksList(selectedCategories, values);
+                }}
+                options={uniqueAuthors.map((author) => ({
+                  label: author,
+                  value: author,
+                }))}
+              />
+            </div>
           </div>
-          <br />
-          <br />
+          <div className="hidden lg:block">
+            <br />
+          </div>
           <div className='price'>
-            <Card
-              title='💲Filter by Price'
-              className='h-auto overflow-y-auto bg-gray-50'
-              bordered={false}
-            >
+            <div className="price-ipad hidden lg:block">
+              <Card
+                title='💲Filter by Price'
+                className='h-auto overflow-y-auto bg-gray-50'
+                bordered={false}
+              >
+                <Slider
+                  range
+                  defaultValue={priceRange}
+                  max={200000}
+                  onChange={handleSliderChange}
+                  onChangeComplete={handleSliderAfterChange}
+                  disabled={disabled}
+                />
+                <div className='flex justify-between mt-2'>
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1]}</span>
+                </div>
+                <div className='my-5'>
+                  Disabled:{' '}
+                  <Switch
+                    size='small'
+                    checked={disabled}
+                    onChange={(checked) => setDisabled(checked)}
+                  />
+                </div>
+              </Card>
+            </div>
+            <div className="price-phone lg:hidden mx-5">
               <Slider
                 range
                 defaultValue={priceRange}
                 max={200000}
+                className='w-full md:w-5/6'
                 onChange={handleSliderChange}
                 onChangeComplete={handleSliderAfterChange}
                 disabled={disabled}
               />
-              <div className='flex justify-between mt-2'>
+              <div className='flex justify-between md:w-5/6 mt-2'>
                 <span>${priceRange[0]}</span>
                 <span>${priceRange[1]}</span>
               </div>
-              <div className='my-5'>
+              <div className='my-1'>
                 Disabled:{' '}
                 <Switch
                   size='small'
@@ -259,18 +313,18 @@ export default function ProductPage() {
                   onChange={(checked) => setDisabled(checked)}
                 />
               </div>
-            </Card>
+            </div>
           </div>
         </div>
-        <div className='all-books w-5/6 ml-4'>
-          <div className='header-all-books flex justify-between items-center mx-4'>
-            <div className='option-form-left'>
+        <div className='all-books w-full md:w-11/12 lg:w-5/6 lg:ml-4 sm:flex flex-col items-center'>
+          <div className='header-all-books flex justify-between items-center mx-4 my-2 lg:my-0 lg:w-11/12'>
+            <div className='option-form-left flex items-center w-1/12 justify-end lg:justify-start'>
               <QrcodeOutlined
                 className={`mr-2 choice-icon-tnvd ${viewMode === 'block' ? 'text-blue-500' : ''}`}
                 onClick={() => handleViewModeChange('block')}
               />
               <BarsOutlined
-                className={`choice-icon-tnvd ${viewMode === 'line' ? 'text-blue-500' : ''}`}
+                className={`choice-icon-tnvd hidden md:block ${viewMode === 'line' ? 'text-blue-500' : ''}`}
                 onClick={() => handleViewModeChange('line')}
               />
             </div>
@@ -337,7 +391,7 @@ export default function ProductPage() {
           </div>
           <div className='horizontal-line bg-slate-200 h-px w-11/12 my-2 mx-10'></div>
           {viewMode === 'block' ? (
-            <div className='list-by-block'>
+            <div className='list-by-block sm:w-11/12 xl:w-full'>
               {currentBooks.length === 0 ? (
                 <div className='not-found'>
                   <h2 className='text-center my-20'>
@@ -350,10 +404,10 @@ export default function ProductPage() {
                     const imageUrl = book.images[0] ? book.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
 
                     return (
-                      <div className='flex justify-between items-center' key={index}>
+                      <div className='flex flex-col sm:flex-row justify-between items-center' key={index}>
                         <div
                           id={index}
-                          className='bg-white w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md mb-4'
+                          className='bg-white w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
                         >
                           <div className='relative group overflow-hidden rounded-lg mb-4'>
                             <img
@@ -386,7 +440,8 @@ export default function ProductPage() {
                           </div>
                           <p className='text-red-500 text-lg font-bold truncate'>$ {book.price}</p>
                         </div>
-                        <div className='jamb bg-slate-200 w-px h-4/5 mx-2'></div>
+                        <div className='jamb bg-slate-200 w-px h-4/5 mx-2 hidden sm:block'></div>
+                        <div className='row-line bg-slate-200 h-px w-4/5 sm:hidden'></div>
                       </div>
                     );
                   })}

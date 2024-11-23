@@ -1,17 +1,42 @@
-import { apiClient } from '../ApiConfig/apiConfig';
+import { axiosClient } from '../ApiConfig/apiConfig';
+import constants from '../constants/constants';
 
-const userAPI = {
-  // loginUserGG: () => {
-  //   return apiClient.get("/auth/google/callback");
-  // },
+const LOGIN_API_ENDPOINT = '/login';
 
-  loginUserFB: () => {
-    return apiClient.get('/auth/google/callback');
+const loginApi = {
+  postLogin: (account) => {
+    const url = LOGIN_API_ENDPOINT;
+    return axiosClient.post(url, account);
+  },
+  verifyUser: (account) => {
+    const url = LOGIN_API_ENDPOINT + '/verify';
+    return axiosClient.post(url, account);
+  },
+  postLoginWithGoogle: (accessToken) => {
+    const url = LOGIN_API_ENDPOINT + '/auth/google';
+    return axiosClient.post(url, accessToken);
   },
 
-  loginUser: (loginData) => {
-    return apiClient.post('/loginWithPassword', loginData);
+  getAuth: () => {
+    const url = LOGIN_API_ENDPOINT + '/auth';
+      return axiosClient.get(url, {
+        params: {
+          token: localStorage.getItem(constants.ACCESS_TOKEN_KEY),
+        },
+      });
+  },
+
+  postRefreshToken: (refreshToken) => {
+    const url = LOGIN_API_ENDPOINT + '/refresh_token';
+    return axiosClient.post(url, refreshToken);
+  },
+
+  postLogout: () => {
+    const url = LOGIN_API_ENDPOINT + '/logout';
+      return axiosClient.post(url, {
+        token: localStorage.getItem(constants.ACCESS_TOKEN_KEY),
+      });
   },
 };
 
-export { userAPI };
+export default loginApi;

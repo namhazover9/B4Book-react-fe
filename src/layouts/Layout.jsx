@@ -1,266 +1,171 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-  DownOutlined,
-  MenuUnfoldOutlined,
-  PhoneOutlined,
-  SearchOutlined,
-  ShoppingCartOutlined,
-} from '@ant-design/icons';
-import { Button, Select, Tooltip } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { MenuUnfoldOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Select } from 'antd';
+import Footer from '../components/footer/Footer';
+
+import LoginPage from '../components/modallogin/Login';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
-import Login from '../pages/login/Login';
-import Footer from '../components/footer/Footer';
-import PopupCart from '../pages/UserRole/PopupCart';
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
-
-  const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);
-  const cartSidebarRef = useRef(null);
-
-  const handleChange = (value) => {
-    switchLocale(value);
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleLoginPopup = () => {
     setIsLoginPopupOpen(!isLoginPopupOpen);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prevState) => !prevState);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const toggleCartSidebar = () => {
-    setIsCartSidebarOpen(!isCartSidebarOpen);
+  const handleChange = (value) => {
+    switchLocale(value);
   };
 
-  const navigate = useNavigate();
-
-  const handleLogoClick = () => {
-    navigate('/');
-  };
-
-  // Đóng dropdown nếu click ra ngoài
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      // Dropdown
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setIsDropdownOpen(false);
-      }
-      // Sidebar
-      if (cartSidebarRef.current && !cartSidebarRef.current.contains(event.target)) {
-        setIsCartSidebarOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
+  const menuItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Shop', path: '/products' },
+    { name: 'Books', path: '/books' },
+    { name: 'Pages', path: '/pages' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'About Us', path: '/aboutus' },
+  ];
 
   return (
     <div className='font-cairoRegular'>
       <header className='bg-white shadow-md w-full'>
-        {/* Top Row - Navigation Links */}
-        <div className='container mx-auto flex items-center justify-between px-6 py-2 text-sm text-gray-600'>
-          <div className='flex space-x-4'>
-            <Link
-              to='/aboutus'
-              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-            >
-              About Us
-            </Link>
-            <a
-              href='#'
-              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-            >
-              My Account
-            </a>
-            <a
-              href='#'
-              className="hover:text-red-500 relative after:content-[''] after:absolute after:right-[-8px] after:top-0 after:h-full after:w-[0.5px] after:bg-gray-300 last:after:hidden"
-            >
-              Wishlist
-            </a>
-            <a href='#' className='hover:text-red-500'>
-              Order Tracking
-            </a>
-          </div>
-        </div>
-
-        <div className='w-full h-[0.5px] bg-gray-300'></div>
-
-        <div className='container mx-auto flex items-center justify-between px-20'>
-          {/* Left side - Logo and main navigation */}
-          <div
-            className='flex items-center'
-            onClick={handleLogoClick}
-            style={{ cursor: 'pointer' }}
-          >
-            {/* Logo */}
-            <img className='w-28 h-28' src='src/assets/images/logo_b4b.png' alt='Logo' />
-            <h2 className='text-4xl text-black font-bold'>BigFour</h2>
-          </div>
-
-          {/* Search Bar */}
-          <div className='flex items-center border rounded-full px-3 py-3 bg-gray-100 w-1/3'>
-            <input
-              type='text'
-              placeholder='Search products...'
-              className='flex-grow outline-none bg-transparent text-gray-700 px-2'
+        {/* Main Container */}
+        <div className='container mx-auto flex justify-between items-center px-4 py-2'>
+          {/* Logo */}
+          <div className='flex items-center cursor-pointer' onClick={() => navigate('/')}>
+            <img
+              className='w-20 h-20'
+              src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png'
+              alt='Logo'
             />
-            <SearchOutlined className='text-white cursor-pointer text-1xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110 hover:shadow-lg' />
+            <h2 className='text-2xl font-bold m-0'>BigFour</h2>
           </div>
+
+          {/* Mobile View - Sidebar and Shopping Cart */}
+          <div className='block sm:hidden flex items-center space-x-4'>
+            <Link to='/cart' className='hover:text-red-500'>
+              <ShoppingCartOutlined className='text-2xl text-red-400 ' />
+            </Link>
+            <MenuUnfoldOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+          </div>
+
+          {/* Navbar - Hidden on smaller screens */}
+          <nav className='hidden sm:flex space-x-12'>
+            {menuItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`relative font-bold transition duration-300 ${
+                  location.pathname === item.path
+                    ? 'text-red-500 text-lg after:w-full'
+                    : 'text-gray-700 text-lg after:w-0'
+                } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
+              >
+                <Translate text={item.name} />
+              </Link>
+            ))}
+          </nav>
 
           {/* Right side - Search bar, icons, and language switch */}
-          <div className='flex items-center space-x-4 '>
-            {/* Language Selector */}
+          <div className='hidden sm:flex items-center space-x-4'>
+            {/* Language Switcher */}
             <Select
+              className='w-28'
               defaultValue={localStorage.getItem('locale') ?? 'en'}
               onChange={handleChange}
               options={languages}
             />
-            {/* Icons */}
-            <div className='flex items-center space-x-4 text-gray-700 '>
-              <Button onClick={toggleLoginPopup} ref={dropdownRef}>
-                Login
-              </Button>
-              <a href='#' onClick={toggleCartSidebar}>
-                <ShoppingCartOutlined className='text-2xl hover:text-red-500' />
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className='w-full h-[0.5px] bg-gray-300'></div>
-
-        {/* Secondary navigation row */}
-        <div className='flex flex-wrap justify-between px-4 sm:px-10 py-4 bg-gray-50 shadow-md border rounded-lg'>
-          {/* Categories Dropdown */}
-          <div className='relative w-full sm:w-auto' ref={dropdownRef}>
+            {/* Login Button */}
             <button
-              ref={buttonRef} // Gán ref cho button
-              className='w-full sm:w-auto flex items-center bg-red-500 text-white font-semibold text-sm sm:text-lg px-4 sm:px-6 py-2 rounded-full shadow hover:bg-red-600 transition duration-300'
-              onClick={toggleDropdown}
+              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+              onClick={toggleLoginPopup}
             >
-              <MenuUnfoldOutlined className='text-xl sm:text-2xl mr-2' />
-              <span>
-                <Translate text='Categories' />
-              </span>
-              <DownOutlined className='text-lg sm:text-xl ml-2' />
+              Login
             </button>
-
-            {isDropdownOpen && (
-              <div className='absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50'>
-                {[
-                  { icon: '📖', text: 'Action & Adventure' },
-                  { icon: '⭐', text: 'Americas', active: true },
-                  { icon: '🎨', text: 'Arts & Photography' },
-                  { icon: '📚', text: 'Biographies' },
-                  { icon: '👶', text: "Children's Books" },
-                  { icon: '📜', text: 'Classics' },
-                  { icon: '📝', text: 'Contemporary' },
-                  { icon: '📖', text: 'Education & Reference' },
-                  { icon: '📔', text: 'Genre Fiction' },
-                  { icon: '🏛️', text: 'Historical' },
-                ].map((category, index) => (
-                  <a
-                    key={index}
-                    href='#'
-                    className={`flex items-center px-4 py-2 text-sm ${
-                      category.active
-                        ? 'text-red-500 font-semibold bg-gray-50'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    } transition duration-300`}
-                  >
-                    <span className='mr-2'>{category.icon}</span>
-                    {category.text}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Main Navigation */}
-          {/* <nav className='flex space-x-8 text-base font-medium'>
-            {['Home', 'Shop', 'Books', 'Pages', 'Blog', 'Contact'].map((item, index) => (
-              <a
-                key={index}
-                href='products'
-                className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                <Translate text={item} />
-              </a>
-            ))}
-          </nav> */}
-
-          <nav className='w-full sm:w-auto flex flex-wrap justify-center space-x-2 sm:space-x-8 text-sm sm:text-base font-medium'>
-            {[
-              { name: 'Home', path: '/' },
-              { name: 'Shop', path: 'products' },
-              { name: 'Books', path: '/' },
-              { name: 'Pages', path: '/' },
-              { name: 'Blog', path: '/' },
-              { name: 'Contact', path: '/' },
-            ].map((item, index) => (
-              <a
-                key={index}
-                href={item.path} // Sử dụng đường dẫn của từng mục
-                className="relative text-gray-700 font-bold hover:text-red-500 transition duration-300 after:content-[''] after:block after:h-0.5 after:w-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                <Translate text={item.name} />
-              </a>
-            ))}
-          </nav>
-
-          {/* Contact Info */}
-          <div className='flex flex-wrap items-center space-x-4 mt-4 sm:mt-0'>
-            <Tooltip title='Call Us' placement='bottom'>
-              <a href='#' className='text-gray-600 hover:text-red-500 transition duration-300'>
-                <PhoneOutlined className='text-lg sm:text-2xl' />
-              </a>
-            </Tooltip>
-            <div className='flex flex-col items-start'>
-              <span className='text-sm sm:text-lg font-semibold'>Contact Us</span>
-              <span className='text-xs sm:text-sm'>Call: 123-456-789</span>
-            </div>
+            {/* Shopping Cart */}
+            <Link to='/cart' className='hover:text-red-500'>
+              <ShoppingCartOutlined className='text-2xl text-red-400 hover:bg-red-500 hover:text-white p-2 rounded-full' />
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* Cart Sidebar */}
+      {/* Sidebar Overlay */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform ${
-          isCartSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        } z-50`}
-        ref={cartSidebarRef}
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
+          isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
+        } sm:hidden`}
+        onClick={toggleSidebar} // Close sidebar when clicking outside
+      ></div>
+
+      {/* Sidebar - Only visible when open */}
+      <div
+        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 sm:hidden`}
       >
-        <div className='flex items-center justify-between p-4 border-b border-gray-300'>
-          <h2 className='text-lg font-semibold'>
-            <Link to={'/cart'} onClick={toggleCartSidebar}>
-              Shopping Cart
+        <div className='flex justify-between'>
+          <div className='text-xl font-bold'>Menu</div>
+          <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
+        </div>
+        <nav className='mt-4'>
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={toggleSidebar} // Close sidebar when a menu item is clicked
+              className='block py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <Translate text={item.name} />
             </Link>
-          </h2>
-          <button onClick={toggleCartSidebar} className='text-gray-500 hover:text-gray-800'>
-            ✕
+          ))}
+          {/* Language Switcher */}
+          <Select
+            className='w-full mt-4'
+            defaultValue={localStorage.getItem('locale') ?? 'en'}
+            onChange={handleChange}
+            options={languages}
+          />
+          {/* Login Button */}
+          <button
+            className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
+            onClick={() => {
+              toggleLoginPopup();
+              toggleSidebar(); // Close sidebar on login click
+            }}
+          >
+            Login
           </button>
-        </div>
-        <div className='p-4'>
-          <PopupCart />
-        </div>
+        </nav>
       </div>
 
+      {/* Login Popup */}
+      {isLoginPopupOpen && (
+        <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 select-none'>
+          <div className='bg-white w-9/12 sm:w-1/2 max-w-md p-6 rounded-lg shadow-lg relative'>
+            <button
+              onClick={toggleLoginPopup}
+              className='absolute top-4 right-4 text-gray-500 hover:text-gray-800'
+            >
+              ✕
+            </button>
+            <LoginPage />
+          </div>
+        </div>
+      )}
+
+      {/* Page Content */}
       {children}
 
       <Footer />

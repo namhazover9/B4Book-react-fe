@@ -3,6 +3,7 @@ import { lazy } from 'react';
 
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
+const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
 const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
@@ -21,6 +22,12 @@ export const routes_here = [
   {
     path: '/login',
     element: <Login />,
+    layout: null,
+    isPrivate: false,
+  },
+  {
+    path: '/forgotPassword',
+    element: <ForgotPassword />,
     layout: null,
     isPrivate: false,
   },
