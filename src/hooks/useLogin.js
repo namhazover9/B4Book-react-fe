@@ -13,7 +13,7 @@ const loginApi = {
     return axiosClient.post(url, account);
   },
   postLoginWithGoogle: (accessToken) => {
-    const url = LOGIN_API_ENDPOINT + '/auth/google';
+    const url = LOGIN_API_ENDPOINT + '/gg';
     return axiosClient.post(url, accessToken);
   },
 

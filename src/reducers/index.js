@@ -4,9 +4,9 @@ import cartsReducer from './carts';
 import userReducer from './user';
 
 const rootReducer = combineReducers({
-    authenticate: authReducer.authReducer,
-    user: userReducer.userReducer,
-    carts: cartsReducer.cartReducer,
+    authenticate: authReducer,
+    user: userReducer,
+    carts: cartsReducer,
 });
 
 export default rootReducer;
