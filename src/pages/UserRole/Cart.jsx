@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Divider, InputNumber, Input } from 'antd';
 import 'antd/dist/reset.css';
+import { Link } from 'react-router-dom';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([
@@ -30,7 +31,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     },
   ]);
 
-  const [voucherCode, setVoucherCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [totalPriceBeforeDiscount, setTotalPriceBeforeDiscount] = useState(0);
 
@@ -69,16 +69,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     alert('Cart updated successfully!');
   };
 
-  const handleApplyVoucher = () => {
-    if (voucherCode === 'DISCOUNT10') {
-      const discountAmount = totalPriceBeforeDiscount * 0.1;
-      setDiscount(discountAmount);
-    } else {
-      alert('Invalid Voucher Code');
-      setDiscount(0);
-    }
-  };
-
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
   };
@@ -94,12 +84,14 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       title: 'Product Name',
       dataIndex: 'name',
       key: 'name',
+      className: 'min-w-[120px]', // Ensure minimum width for product name
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
       render: (price) => `$${price}`,
+      className: 'min-w-[80px]', // Ensure minimum width for price
     },
     {
       title: 'Quantity',
@@ -110,6 +102,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           min={1}
           value={record.quantity}
           onChange={(value) => handleQuantityChange(record.id, value)}
+          className='w-16' // Fixed width for input number
         />
       ),
     },
@@ -117,6 +110,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       title: 'Total',
       key: 'total',
       render: (_, record) => `$${record.price * record.quantity}`,
+      className: 'min-w-[80px]', // Ensure minimum width for total
     },
     {
       title: 'Actions',
@@ -137,61 +131,60 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   if (!showUI)
     return (
-      <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
-        <h1 className='text-2xl font-bold mb-4'>Shopping Cart</h1>
-        <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
+      <div className='min-h-screen bg-gray-100 p-2 sm:p-4 flex flex-col items-center'>
+        <h1 className='text-xl sm:text-2xl font-bold mb-4'>Shopping Cart</h1>
+        <div className='w-full max-w-4xl bg-white p-2 sm:p-4 shadow-md rounded-lg'>
           {Object.keys(groupedItems).map((shop, index) => (
             <div key={index}>
               <div className='flex justify-between items-center mb-2'>
-                <h2 className='text-lg font-bold'>{shop}</h2>
+                <h2 className='text-base sm:text-lg font-bold'>{shop}</h2>
               </div>
-              <Table
-                dataSource={groupedItems[shop]}
-                columns={columns}
-                rowKey='id'
-                pagination={false}
-                bordered
-              />
+              <div className='overflow-x-auto'>
+                <Table
+                  dataSource={groupedItems[shop]}
+                  columns={columns}
+                  rowKey='id'
+                  pagination={false}
+                  bordered
+                  scroll={{ x: 'max-content' }}
+                  className='min-w-full'
+                />
+              </div>
               {index < Object.keys(groupedItems).length - 1 && <Divider />}
             </div>
           ))}
-          <div className='container flex justify-between items-center'>
+
+          {/* Voucher and Update Cart Section */}
+          <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-4">
             <Button
               type='primary'
               onClick={handleUpdateItems}
-              className='bg-red-500 hover:bg-red-600 m-4'
+              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
             >
               Update Cart
             </Button>
-            <div className='flex items-center m-2'>
-              <Input
-                placeholder='Enter Voucher Code'
-                value={voucherCode}
-                onChange={(e) => setVoucherCode(e.target.value)}
-                className='mr-2'
-              />
-              <Button
-                type='primary'
-                onClick={handleApplyVoucher}
-                className='bg-red-500 hover:bg-red-600'
-              >
-                Apply Voucher
-              </Button>
-            </div>
-            <div className='flex justify-between items-center mt-4'>
-              {discount > 0 && (
-                <h3 className='text-xl font-bold text-red-500'>
-                  Discount Applied: -${discount.toFixed(2)}
-                </h3>
-              )}
-            </div>
+
           </div>
-          <div className='flex justify-between items-center mt-4'>
-            <h2 className='text-xl font-bold'>
+
+          {/* Discount Section */}
+          {discount > 0 && (
+            <div className='mt-4 text-center sm:text-right'>
+              <h3 className='text-lg sm:text-xl font-bold text-red-500'>
+                Discount Applied: -${discount.toFixed(2)}
+              </h3>
+            </div>
+          )}
+
+          {/* Total and Checkout Section */}
+          <div className='flex flex-col sm:flex-row justify-between items-center gap-4 mt-4'>
+            <h2 className='text-lg sm:text-xl font-bold'>
               Total Price: ${totalPriceAfterDiscount.toFixed(2)}
             </h2>
-            <Button type='primary' className='bg-red-500 hover:bg-red-600' onClick={handleCheckout}>
-              Checkout
+            <Button
+              type='primary'
+              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
+              onClick={handleCheckout}
+            ><Link to='/order'>Checkout</Link>
             </Button>
           </div>
         </div>
