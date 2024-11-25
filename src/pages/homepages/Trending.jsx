@@ -106,7 +106,7 @@ const BookShowcase = () => {
           </button>
         </div>
 
-        <div className='flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4'>
+        <div className='container flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4'>
           {/* Carousel section */}
           <div className='lg:w-2/3 overflow-hidden mb-4 lg:mb-0'>
             <Carousel
@@ -124,18 +124,6 @@ const BookShowcase = () => {
                 },
                 {
                   breakpoint: 768,
-                  settings: {
-                    slidesToShow: 2,
-                  },
-                },
-                {
-                  breakpoint: 915,
-                  settings: {
-                    slidesToShow: 4,
-                  },
-                },
-                {
-                  breakpoint: 1280,
                   settings: {
                     slidesToShow: 3,
                   },
@@ -169,8 +157,8 @@ const BookShowcase = () => {
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600'>
-                        <button>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
+                        <button className='truncate block w-full'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
@@ -192,12 +180,12 @@ const BookShowcase = () => {
           </div>
 
           {/* Banner section */}
-          <div className='lg:w-1/3 '>
+          <div className='lg:w-1/3 hidden lg:block'>
             <div className='relative aspect-square rounded-2xl overflow-hidden '>
               <img src={store1} alt='Banner' className='w-full h-full object-cover ' />
               <div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent'>
                 <div className='absolute inset-0 flex flex-col justify-start items-start text-white p-6'>
-                  <h2 className='text-2xl sm:text-3xl font-bold break-words w-3/4'>
+                  <h2 className='text-2xl sm:text-2xl font-bold break-words w-3/4'>
                     {banner.title}
                   </h2>
                   <div className='text-4xl sm:text-5xl font-bold mb-4'>{banner.detail} Off</div>

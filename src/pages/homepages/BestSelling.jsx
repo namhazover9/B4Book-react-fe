@@ -1,24 +1,25 @@
 // eslint-disable-next-line no-unused-vars
+import { Button, Carousel } from 'antd';
+import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Carousel } from 'antd';
-import { Eye, Heart, ShoppingCart } from 'lucide-react';
-import { default as pic1, default as pic4 } from '../../assets/images/BestSelling/20.jpg';
-import pic2 from '../../assets/images/BestSelling/21.jpg';
-import pic3 from '../../assets/images/BestSelling/24.jpg';
-import pic5 from '../../assets/images/BestSelling/25.jpg';
-import pic6 from '../../assets/images/BestSelling/26.jpg';
-import pic7 from '../../assets/images/BestSelling/27.jpg';
-import pic8 from '../../assets/images/BestSelling/28.jpg';
-import pic9 from '../../assets/images/BestSelling/29.jpg';
-import store1 from '../../assets/images/BestSelling/h6_banner5.jpg';
+import pic1 from '../../assets/images/BestSelling/1.jpg';
+import pic2 from '../../assets/images/BestSelling/4.jpg';
+import pic3 from '../../assets/images/BestSelling/7.jpg';
+import pic4 from '../../assets/images/BestSelling/9.jpg';
+import pic5 from '../../assets/images/BestSelling/12.jpg';
+import pic6 from '../../assets/images/BestSelling/13.jpg';
+import pic7 from '../../assets/images/BestSelling/15.jpg';
+import pic8 from '../../assets/images/BestSelling/16.jpg';
+import pic9 from '../../assets/images/BestSelling/30.jpg';
+import store1 from '../../assets/images/BestSelling/h6_banner4.jpg';
 
 const BookShowcase = () => {
   const banner = {
     id: 1,
-    sologan: 'It all begins with a great book!',
-    title: 'Big Sale',
-    detail: '25%',
-    contact: 'Buy Now',
+    sologan: ' Why not send the gift of a book to family & friends.',
+    title: 'Books Make Great Gifts',
+    detail: '20%',
+    contact: 'Shop Now',
   };
   const books = [
     {
@@ -94,7 +95,6 @@ const BookShowcase = () => {
       image: pic9,
     },
   ];
-
   return (
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
@@ -106,7 +106,7 @@ const BookShowcase = () => {
           </button>
         </div>
 
-        <div className='flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4'>
+        <div className='container flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4'>
           {/* Carousel section */}
           <div className='lg:w-2/3 overflow-hidden mb-4 lg:mb-0'>
             <Carousel
@@ -125,30 +125,18 @@ const BookShowcase = () => {
                 {
                   breakpoint: 768,
                   settings: {
-                    slidesToShow: 2,
-                  },
-                },
-                {
-                  breakpoint: 915,
-                  settings: {
-                    slidesToShow: 2,
-                  },
-                },
-                {
-                  breakpoint: 1280,
-                  settings: {
                     slidesToShow: 3,
                   },
                 },
               ]}
             >
               {books.map((book) => (
-                <div key={book.id} className='w-1/4 p-2'>
-                  <div className='group relative'>
-                    <div className='relative overflow-hidden rounded-2xl'>
+                <div key={book.id} className='w-1/4 p-2 '>
+                  <div className='group relative '>
+                    <div className='relative overflow-hidden rounded-2xl '>
                       <img
                         src={book.image}
-                        className='w-full h-90 object-cover transition-all ease-in-out duration-300'
+                        className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                         <div className='absolute right-4 bottom-5 top-1/2 -translate-y-1/2 flex flex-col gap-3'>
@@ -169,8 +157,8 @@ const BookShowcase = () => {
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600'>
-                        <button>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
+                        <button className='truncate block w-full'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
@@ -192,12 +180,12 @@ const BookShowcase = () => {
           </div>
 
           {/* Banner section */}
-          <div className='lg:w-1/3 '>
-            <div className='relative aspect-square rounded-2xl overflow-hidden'>
-              <img src={store1} alt='Banner' className='w-full h-full object-cover' />
+          <div className='lg:w-1/3 hidden lg:block'>
+            <div className='relative aspect-square rounded-2xl overflow-hidden '>
+              <img src={store1} alt='Banner' className='w-full h-full object-cover ' />
               <div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent'>
                 <div className='absolute inset-0 flex flex-col justify-start items-start text-white p-6'>
-                  <h2 className='text-2xl sm:text-3xl font-bold break-words w-3/4'>
+                  <h2 className='text-2xl sm:text-2xl font-bold break-words w-3/4'>
                     {banner.title}
                   </h2>
                   <div className='text-4xl sm:text-5xl font-bold mb-4'>{banner.detail} Off</div>

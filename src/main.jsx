@@ -6,17 +6,22 @@ import '@styles/index.css';
 import { Provider } from 'react-redux';
 import { LocalizationProvider } from './context/LocalizationWrapper';
 import configStore from './configs/configureStore';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const store = configStore();
 
+const clientId = import.meta.env.VITE_CLIENT_ID;
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LocalizationProvider>
-      <Provider store={store}>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </Provider>
-    </LocalizationProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <LocalizationProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </Provider>
+      </LocalizationProvider>
+    </GoogleOAuthProvider>
   </React.StrictMode>,
 );

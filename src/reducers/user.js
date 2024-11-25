@@ -21,7 +21,7 @@ const getUser = (user) => {
   };
 };
 
-const initialState = {};
+const initialState = {role: ''};
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -34,9 +34,10 @@ const userReducer = (state = initialState, action) => {
   }
 };
 
-export default {
-  userReducer,
+export {
   getUserRequest,
   getUser,
-  GET_USER,
+  GET_USER
 };
+
+export default userReducer;

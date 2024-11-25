@@ -9,13 +9,13 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import authReducers from '../../reducers/auth';
 
 import CheckboxField from '../../components/Field/CheckboxField';
 import InputField from '../../components/Field/InputField';
 import LoginGoogle from '../../components/LoginGoogle';
 import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
+import { setIsAuth } from '../../reducers/auth';
 
 function Login() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function Login() {
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       if (process.env.NODE_ENV === 'production')
         localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      dispatch(authReducers.setIsAuth(true));
+      dispatch(setIsAuth(true));
       setTimeout(() => {
         navigate(-1);
       }, constants.DELAY_TIME);

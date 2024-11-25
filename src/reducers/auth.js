@@ -58,9 +58,11 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export default {
-  authReducer,
-  SET_IS_AUTH,
-  setIsAuth,
+export {
+  refreshToken,
   getIsAuth,
+  setIsAuth,
+  SET_IS_AUTH,
 };
+
+export default authReducer;

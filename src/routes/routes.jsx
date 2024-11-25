@@ -9,6 +9,7 @@ const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
+const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -57,6 +58,12 @@ export const routes_here = [
   {
     path: '/cart',
     element: <Cart />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/popupcart',
+    element: <PopupCart />,
     layout: 'user',
     isPrivate: false,
   },
