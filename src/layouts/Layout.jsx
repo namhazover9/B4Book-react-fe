@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
 
-import LoginPage from '../components/modallogin/Login';
+import LoginPage from '../components/modalLogin/LoginPopup';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';

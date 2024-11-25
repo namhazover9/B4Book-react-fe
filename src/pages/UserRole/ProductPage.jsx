@@ -37,6 +37,10 @@ export default function ProductPage() {
   }, []);
 
   // Filter Category
+  const onCategoryChange = (e) => {
+    console.log(`checked = ${e.target.checked}`);
+  };
+
   const uniqueCategories = bookList.reduce((categories, book) => {
     book.category.forEach((cat) => {
       if (!categories.includes(cat)) {
@@ -49,13 +53,7 @@ export default function ProductPage() {
   const categoryItems = uniqueCategories.map((category, index) => ({
     key: `category-${index}`,
     label: (
-      <Checkbox
-        checked={selectedCategories.includes(category)}
-        onChange={(e) => onCategoryChange(e, category)}
-        className='truncate'
-      >
-        {category}
-      </Checkbox>
+      <Checkbox onChange={onCategoryChange}>{category}</Checkbox>
     ),
   }));
 
@@ -69,6 +67,10 @@ export default function ProductPage() {
   ];
 
   // Filter Author
+  const onAuthorChange = (e) => {
+    console.log(`checked = ${e.target.checked}`);
+  };
+
   const uniqueAuthors = bookList.reduce((authors, book) => {
     if (!authors.includes(book.author)) {
       authors.push(book.author);
@@ -79,13 +81,7 @@ export default function ProductPage() {
   const authorItems = uniqueAuthors.map((author, index) => ({
     key: `author-${index}`,
     label: (
-      <Checkbox
-        checked={selectedAuthors.includes(author)}
-        onChange={(e) => onAuthorChange(e, author)}
-        className='truncate'
-      >
-        {author}
-      </Checkbox>
+      <Checkbox onChange={onAuthorChange}>{author}</Checkbox>
     ),
   }));
 
@@ -98,87 +94,71 @@ export default function ProductPage() {
     },
   ];
 
-  const onCategoryChange = (e, category) => {
-    if (e.target && e.target.checked !== undefined) {
-      const { checked } = e.target;
-      setSelectedCategories((prevCategories) => {
-        const updatedCategories = checked
-          ? [...prevCategories, category]
-          : prevCategories.filter((cat) => cat !== category);
+  // const onCategoryChange = (e, category) => {
+  //   if (e.target && e.target.checked !== undefined) {
+  //     const { checked } = e.target;
+  //     setSelectedCategories((prevCategories) => {
+  //       const updatedCategories = checked
+  //         ? [...prevCategories, category]
+  //         : prevCategories.filter((cat) => cat !== category);
 
-        filterBooksList(updatedCategories, selectedAuthors);
-        return updatedCategories;
-      });
-    }
-  };
+  //       filterBooksList(updatedCategories, selectedAuthors);
+  //       return updatedCategories;
+  //     });
+  //   }
+  // };
 
-  const onAuthorChange = (e, author) => {
-    if (e.target && e.target.checked !== undefined) {
-      const { checked } = e.target;
-      setSelectedAuthors((prevAuthors) => {
-        const updatedAuthors = checked
-          ? [...prevAuthors, author]
-          : prevAuthors.filter((cat) => cat !== author);
+  // const onAuthorChange = (e, author) => {
+  //   if (e.target && e.target.checked !== undefined) {
+  //     const { checked } = e.target;
+  //     setSelectedAuthors((prevAuthors) => {
+  //       const updatedAuthors = checked
+  //         ? [...prevAuthors, author]
+  //         : prevAuthors.filter((cat) => cat !== author);
 
-        filterBooksList(selectedCategories, updatedAuthors);
-        return updatedAuthors;
-      });
-    }
-  };
+  //       filterBooksList(selectedCategories, updatedAuthors);
+  //       return updatedAuthors;
+  //     });
+  //   }
+  // };
 
-  const filterBooksList = (categories, authors, price = priceRange) => {
-    const filteredBooks = bookList.filter((book) => {
+  // const filterBooksList = (categories, authors, price = priceRange) => {
+  //   const filteredBooks = bookList.filter((book) => {
 
-      // Kiểm tra Category
-      const categoryMatch = categories.length
-        ? categories.some((category) => {
-          return Array.isArray(book.category)
-            ? book.category.some((cat) => cat.includes(category))
-            : book.category.includes(category);
-        })
-        : true;
+  //     // Kiểm tra Category
+  //     const categoryMatch = categories.length
+  //       ? categories.some((category) => {
+  //         return Array.isArray(book.category)
+  //           ? book.category.some((cat) => cat.includes(category))
+  //           : book.category.includes(category);
+  //       })
+  //       : true;
 
-      // Kiểm tra Author
-      const authorMatch = authors.length ? authors.includes(book.author) : true;
+  //     // Kiểm tra Author
+  //     const authorMatch = authors.length ? authors.includes(book.author) : true;
 
-      // Kiểm tra Price
-      const priceMatch = book.price >= price[0] && book.price <= price[1];
+  //     // Kiểm tra Price
+  //     const priceMatch = book.price >= price[0] && book.price <= price[1];
 
-      return categoryMatch && authorMatch && priceMatch;
-    });
+  //     return categoryMatch && authorMatch && priceMatch;
+  //   });
 
-    console.log('Filtered Books:', filteredBooks);
+  //   console.log('Filtered Books:', filteredBooks);
 
-    setFilterBooks(filteredBooks);
-    setCurrentPage(1);
-  };
-
+  //   setFilterBooks(filteredBooks);
+  //   setCurrentPage(1);
+  // };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   // Get current page books
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = filterBooks.slice(indexOfFirstBook, indexOfLastBook);
 
   // Filter by Price
   const [disabled, setDisabled] = useState(false);
   const onChange = (checked) => {
     setDisabled(checked);
-  };
-
-  const handleSliderChange = (value) => {
-    setPriceRange(value);
-  };
-
-  const handleSliderAfterChange = (value) => {
-    filterBooksList(selectedCategories, selectedAuthors, value);
-  };
-
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
 
   // View Change
@@ -211,7 +191,7 @@ export default function ProductPage() {
                 defaultOpenKeys={['sub1']}
                 mode='inline'
                 items={categorys}
-                onClick={onCategoryChange}
+                // onClick={onCategoryChange}
               />
             </div>
             <div className="genre-phone lg:hidden">
@@ -220,10 +200,10 @@ export default function ProductPage() {
                 defaultValue={[]}
                 mode="multiple"
                 className='w-full md:w-5/6'
-                onChange={(values) => {
-                  setSelectedCategories(values);
-                  filterBooksList(values, selectedAuthors);
-                }}
+                // onChange={(values) => {
+                //   setSelectedCategories(values);
+                //   filterBooksList(values, selectedAuthors);
+                // }}
                 options={uniqueCategories.map((category) => ({
                   label: category,
                   value: category,
@@ -239,7 +219,7 @@ export default function ProductPage() {
                 defaultOpenKeys={['sub1']}
                 mode='inline'
                 items={authors}
-                onClick={onAuthorChange}
+                // onClick={onAuthorChange}
               />
             </div>
             <div className="author-phone lg:hidden">
@@ -248,10 +228,10 @@ export default function ProductPage() {
                 defaultValue={[]}
                 mode="multiple"
                 className='w-full md:w-5/6'
-                onChange={(values) => {
-                  setSelectedAuthors(values);
-                  filterBooksList(selectedCategories, values);
-                }}
+                // onChange={(values) => {
+                //   setSelectedAuthors(values);
+                //   filterBooksList(selectedCategories, values);
+                // }}
                 options={uniqueAuthors.map((author) => ({
                   label: author,
                   value: author,
@@ -265,7 +245,7 @@ export default function ProductPage() {
           <div className='price'>
             <div className="price-ipad hidden lg:block">
               <Card
-                title='💲Filter by Price'
+                title=':heavy_dollar_sign:Filter by Price'
                 className='h-auto overflow-y-auto bg-gray-50'
                 bordered={false}
               >
@@ -273,8 +253,8 @@ export default function ProductPage() {
                   range
                   defaultValue={priceRange}
                   max={200000}
-                  onChange={handleSliderChange}
-                  onChangeComplete={handleSliderAfterChange}
+                  // onChange={handleSliderChange}
+                  // onChangeComplete={handleSliderAfterChange}
                   disabled={disabled}
                 />
                 <div className='flex justify-between mt-2'>
@@ -297,8 +277,8 @@ export default function ProductPage() {
                 defaultValue={priceRange}
                 max={200000}
                 className='w-full md:w-5/6'
-                onChange={handleSliderChange}
-                onChangeComplete={handleSliderAfterChange}
+                // onChange={handleSliderChange}
+                // onChangeComplete={handleSliderAfterChange}
                 disabled={disabled}
               />
               <div className='flex justify-between md:w-5/6 mt-2'>
@@ -333,7 +313,7 @@ export default function ProductPage() {
                 <Select
                   defaultValue='Default sorting'
                   className='w-44 mr-2'
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   options={[
                     {
                       value: 'Default sorting',
@@ -366,7 +346,7 @@ export default function ProductPage() {
                 <Select
                   defaultValue='Show 10'
                   className='w-28'
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   options={[
                     {
                       value: 'Show 10',
@@ -402,7 +382,7 @@ export default function ProductPage() {
               <div className="">
                 {viewMode === 'block' ? (
                   <div className='list-by-block sm:w-11/12 xl:w-full'>
-                    {currentBooks.length === 0 ? (
+                    {bookList.length === 0 ? (
                       <div className='not-found'>
                         <h2 className='text-center my-20'>
                           No books found matching the selected filters.
@@ -410,8 +390,8 @@ export default function ProductPage() {
                       </div>
                     ) : (
                       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
-                        {currentBooks.map((book, index) => {
-                          const imageUrl = book.images[0] ? book.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
+                        {bookList.map((book, index) => {
+                          const imageUrl = book.images[0] ? book.images[0] : '';
 
                           return (
                             <div className='flex flex-col sm:flex-row justify-between items-center' key={index}>
@@ -460,7 +440,7 @@ export default function ProductPage() {
                   </div>
                 ) : (
                   <div className='list-by-line'>
-                    {currentBooks.length === 0 ? (
+                    {bookList.length === 0 ? (
                       <div className='not-found'>
                         <h2 className='text-center my-20'>
                           No books found matching the selected filters.
@@ -468,8 +448,8 @@ export default function ProductPage() {
                       </div>
                     ) : (
                       <div className='flex flex-col'>
-                        {currentBooks.map((book, index) => {
-                          const imageUrl = book.images[0] ? book.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
+                        {bookList.map((book, index) => {
+                          const imageUrl = book.images[0] ? book.images[0] : '';
 
                           return (
                             <div className='mx-6'>

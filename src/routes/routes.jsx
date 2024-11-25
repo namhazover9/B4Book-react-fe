@@ -41,7 +41,7 @@ export const routes_here = [
     path: '/admin',
     element: <AdminPage />,
     layout: 'admin',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/dashboard',
