@@ -53,7 +53,7 @@ export const routes_here = [
     path: '/products',
     element: <ProductPage />,
     layout: 'user',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/cart',
