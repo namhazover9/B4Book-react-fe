@@ -10,7 +10,8 @@ const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
-const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const Details = lazy(() => import('@pages/homepages/Details'));
+const Order = lazy(() => import('@pages/UserRole/Order'));
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -69,8 +70,14 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shops',
-    element: <SellerPage />,
+    path: '/details',
+    element: <Details />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/order',
+    element: <Order />,
     layout: 'user',
     isPrivate: false,
   },
