@@ -94,11 +94,12 @@ const cartReducer = (state = initialState, action) => {
 };
 
 //======= exports =======//
-export default {
+export {
   addToCart,
   ADD_PRODUCT,
-  cartReducer,
   resetCart,
   delCartItem,
   updateCartItem,
 };
+
+export default cartReducer;

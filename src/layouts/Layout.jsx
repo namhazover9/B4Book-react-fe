@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
 
-import LoginPage from '../components/modallogin/Login';
+import LoginPage from '../components/modalLogin/LoginPopup';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
@@ -30,8 +30,8 @@ export default function Layout({ children }) {
 
   const menuItems = [
     { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/products' },
-    { name: 'Books', path: '/books' },
+    { name: 'Shops', path: '/shops' },
+    { name: 'Books', path: '/products' },
     { name: 'Pages', path: '/pages' },
     { name: 'Blog', path: '/blog' },
     { name: 'About Us', path: '/aboutus' },

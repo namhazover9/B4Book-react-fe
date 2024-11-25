@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '@layouts/Layout';
 import AdminLayout from '../layouts/AdminLayout';
@@ -7,20 +8,37 @@ import ScrollTop from '@components/ScrollTop';
 import NotFoundPage from '../pages/pageError/page404';
 import ForbiddenPage from '../pages/pageError/page403';
 import LoadingSpinner from '../components/loading';
+import { getIsAuth } from '../reducers/auth';
+import { getUserRequest } from '../reducers/user';
+import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
 
 const layoutMap = {
   admin: AdminLayout,
-  //   sale: SaleLayout,
   user: Layout,
 };
 
 const AppRoutes = () => {
-  const isAuthenticated = true;
-  const userRole = 'user';
+  const dispatch = useDispatch();
 
+  // Lấy trạng thái xác thực và vai trò người dùng từ Redux
+  const isAuth = useSelector((state) => state.authenticate.isAuth);
+  const userRole = useSelector((state) => state.user.role);
+
+  // Kiểm tra xác thực
+  useEffect(() => {
+    dispatch(getIsAuth());
+  }, [dispatch]);
+
+  // Lấy thông tin người dùng khi xác thực thành công
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(getUserRequest());
+    }
+  }, [isAuth, dispatch]);
+
+  // Xác định quyền truy cập
   const hasAccess = (layout) => {
     if (layout === 'admin' && userRole !== 'admin') return false;
-    if (layout === 'sale' && userRole !== 'sale') return false;
     if (layout === 'user' && userRole !== 'user') return false;
     return true;
   };
@@ -36,11 +54,12 @@ const AppRoutes = () => {
         <ScrollTop />
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
-            if (isPrivate && !isAuthenticated) {
-              return <Route key={key} path={path} element={<Navigate to='/login' />} />;
+            if (isPrivate && !isAuth) {
+              // If the user is not authenticated and the route is private, show the LoginPopup
+              return <Route key={key} path={path} element={<LoginPopup />} />;
             }
 
-            if (!hasAccess(layout)) {
+            if (!hasAccess(layout) && isPrivate) {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;
             }
 

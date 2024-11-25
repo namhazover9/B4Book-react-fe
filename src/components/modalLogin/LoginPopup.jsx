@@ -17,7 +17,7 @@ import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
 import { setIsAuth } from '../../reducers/auth';
 
-function Login() {
+function LoginPopup() {
   const navigate = useNavigate();
   const windowWidth = window.screen.width;
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +30,7 @@ function Login() {
       setIsSubmitting(false);
       message.success('Đăng nhập thành công');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
+
       if (process.env.NODE_ENV === 'production')
         localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
@@ -72,7 +73,7 @@ function Login() {
   // Giá trị khởi tạo cho Formik
   const initialValue = {
     email: '',
-    password: '',
+    passWord: '',
     keepLogin: false,
   };
 
@@ -82,13 +83,13 @@ function Login() {
       .trim()
       .required('* Email bạn là gì ?')
       .email('* Email không hợp lệ !'),
-    password: Yup.string()
+    passWord: Yup.string()
       .trim()
       .required('* Mật khẩu của bạn là gì ?'),
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className=" flex flex-col items-center justify-center">
       <h1 className="text-xl font-bold underline underline-offset-4 mb-5">Đăng nhập</h1>
       <Formik
         initialValues={initialValue}
@@ -118,7 +119,7 @@ function Login() {
               </div>
               <div className="mb-4">
                 <FastField
-                  name="password"
+                  name="passWord"
                   component={InputField}
                   className="w-full px-3 py-2 border rounded-lg"
                   type="password"
@@ -167,4 +168,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPopup;

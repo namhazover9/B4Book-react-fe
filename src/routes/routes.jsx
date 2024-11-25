@@ -43,7 +43,7 @@ export const routes_here = [
     path: '/admin',
     element: <AdminPage />,
     layout: 'admin',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/dashboard',
@@ -55,7 +55,7 @@ export const routes_here = [
     path: '/products',
     element: <ProductPage />,
     layout: 'user',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/cart',
