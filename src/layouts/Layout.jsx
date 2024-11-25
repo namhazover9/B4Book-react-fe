@@ -30,8 +30,8 @@ export default function Layout({ children }) {
 
   const menuItems = [
     { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/products' },
-    { name: 'Books', path: '/books' },
+    { name: 'Shops', path: '/shops' },
+    { name: 'Books', path: '/products' },
     { name: 'Pages', path: '/pages' },
     { name: 'Blog', path: '/blog' },
     { name: 'About Us', path: '/aboutus' },
