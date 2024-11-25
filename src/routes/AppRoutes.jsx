@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '@layouts/Layout';
@@ -10,6 +10,7 @@ import ForbiddenPage from '../pages/pageError/page403';
 import LoadingSpinner from '../components/loading';
 import { getIsAuth } from '../reducers/auth';
 import { getUserRequest } from '../reducers/user';
+import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
 
 const layoutMap = {
   admin: AdminLayout,
@@ -48,13 +49,14 @@ const AppRoutes = () => {
   };
 
   return (
-    <React.Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<LoadingSpinner />}>
       <>
         <ScrollTop />
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
             if (isPrivate && !isAuth) {
-              return <Route key={key} path={path} element={<Navigate to='/login' />} />;
+              // If the user is not authenticated and the route is private, show the LoginPopup
+              return <Route key={key} path={path} element={<LoginPopup />} />;
             }
 
             if (!hasAccess(layout) && isPrivate) {
@@ -66,7 +68,7 @@ const AppRoutes = () => {
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </>
-    </React.Suspense>
+    </Suspense>
   );
 };
 
