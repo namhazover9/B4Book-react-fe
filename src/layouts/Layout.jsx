@@ -54,7 +54,7 @@ export default function Layout({ children }) {
 
           {/* Mobile View - Sidebar and Shopping Cart */}
           <div className='block sm:hidden flex items-center space-x-4'>
-            <Link to='/cart' className='hover:text-red-500'>
+            <Link to='/popupcart' className='hover:text-red-500'>
               <ShoppingCartOutlined className='text-2xl text-red-400 ' />
             </Link>
             <MenuUnfoldOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
@@ -66,11 +66,10 @@ export default function Layout({ children }) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative font-bold transition duration-300 ${
-                  location.pathname === item.path
+                className={`relative font-bold transition duration-300 ${location.pathname === item.path
                     ? 'text-red-500 text-lg after:w-full'
                     : 'text-gray-700 text-lg after:w-0'
-                } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
+                  } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
@@ -103,17 +102,15 @@ export default function Layout({ children }) {
 
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-          isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
-        } sm:hidden`}
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
+          } sm:hidden`}
         onClick={toggleSidebar} // Close sidebar when clicking outside
       ></div>
 
       {/* Sidebar - Only visible when open */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 sm:hidden`}
+        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 sm:hidden`}
       >
         <div className='flex justify-between'>
           <div className='text-xl font-bold'>Menu</div>
@@ -142,7 +139,7 @@ export default function Layout({ children }) {
             className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
             onClick={() => {
               toggleLoginPopup();
-              toggleSidebar(); // Close sidebar on login click
+              toggleSidebar();
             }}
           >
             Login
