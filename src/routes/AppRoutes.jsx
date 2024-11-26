@@ -10,7 +10,6 @@ import ForbiddenPage from '../pages/pageError/page403';
 import LoadingSpinner from '../components/loading';
 import { getIsAuth } from '../reducers/auth';
 import { getUserRequest } from '../reducers/user';
-import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
 
 const layoutMap = {
   admin: AdminLayout,
@@ -39,8 +38,8 @@ const AppRoutes = () => {
 
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
-    if (layout === 'admin' && userRole !== 'admin') return false;
-    if (layout === 'user' && userRole !== 'user') return false;
+    if (layout === 'Admin' && userRole !== 'Admin') return false;
+    if (layout === 'Customer' && userRole !== 'Customer') return false;
     if (layout === 'Shop' && userRole !== 'Shop') return false;
     return true;
   };

@@ -86,12 +86,14 @@ export default function Layout({ children }) {
               options={languages}
             />
             {/* Login Button */}
+            <Link to='/login' className='hover:text-red-500'>
             <button
               className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
-              onClick={toggleLoginPopup}
             >
               Login
             </button>
+            </Link>
+            
             {/* Shopping Cart */}
             <Link to='/cart' className='hover:text-red-500'>
               <ShoppingCartOutlined className='text-2xl text-red-400 hover:bg-red-500 hover:text-white p-2 rounded-full' />
