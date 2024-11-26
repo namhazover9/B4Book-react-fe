@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
 const Home = lazy(() => import('@pages/homepages/Home'));
@@ -42,8 +43,8 @@ export const routes_here = [
   {
     path: '/admin',
     element: <AdminPage />,
-    layout: 'admin',
-    isPrivate: false,
+    layout: 'Admin',
+    isPrivate: true,
   },
   {
     path: '/dashboard',
@@ -60,7 +61,7 @@ export const routes_here = [
   {
     path: '/cart',
     element: <Cart />,
-    layout: 'Shop',
+    layout: 'Customer',
     isPrivate: true,
   },
   {
