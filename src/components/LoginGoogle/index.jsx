@@ -24,9 +24,9 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
 
       dispatch(setIsAuth(true));
 
-      setTimeout(() => {
-        navigate(-1);
-      }, constants.DELAY_TIME);
+      // setTimeout(() => {
+      //   navigate(-1);
+      // }, constants.DELAY_TIME);
     } catch (error) {
       message.error('Lỗi đăng nhập.');
       console.log(error, 'error');

@@ -33,9 +33,9 @@ function Login() {
       if (process.env.NODE_ENV === 'production')
         localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
-      setTimeout(() => {
-        navigate(-1);
-      }, constants.DELAY_TIME);
+      // setTimeout(() => {
+      //   navigate(-1);
+      // }, constants.DELAY_TIME);
     } catch (error) {
       message.error('Lỗi đăng nhập.');
     }

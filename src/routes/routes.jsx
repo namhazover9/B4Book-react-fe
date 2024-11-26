@@ -36,7 +36,7 @@ export const routes_here = [
   {
     path: '/aboutus',
     element: <AboutUs />,
-    layout: 'user',
+    layout: null,
     isPrivate: false,
   },
   {
@@ -60,8 +60,8 @@ export const routes_here = [
   {
     path: '/cart',
     element: <Cart />,
-    layout: 'user',
-    isPrivate: false,
+    layout: 'Shop',
+    isPrivate: true,
   },
   {
     path: '/popupcart',
