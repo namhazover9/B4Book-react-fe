@@ -1,7 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Carousel } from 'antd';
-
 import pic1 from '../../assets/images/BestSelling/32.jpg';
 import pic2 from '../../assets/images/BestSelling/33.jpg';
 import pic3 from '../../assets/images/BestSelling/9.jpg';
@@ -69,88 +68,36 @@ const TopSellingVendors = () => {
           </button>
         </div>
 
-        {/* Vendor Carousel for Mobile */}
-        <div className='block sm:hidden'>
-          <Carousel dots autoplay>
-            {vendors.map((vendor) => (
-              <div key={vendor.id} className='px-2'>
-                <div className='space-y-4'>
-                  <div className='grid grid-cols-3 gap-2'>
-                    <div className='col-span-2'>
-                      <img
-                        src={vendor.images[0]}
-                        alt='Main Product'
-                        className='w-full h-90 sm:h-60 object-cover rounded-xl'
-                      />
-                    </div>
-                    <div className='grid grid-rows-2 gap-2'>
-                      <img
-                        src={vendor.images[1]}
-                        alt='Product'
-                        className='w-full h-45 sm:h-28 object-cover rounded-xl'
-                      />
-                      <img
-                        src={vendor.images[2]}
-                        alt='Product'
-                        className='w-full h-45 sm:h-28 object-cover rounded-xl'
-                      />
-                    </div>
-                  </div>
-
-                  <div className='flex items-center space-x-3'>
-                    <div className='w-14 h-14 bg-blue-400 rounded-2xl flex items-center justify-center text-white text-sm font-bold'>
-                      <img
-                        src={vendor.storeImage}
-                        alt='Store'
-                        className='w-full h-full object-cover rounded-xl'
-                      />
-                    </div>
-                    <div>
-                      <h3 className='font-semibold text-sm'>
-                        {vendor.name}
-                        <span className='text-gray-500 text-sm ml-2'>
-                          ({vendor.products} Products)
-                        </span>
-                      </h3>
-                      <div className='flex text-yellow-400 text-xs'>
-                        {'★'.repeat(vendor.rating)}
-                        {'☆'.repeat(5 - vendor.rating)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </Carousel>
-        </div>
-
-        {/* Vendor Grid for Larger Screens */}
-        <div className='hidden sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-14'>
+        {/* Vendor Grid */}
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-14 '>
           {vendors.map((vendor) => (
             <div key={vendor.id} className='space-y-4'>
-              <div className='grid grid-cols-3 gap-2'>
+              {/* Images */}
+              <div className='grid grid-cols-3  gap-2'>
                 <div className='col-span-2'>
                   <img
                     src={vendor.images[0]}
                     alt='Main Product'
-                    className='w-full h-60 object-cover rounded-xl'
+                    className='w-full h-90 sm:h-60 md:h-[256] object-cover rounded-xl'
                   />
                 </div>
                 <div className='grid grid-rows-2 gap-2'>
                   <img
                     src={vendor.images[1]}
                     alt='Product'
-                    className='w-full h-28 object-cover rounded-xl'
+                    className='w-full h-45 sm:h-28 md:h-[179] object-cover rounded-xl'
                   />
                   <img
                     src={vendor.images[2]}
                     alt='Product'
-                    className='w-full h-28 object-cover rounded-xl'
+                    className='w-full h-45 sm:h-28 md:h-[179]object-cover rounded-xl'
                   />
                 </div>
               </div>
 
+              {/* Vendor Info */}
               <div className='flex items-center space-x-3'>
+                {/* Store Logo */}
                 <div className='w-14 h-14 bg-blue-400 rounded-2xl flex items-center justify-center text-white text-sm font-bold'>
                   <img
                     src={vendor.storeImage}
@@ -158,14 +105,17 @@ const TopSellingVendors = () => {
                     className='w-full h-full object-cover rounded-xl'
                   />
                 </div>
+                {/* Vendor Details */}
                 <div>
-                  <h3 className='font-semibold text-sm'>
-                    {vendor.name}
-                    <span className='text-gray-500 text-sm ml-2'>
-                      ({vendor.products} Products)
-                    </span>
-                  </h3>
-                  <div className='flex text-yellow-400 text-xs'>
+                  <div className='flex items-center space-x-1'>
+                    <h3 className='font-semibold text-sm sm:text-base'>
+                      {vendor.name}
+                      <span className='text-gray-500 text-sm ml-2'>
+                        ({vendor.products} Products)
+                      </span>{' '}
+                    </h3>
+                  </div>
+                  <div className='flex text-yellow-400 text-xs sm:text-sm'>
                     {'★'.repeat(vendor.rating)}
                     {'☆'.repeat(5 - vendor.rating)}
                   </div>
