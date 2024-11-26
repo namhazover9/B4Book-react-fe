@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from 'react';
 
+
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
@@ -10,7 +11,7 @@ const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
-const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -63,17 +64,17 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/popupcart',
-    element: <PopupCart />,
-    layout: 'user',
-    isPrivate: false,
-  },
-  {
     path: '/shops',
-    element: <SellerPage />,
+    element:<ShopPage />,
     layout: 'user',
     isPrivate: false,
   },
+  // {
+  //   path: '/shops',
+  //   element: <SellerPage />,
+  //   layout: 'user',
+  //   isPrivate: false,
+  // },
   // {
   //   path: "/sales",
   //   element: <SalePage />,
