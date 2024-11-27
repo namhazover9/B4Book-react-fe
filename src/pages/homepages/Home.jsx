@@ -14,6 +14,7 @@ import GalleryImage from './GalleryImage';
 import LogoGallery from './LogoGallery';
 import LogoShopBook from './LogoShopbook';
 import Banner from './Banner';
+import OrderConfirm from '../UserRole/OrderConfirm';
 
 export default function Home() {
   // testBackendConnection();
@@ -31,6 +32,7 @@ export default function Home() {
       <Banner />
       <GalleryImage />
       <LogoGallery />
+      <OrderConfirm />
     </div>
   );
 }

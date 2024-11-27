@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Divider, InputNumber, Input } from 'antd';
 import 'antd/dist/reset.css';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -81,6 +83,8 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
+    // window.location.href = '/OrderComfirm.jsx';
+    navigate('/orderconfirm');
   };
 
   const columns = [
