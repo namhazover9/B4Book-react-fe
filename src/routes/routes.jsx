@@ -2,7 +2,6 @@
 import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
-
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
@@ -67,36 +66,26 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
-  {
-    path: '/popupcart',
-    element: <PopupCart />,
-    layout: 'user',
-    isPrivate: false,
-  },
+
   {
     path: '/shops',
-    element:<ShopPage />,
+    element: <ShopPage />,
+    layout: 'user',
+    isPrivate: false,
+  },
+
+  {
+    path: '/details',
+    element: <Details />,
     layout: 'user',
     isPrivate: false,
   },
   {
-        path: '/popupcart',
-        element: <PopupCart />,
-        layout: 'user',
-        isPrivate: false,
-      },
-      {
-        path: '/details',
-        element: <Details />,
-        layout: 'user',
-        isPrivate: false,
-      },
-      {
-        path: '/order',
-        element: <Order />,
-        layout: 'user',
-        isPrivate: false,
-      },
+    path: '/order',
+    element: <Order />,
+    layout: 'user',
+    isPrivate: false,
+  },
   // {
   //   path: '/shops',
   //   element: <SellerPage />,
