@@ -38,6 +38,12 @@ const productsApi = {
     const url = productsApi.buildFilterUrl(filters);
     return axiosClient.get(url);
   },
+
+  // Tìm kiếm sản phẩm theo keyword
+  searchProducts: (keyword) => {
+    const url = `/products/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
+    return axiosClient.get(url);
+  },
 };
 
 export default productsApi;

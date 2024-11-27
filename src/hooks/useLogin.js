@@ -17,13 +17,13 @@ const loginApi = {
     return axiosClient.post(url, accessToken);
   },
 
+  postLoginWithFacebook: (accessToken) => {
+    const url = LOGIN_API_ENDPOINT + '/fb';
+    return axiosClient.post(url, accessToken);
+  },
   getAuth: () => {
     const url = LOGIN_API_ENDPOINT + '/auth';
-      return axiosClient.get(url, {
-        params: {
-          token: localStorage.getItem(constants.ACCESS_TOKEN_KEY),
-        },
-      });
+      return axiosClient.get(url);
   },
 
   postRefreshToken: (refreshToken) => {

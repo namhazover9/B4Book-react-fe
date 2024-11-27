@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '@layouts/Layout';
@@ -21,7 +21,10 @@ const AppRoutes = () => {
 
   // Lấy trạng thái xác thực và vai trò người dùng từ Redux
   const isAuth = useSelector((state) => state.authenticate.isAuth);
-  const userRole = useSelector((state) => state.user.role);
+  const userRole = useSelector((state) => state.user.role[0]?.name);
+  const userId = useSelector((state) => state.user._id);
+  console.log(userId);
+  console.log(userRole);
 
   // Kiểm tra xác thực
   useEffect(() => {
@@ -37,8 +40,9 @@ const AppRoutes = () => {
 
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
-    if (layout === 'admin' && userRole !== 'admin') return false;
-    if (layout === 'user' && userRole !== 'user') return false;
+    if (layout === 'Admin' && userRole !== 'Admin') return false;
+    if (layout === 'Customer' && userRole !== 'Customer') return false;
+    if (layout === 'Shop' && userRole !== 'Shop') return false;
     return true;
   };
 
@@ -48,12 +52,13 @@ const AppRoutes = () => {
   };
 
   return (
-    <React.Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<LoadingSpinner />}>
       <>
         <ScrollTop />
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
             if (isPrivate && !isAuth) {
+              // If the user is not authenticated and the route is private, show the LoginPopup
               return <Route key={key} path={path} element={<Navigate to='/login' />} />;
             }
 
@@ -66,7 +71,7 @@ const AppRoutes = () => {
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </>
-    </React.Suspense>
+    </Suspense>
   );
 };
 

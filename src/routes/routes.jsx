@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { User } from 'lucide-react';
+import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
 const Home = lazy(() => import('@pages/homepages/Home'));
@@ -12,6 +13,10 @@ const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
 const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
+const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
+const Details = lazy(() => import('@pages/homepages/Details'));
+const Order = lazy(() => import('@pages/UserRole/Order'));
+
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -36,14 +41,14 @@ export const routes_here = [
   {
     path: '/aboutus',
     element: <AboutUs />,
-    layout: 'user',
+    layout: null,
     isPrivate: false,
   },
   {
     path: '/admin',
     element: <AdminPage />,
-    layout: 'admin',
-    isPrivate: false,
+    layout: 'Admin',
+    isPrivate: true,
   },
   {
     path: '/dashboard',
@@ -63,9 +68,10 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+
   {
-    path: '/popupcart',
-    element: <PopupCart />,
+    path: '/shops',
+    element: <ShopPage />,
     layout: 'user',
     isPrivate: false,
   },
@@ -76,6 +82,25 @@ export const routes_here = [
     isPrivate: false,
   },
 
+
+  {
+    path: '/details',
+    element: <Details />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/order',
+    element: <Order />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  // {
+  //   path: '/shops',
+  //   element: <SellerPage />,
+  //   layout: 'user',
+  //   isPrivate: false,
+  // },
   // {
   //   path: "/sales",
   //   element: <SalePage />,

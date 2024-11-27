@@ -1,38 +1,35 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Divider, InputNumber, Input } from 'antd';
+import { Table, Button, Divider, InputNumber, message, Pagination } from 'antd';
 import 'antd/dist/reset.css';
+import { Link } from 'react-router-dom';
+import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
+import { useSelector } from 'react-redux';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      shop: 'Shop A',
-      name: 'Product A',
-      price: 100,
-      quantity: 2,
-      image: 'https://via.placeholder.com/50',
-    },
-    {
-      id: 2,
-      shop: 'Shop A',
-      name: 'Product B',
-      price: 150,
-      quantity: 1,
-      image: 'https://via.placeholder.com/50',
-    },
-    {
-      id: 3,
-      shop: 'Shop B',
-      name: 'Product C',
-      price: 200,
-      quantity: 3,
-      image: 'https://via.placeholder.com/50',
-    },
-  ]);
-
-  const [voucherCode, setVoucherCode] = useState('');
-  const [discount, setDiscount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
   const [totalPriceBeforeDiscount, setTotalPriceBeforeDiscount] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const userId = useSelector((state) => state.user._id);
+
+  // Fetch cart data with pagination when component mounts or page changes
+  useEffect(() => {
+    if (userId) {
+      const fetchCart = async () => {
+        try {
+          const response = await ShopingCartApi.getCart(userId, currentPage, 5); // Truyền page và limit vào API
+          setCartItems(response.data.data); // Cập nhật dữ liệu giỏ hàng
+          setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
+        } catch (error) {
+          message.error('Failed to fetch cart data');
+          console.error(error);
+        }
+      };
+      fetchCart();
+    }
+  }, [userId, currentPage]); // Chạy lại khi `userId` hoặc `currentPage` thay đổi
 
   useEffect(() => {
     const calculatedTotal = cartItems.reduce(
@@ -52,31 +49,23 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
 
-  const handleDelete = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
+  // Handle quantity change
   const handleQuantityChange = (id, quantity) => {
     setCartItems(
       cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
+        item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
       ),
     );
   };
 
-  const handleUpdateItems = () => {
-    console.log('Updating items:', cartItems);
-    alert('Cart updated successfully!');
+  // Handle item deletion
+  const handleDelete = (id) => {
+    setCartItems(cartItems.filter((item) => item._id !== id));
   };
 
-  const handleApplyVoucher = () => {
-    if (voucherCode === 'DISCOUNT10') {
-      const discountAmount = totalPriceBeforeDiscount * 0.1;
-      setDiscount(discountAmount);
-    } else {
-      alert('Invalid Voucher Code');
-      setDiscount(0);
-    }
+  const handleUpdateItems = () => {
+    console.log('Updating items:', cartItems);
+    message.success('Cart updated successfully!');
   };
 
   const handleCheckout = () => {
@@ -86,20 +75,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const columns = [
     {
       title: 'Image',
-      dataIndex: 'image',
+      dataIndex: 'images',
       key: 'image',
-      render: (image) => <img src={image} alt='Product' className='w-12 h-12 object-cover' />,
+      render: (images) => <img src={images[0]} alt='Product' className='w-12 h-12 object-cover' />,
     },
     {
       title: 'Product Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'title',
+      key: 'title',
+      className: 'min-w-[120px]',
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
       render: (price) => `$${price}`,
+      className: 'min-w-[80px]',
     },
     {
       title: 'Quantity',
@@ -109,7 +100,8 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         <InputNumber
           min={1}
           value={record.quantity}
-          onChange={(value) => handleQuantityChange(record.id, value)}
+          onChange={(value) => handleQuantityChange(record._id, value)}
+          className='w-16'
         />
       ),
     },
@@ -117,12 +109,13 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       title: 'Total',
       key: 'total',
       render: (_, record) => `$${record.price * record.quantity}`,
+      className: 'min-w-[80px]',
     },
     {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <Button type='danger' onClick={() => handleDelete(record.id)}>
+        <Button type='danger' onClick={() => handleDelete(record._id)}>
           Delete
         </Button>
       ),
@@ -148,52 +141,54 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <Table
                 dataSource={groupedItems[shop]}
                 columns={columns}
-                rowKey='id'
-                pagination={false}
+                rowKey='_id'
+                pagination={false} // Không cần pagination ở đây, để Pagination ở dưới
                 bordered
+                scroll={{ x: 'max-content' }}
               />
               {index < Object.keys(groupedItems).length - 1 && <Divider />}
             </div>
           ))}
-          <div className='container flex justify-between items-center'>
+
+          <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-4">
             <Button
               type='primary'
               onClick={handleUpdateItems}
-              className='bg-red-500 hover:bg-red-600 m-4'
+              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
             >
               Update Cart
             </Button>
-            <div className='flex items-center m-2'>
-              <Input
-                placeholder='Enter Voucher Code'
-                value={voucherCode}
-                onChange={(e) => setVoucherCode(e.target.value)}
-                className='mr-2'
-              />
-              <Button
-                type='primary'
-                onClick={handleApplyVoucher}
-                className='bg-red-500 hover:bg-red-600'
-              >
-                Apply Voucher
-              </Button>
-            </div>
-            <div className='flex justify-between items-center mt-4'>
-              {discount > 0 && (
-                <h3 className='text-xl font-bold text-red-500'>
-                  Discount Applied: -${discount.toFixed(2)}
-                </h3>
-              )}
-            </div>
           </div>
-          <div className='flex justify-between items-center mt-4'>
+
+          {discount > 0 && (
+            <div className='mt-4 text-right'>
+              <h3 className='text-xl font-bold text-red-500'>
+                Discount Applied: -${discount.toFixed(2)}
+              </h3>
+            </div>
+          )}
+
+          <div className='flex flex-col sm:flex-row justify-between items-center gap-4 mt-4'>
             <h2 className='text-xl font-bold'>
               Total Price: ${totalPriceAfterDiscount.toFixed(2)}
             </h2>
-            <Button type='primary' className='bg-red-500 hover:bg-red-600' onClick={handleCheckout}>
-              Checkout
+            <Button
+              type='primary'
+              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
+              onClick={handleCheckout}
+            >
+              <Link to='/order'>Checkout</Link>
             </Button>
           </div>
+
+          {/* Pagination */}
+          <Pagination
+            current={currentPage}
+            total={totalPages * 10} // Số lượng mục mỗi trang * tổng số trang
+            pageSize={10}
+            onChange={(page) => setCurrentPage(page)} // Cập nhật trang khi người dùng chuyển trang
+            className="mt-4"
+          />
         </div>
       </div>
     );
