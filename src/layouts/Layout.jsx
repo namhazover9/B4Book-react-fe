@@ -183,7 +183,7 @@ export default function Layout({ children }) {
         </div>
         <div className='mt-4'>
           {/* Add Cart Details Here */}
-          <PopupCart />
+          {/* <PopupCart /> */}
         </div>
       </div>
       {/* Page Content */}
