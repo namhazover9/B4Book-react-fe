@@ -2,6 +2,7 @@
 import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
+
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
@@ -11,8 +12,10 @@ const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
+const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Details = lazy(() => import('@pages/homepages/Details'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
+
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -71,17 +74,35 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/details',
-    element: <Details />,
+    path: '/shops',
+    element:<ShopPage />,
     layout: 'user',
     isPrivate: false,
   },
   {
-    path: '/order',
-    element: <Order />,
-    layout: 'user',
-    isPrivate: false,
-  },
+        path: '/popupcart',
+        element: <PopupCart />,
+        layout: 'user',
+        isPrivate: false,
+      },
+      {
+        path: '/details',
+        element: <Details />,
+        layout: 'user',
+        isPrivate: false,
+      },
+      {
+        path: '/order',
+        element: <Order />,
+        layout: 'user',
+        isPrivate: false,
+      },
+  // {
+  //   path: '/shops',
+  //   element: <SellerPage />,
+  //   layout: 'user',
+  //   isPrivate: false,
+  // },
   // {
   //   path: "/sales",
   //   element: <SalePage />,

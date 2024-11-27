@@ -13,6 +13,7 @@ import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
 import { setIsAuth } from '../../reducers/auth';
 import { u } from 'framer-motion/client';
+import LoginFacebook from '../../components/LoginFacebook';
 
 function Login() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const onLoginSuccess = async (data, role) => {
   try {
     setIsSubmitting(false);
     message.success('Đăng nhập thành công');
+    
     localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
     if (process.env.NODE_ENV === 'production')
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
@@ -140,6 +142,7 @@ const onLogin = async (account) => {
               </Button>
               <div className='text-center text-gray-500 mb-4'>HOẶC</div>
               <LoginGoogle title={windowWidth > 375 ? 'Đăng nhập với Gmail' : 'Gmail'} />
+              <LoginFacebook title={windowWidth > 375 ? 'Đăng nhập với Facebook' : 'Facebook'} />
               <div className='text-center mt-4'>
                 Bạn chưa có tài khoản?
                 <Link to={constants.ROUTES.SIGNUP} className='text-blue-500 ml-1'>

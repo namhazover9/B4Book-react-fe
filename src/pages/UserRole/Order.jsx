@@ -264,22 +264,18 @@ const Checkout = () => {
     return (
         <div className="flex flex-col items-center py-10 bg-gray-100 min-h-screen">
             <h1 className="text-xl sm:text-2xl font-bold mb-4">Checkout</h1>
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
-                <Form
-                    layout="vertical"
-                    onFinish={handlePlaceOrder}
-                >
+            <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-4xl">
+                <Form layout="vertical" onFinish={handlePlaceOrder}>
                     {/* Address Section */}
                     <div className="border-b border-gray-200 pb-4 mb-6">
-                        <h2 className="text-xl font-semibold mb-4 underline">Address</h2>
-                        <div className="flex justify-between items-center">
+                        <h2 className="text-lg sm:text-xl font-semibold mb-4 underline">Address</h2>
+                        <div className="sm:flex justify-between items-center">
                             <div>
                                 {selectedAddressId ? (
                                     <>
                                         <p>
                                             {
-                                                addresses.find((addr) => addr.id === selectedAddressId)
-                                                    ?.name
+                                                addresses.find((addr) => addr.id === selectedAddressId)?.name
                                             }{" "}
                                             ({addresses.find((addr) => addr.id === selectedAddressId)?.phone})
                                         </p>
@@ -296,7 +292,7 @@ const Checkout = () => {
                             <Button
                                 type="link"
                                 onClick={() => setIsModalVisible(true)}
-                                className="text-gray-800 hover:text-blue-700"
+                                className="text-gray-800 hover:text-blue-700 mt-4 sm:mt-0"
                             >
                                 Select / Add Address
                             </Button>
@@ -304,21 +300,20 @@ const Checkout = () => {
                     </div>
 
                     {/* Products Table */}
-                    <Table
-                        columns={columns}
-                        dataSource={products}
-                        pagination={false}
-                        className="mb-6"
-                    />
+                    <div className="overflow-x-auto mb-6">
+                        <Table
+                            columns={columns}
+                            dataSource={products}
+                            pagination={false}
+                            className="min-w-full"
+                        />
+                    </div>
 
-                    {/* Payment Method Section */}
-                    <div className="flex flex-col-2 space-x-60 items-center justify-between mb-6">
-                        <div>
-                            <Form.Item
-                                name="paymentMethod"
-                                label="Payment Method"
-                                required
-                            >
+                    {/* Payment and Total Cost */}
+                    <div className="flex flex-col sm:flex-row justify-between sm:space-x-8 mb-6">
+                        {/* Payment Section */}
+                        <div className="flex-1 mb-6 sm:mb-0">
+                            <Form.Item name="paymentMethod" label="Payment Method" required>
                                 <Radio.Group
                                     onChange={handlePaymentChange}
                                     value={paymentMethod}
@@ -331,21 +326,23 @@ const Checkout = () => {
                             </Form.Item>
 
                             {paymentMethod === "card" && (
-                                <Form.Item
-                                    name="cardOption"
-                                    label="Select Payment Gateway"
-                                    required
-                                >
+                                <Form.Item name="cardOption" label="Select Payment Gateway" required>
                                     <Radio.Group
                                         onChange={handleCardOptionChange}
                                         value={cardOption}
                                     >
                                         <Space direction="vertical">
-                                            <Radio value="stripe" className="flex justify-between">
-                                                <img src={stripe2} className="w-10 h-10" alt="Stripe" />Stripe
+                                            <Radio value="stripe">
+                                                <div className="flex items-center">
+                                                    <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
+                                                    Stripe
+                                                </div>
                                             </Radio>
-                                            <Radio value="vnpay" className="flex justify-between">
-                                                <img src={vnp} className="w-10 h-10" alt="VNPay" />VNPay
+                                            <Radio value="vnpay">
+                                                <div className="flex items-center">
+                                                    <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
+                                                    VNPay
+                                                </div>
                                             </Radio>
                                         </Space>
                                     </Radio.Group>
@@ -354,7 +351,7 @@ const Checkout = () => {
                         </div>
 
                         {/* Total Cost Section */}
-                        <div className="text-right">
+                        <div className="flex-1 text-right">
                             <p className="text-lg">
                                 <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
                             </p>
@@ -380,164 +377,11 @@ const Checkout = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        className="w-full"
-                    >
+                    <Button type="primary" htmlType="submit" className="w-full">
                         Place Order
                     </Button>
                 </Form>
             </div>
-
-            <Modal
-                title="Available Vouchers"
-                visible={isVoucherModalVisible}
-                onOk={handleApplyVoucher}
-                onCancel={() => setIsVoucherModalVisible(false)}
-                okText="Apply Voucher"
-                cancelText="Cancel"
-                width={600}
-            >
-                <div className="flex flex-col gap-4">
-                    {vouchers.map((voucher) => (
-                        <div
-                            key={voucher.code}
-                            className="flex items-center justify-between p-3 border border-gray-200 rounded-md"
-                        >
-                            <div>
-                                <p className="font-semibold">{voucher.code}</p>
-                                <p className="text-gray-500">{voucher.description}</p>
-                            </div>
-                            <Button
-                                type="link"
-                                onClick={() => setVoucherCode(voucher.code)}
-                                className="text-black"
-                            >
-                                Select
-                            </Button>
-                        </div>
-                    ))}
-                </div>
-            </Modal>
-            {/* Address Modals */}
-            <Modal
-                title="My Addresses"
-                visible={isModalVisible}
-                onOk={handleUpdateDefault}
-                onCancel={() => setIsModalVisible(false)}
-                okText="Confirm"
-                cancelText="Cancel"
-                width={600}
-            >
-                <Radio.Group
-                    onChange={(e) => handleSelectAddress(e.target.value)}
-                    value={selectedAddressId}
-                    className="flex flex-col gap-4"
-                >
-                    {addresses.map((addr) => (
-                        <div
-                            key={addr.id}
-                            className="flex items-start justify-between p-3 border border-gray-200 rounded-md"
-                        >
-                            <Radio value={addr.id}>
-                                <div>
-                                    <p className="font-semibold">
-                                        {addr.name} ({addr.phone})
-                                    </p>
-                                    <p>{addr.address}</p>
-                                    {addr.default && (
-                                        <span className="text-red-500 text-sm font-bold">
-                                            Default
-                                        </span>
-                                    )}
-                                </div>
-                            </Radio>
-                            <Button
-                                type="link"
-                                onClick={() => {
-                                    setEditingAddress({ ...addr });
-                                    setIsModalVisible(false);
-                                }}
-                                className="text-blue-500"
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    ))}
-                </Radio.Group>
-                <Button
-                    type="dashed"
-                    onClick={() => {
-                        setIsModalVisible(false);
-                        setIsAddAddressModalVisible(true);
-                    }}
-                    className="w-full mt-4"
-                >
-                    ➕ Add New Address
-                </Button>
-            </Modal>
-
-            <Modal
-                title="Add New Address"
-                visible={isAddAddressModalVisible}
-                onOk={handleAddAddress}
-                onCancel={() => setIsAddAddressModalVisible(false)}
-                okText="Add"
-                cancelText="Cancel"
-                width={600}
-            >
-                <div className="flex flex-col gap-4">
-                    <Input
-                        placeholder="Full Name"
-                        value={newAddress.name}
-                        onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
-                    />
-                    <Input
-                        placeholder="Phone Number"
-                        value={newAddress.phone}
-                        onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-                    />
-                    <Input
-                        placeholder="Shipping Address"
-                        value={newAddress.address}
-                        onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
-                    />
-                </div>
-            </Modal>
-            <Modal
-                title="Update Address"
-                visible={!!editingAddress}
-                onOk={handleEditAddress}
-                onCancel={() => setEditingAddress(null)}
-                okText="Save"
-                cancelText="Cancel"
-                width={600}
-            >
-                <Input
-                    placeholder="Recipient Name"
-                    value={editingAddress?.name || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, name: e.target.value })
-                    }
-                    className="mb-3"
-                />
-                <Input
-                    placeholder="Phone Number"
-                    value={editingAddress?.phone || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, phone: e.target.value })
-                    }
-                    className="mb-3"
-                />
-                <Input
-                    placeholder="Address"
-                    value={editingAddress?.address || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, address: e.target.value })
-                    }
-                />
-            </Modal>
         </div>
     );
 };
