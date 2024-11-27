@@ -41,7 +41,7 @@ const productsApi = {
 
   // Tìm kiếm sản phẩm theo keyword
   searchProducts: (keyword) => {
-    const url = `/search?keyword=${encodeURIComponent(keyword)}`;
+    const url = `/products/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
 };

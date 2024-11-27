@@ -98,7 +98,31 @@ const AboutUs = () => {
           <div className='w-2/3 h-px bg-gray-300 my-2 shadow-md' />
         </div>
         <div className='gap-12'>
-          <Carousel autoplay slidesToShow={3} swipeToSlide>
+          <Carousel
+            autoplay
+            swipeToSlide
+            slidesToShow={3}
+            responsive={[
+              {
+                breakpoint: 768, // Dưới 768px (mobile)
+                settings: {
+                  slidesToShow: 1,
+                },
+              },
+              {
+                breakpoint: 1024, // Dưới 1024px (tablet)
+                settings: {
+                  slidesToShow: 2,
+                },
+              },
+              {
+                breakpoint: 1440, // Dưới 1440px (desktop nhỏ)
+                settings: {
+                  slidesToShow: 3,
+                },
+              },
+            ]}
+          >
             {/* Testimonial 1 */}
             <div className='bg-white p-6 rounded-xl '>
               <div className='flex items-center mb-4'>
@@ -145,37 +169,46 @@ const AboutUs = () => {
             </div>
           </Carousel>
         </div>
+
       </div>
 
       {/* Join Community Section */}
-      <div className='bg-emerald-100 rounded-3xl p-8 mb-16'>
-        <div className='flex flex-col md:flex-row items-center justify-between'>
-          <div className='md:w-1/2 mb-6 md:mb-0'>
-            <h2 className='text-2xl font-bold mb-4'>Join the community</h2>
-            <p className='text-gray-600 mb-6'>
+      <div className="bg-emerald-100 rounded-3xl p-6 sm:p-8 mb-12 sm:mb-16">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          {/* Left Section */}
+          <div className="w-full md:w-1/2 mb-6 md:mb-0 text-center md:text-left">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Join the community</h2>
+            <p className="text-gray-600 mb-6">
               Share your email address to receive regular updates, as well as news on upcoming
               events and special offers.
             </p>
-            <div className='flex'>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-start">
               <Input
-                placeholder='Your email address'
-                className='mr-2 rounded-md'
-                style={{ width: '300px' }}
+                placeholder="Your email address"
+                className="rounded-md mb-3 sm:mb-0 sm:mr-2"
+                style={{ width: '100%', maxWidth: '300px' }}
               />
               <Button
-                type='primary'
+                type="primary"
                 icon={<SendOutlined />}
-                className='bg-red-500 hover:bg-green-600 border-none'
+                className="bg-red-500 hover:bg-green-600 border-none"
               >
                 Subscribe
               </Button>
             </div>
           </div>
-          <div className='md:w-1/3'>
-            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180482/h2_img_iliqr2.png" alt='Join community illustration' className='w-full h-auto' />
+
+          {/* Right Section */}
+          <div className="w-full md:w-1/3">
+            <img
+              src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180482/h2_img_iliqr2.png"
+              alt="Join community illustration"
+              className="w-full h-auto max-w-sm mx-auto"
+            />
           </div>
         </div>
       </div>
+
     </div>
   );
 };

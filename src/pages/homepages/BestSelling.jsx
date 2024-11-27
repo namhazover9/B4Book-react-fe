@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import { Button, Carousel } from 'antd';
+import { Button, Carousel, } from 'antd';
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons';
 import pic1 from '../../assets/images/BestSelling/1.jpg';
 import pic2 from '../../assets/images/BestSelling/4.jpg';
 import pic3 from '../../assets/images/BestSelling/7.jpg';
@@ -138,27 +139,29 @@ const BookShowcase = () => {
                         src={book.image}
                         className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
                       />
-                      <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                        <div className='absolute right-4 bottom-5 top-1/2 -translate-y-1/2 flex flex-col gap-3'>
-                          <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 shadow-lg'>
-                            <Heart className='w-5 h-5 text-black-500' />
+                      <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                        <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
+                          <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
+                            <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                           </button>
-                          <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-75 shadow-lg'>
-                            <Eye className='w-5 h-5 text-black-500' />
+                          <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
+                            <Link to='/details' className='hover:text-red-500'>
+                              <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                            </Link>
                           </button>
-                          <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-150 shadow-lg'>
-                            <ShoppingCart className='w-5 h-6 text-black-500' />
+                          <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
+                            <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    <div className='mt-3'>
+                    <div className='mt-3 text-left'>
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
-                        <button className='truncate block w-full'>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate text-left'>
+                        <button className='truncate block'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
