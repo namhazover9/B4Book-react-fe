@@ -28,6 +28,7 @@ const onLoginSuccess = async (data, role) => {
   try {
     setIsSubmitting(false);
     message.success('Đăng nhập thành công');
+    
     localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
     if (process.env.NODE_ENV === 'production')
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
