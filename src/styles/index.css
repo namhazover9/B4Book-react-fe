@@ -93,3 +93,12 @@ body {
 .choice-icon-tnvd {
   @apply hover:bg-slate-200 hover:shadow-inner transition-all duration-200 ease-in p-2 rounded-full
 }
+
+/* Form Input */
+.flex-input-tnvd {
+  @apply flex items-center justify-start mb-3
+}
+
+.label-input-tnvd {
+  @apply w-3/12 sm:w-28 font-medium text-start text-base mr-1
+}

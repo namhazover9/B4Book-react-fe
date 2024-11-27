@@ -11,6 +11,7 @@ const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
 const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
 export const routes_here = [
@@ -48,7 +49,7 @@ export const routes_here = [
     path: '/dashboard',
     element: <Dashboard />,
     layout: 'admin',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/products',
@@ -69,9 +70,15 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shops',
+    path: '/shop-HoangNam/home',
     element: <SellerPage />,
-    layout: 'user',
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop-HoangNam/orders',
+    element: <OrderPageOfSeller />,
+    layout: 'seller',
     isPrivate: false,
   },
   // {
