@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { User } from 'lucide-react';
 import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
@@ -11,6 +12,7 @@ const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
+const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Details = lazy(() => import('@pages/homepages/Details'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
@@ -52,7 +54,7 @@ export const routes_here = [
     path: '/dashboard',
     element: <Dashboard />,
     layout: 'admin',
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     path: '/products',
@@ -73,6 +75,13 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+  {
+    path: '/userprofile',
+    element: <UserProfile />,
+    layout: 'user',
+    isPrivate: false,
+  },
+
 
   {
     path: '/details',
