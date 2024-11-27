@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Form, Modal, Radio, Table, notification, Typography, Space } from "antd";
-import { Context } from "react-intl/src/components/injectIntl";
+import { Input, Button, Form, Modal, Radio, Table, notification, Space } from "antd";
 import stripe2 from '../../assets/images/stripe2.jpg';
 import vnp from '../../assets/images/vnpay.jpg';
 
@@ -36,6 +35,9 @@ const Checkout = () => {
         address: "",
     });
     const [discount, setDiscount] = useState(0);
+    const [shippingCost, setShippingCost] = useState(32700);
+    const [paymentMethod, setPaymentMethod] = useState("");
+    const [cardOption, setCardOption] = useState("");
 
     const products = [
         {
@@ -73,10 +75,6 @@ const Checkout = () => {
         { code: "FREESHIP", description: "Free Shipping", discountRate: 0 },
         { code: "SAVE20", description: "20% off on orders above 1,000,000₫", discountRate: 0.018 },
     ];
-    const [shippingCost, setShippingCost] = useState(32700);
-
-    const [paymentMethod, setPaymentMethod] = useState("");
-    const [cardOption, setCardOption] = useState("");
 
     const calculateTotalAmount = () =>
         products.reduce((sum, product) => sum + product.total, 0) - discount + shippingCost;
@@ -153,7 +151,7 @@ const Checkout = () => {
         notification.success({ message: "Default address updated successfully!" });
     };
 
-    const handlePlaceOrder = (values) => {
+    const handlePlaceOrder = () => {
         // Validate selected address
         if (!selectedAddressId) {
             notification.error({
@@ -264,39 +262,29 @@ const Checkout = () => {
     return (
         <div className="flex flex-col items-center py-10 bg-gray-100 min-h-screen">
             <h1 className="text-xl sm:text-2xl font-bold mb-4">Checkout</h1>
-            <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-4xl">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
                     {/* Address Section */}
                     <div className="border-b border-gray-200 pb-4 mb-6">
-                        <h2 className="text-lg sm:text-xl font-semibold mb-4 underline">Address</h2>
-                        <div className="sm:flex justify-between items-center">
-                            <div>
-                                {selectedAddressId ? (
-                                    <>
-                                        <p>
-                                            {
-                                                addresses.find((addr) => addr.id === selectedAddressId)?.name
-                                            }{" "}
-                                            ({addresses.find((addr) => addr.id === selectedAddressId)?.phone})
-                                        </p>
-                                        <p>
-                                            {addresses.find((addr) => addr.id === selectedAddressId)?.address}
-                                        </p>
-                                    </>
-                                ) : (
-                                    <p className="text-gray-500">
-                                        You have not selected a shipping address.
-                                    </p>
-                                )}
-                            </div>
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg sm:text-xl font-semibold">Address</h2>
                             <Button
                                 type="link"
                                 onClick={() => setIsModalVisible(true)}
-                                className="text-gray-800 hover:text-blue-700 mt-4 sm:mt-0"
+                                className="text-gray-800 hover:text-blue-700"
                             >
                                 Select / Add Address
                             </Button>
                         </div>
+                        {selectedAddressId && (
+                            <div>
+                                <p>
+                                    {addresses.find((addr) => addr.id === selectedAddressId)?.name}{" "}
+                                    ({addresses.find((addr) => addr.id === selectedAddressId)?.phone})
+                                </p>
+                                <p>{addresses.find((addr) => addr.id === selectedAddressId)?.address}</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Products Table */}
@@ -319,7 +307,7 @@ const Checkout = () => {
                                     value={paymentMethod}
                                 >
                                     <Space direction="vertical">
-                                        <Radio value="cod">Cash on Delivery</Radio>
+                                        <Radio value="cash">Cash on Delivery</Radio>
                                         <Radio value="card">Credit/Debit Card</Radio>
                                     </Space>
                                 </Radio.Group>
@@ -356,24 +344,15 @@ const Checkout = () => {
                                 <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
                             </p>
                             <p className="text-lg">
-                                <span>Total Shipping Cost:</span> {shippingCost}$
+                                <span>Shipping Cost:</span> {shippingCost}$
                             </p>
-                            <h2 className="text-lg font-semibold">
-                                <span className="underline">Total Payment:</span> {calculateTotalAmount()}$
-                            </h2>
+                            <p className="text-lg">
+                                <span>Discount:</span> {discount}$
+                            </p>
+                            <p className="text-xl font-bold">
+                                <span>Total Amount:</span> {calculateTotalAmount()}$
+                            </p>
                         </div>
-                    </div>
-
-                    {/* Voucher Section */}
-                    <div className="flex flex-col sm:flex-row justify-end items-center mb-5 gap-2 w-full sm:w-auto">
-                        <Typography.Text strong>{voucherCode}</Typography.Text>
-                        <Button
-                            type="dashed"
-                            onClick={() => setIsVoucherModalVisible(true)}
-                            className="w-full sm:w-auto"
-                        >
-                            Select Voucher
-                        </Button>
                     </div>
 
                     {/* Submit Button */}
@@ -382,8 +361,158 @@ const Checkout = () => {
                     </Button>
                 </Form>
             </div>
+
+            {/* Modals */}
+            <Modal
+                title="Available Vouchers"
+                visible={isVoucherModalVisible}
+                onOk={handleApplyVoucher}
+                onCancel={() => setIsVoucherModalVisible(false)}
+                okText="Apply Voucher"
+                cancelText="Cancel"
+                width={600}
+            >
+                {/* Voucher Modal Content */}
+                <div className="flex flex-col gap-4">
+                    {vouchers.map((voucher) => (
+                        <div
+                            key={voucher.code}
+                            className="flex items-center justify-between p-3 border border-gray-200 rounded-md"
+                        >
+                            <div>
+                                <p className="font-semibold">{voucher.code}</p>
+                                <p className="text-gray-500">{voucher.description}</p>
+                            </div>
+                            <Button
+                                type="link"
+                                onClick={() => setVoucherCode(voucher.code)}
+                                className="text-black"
+                            >
+                                Select
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+            </Modal>
+
+            {/* Address Modals */}
+            <Modal
+                title="My Addresses"
+                visible={isModalVisible}
+                onOk={handleUpdateDefault}
+                onCancel={() => setIsModalVisible(false)}
+                okText="Confirm"
+                cancelText="Cancel"
+                width={600}
+            >
+                <Radio.Group
+                    onChange={(e) => handleSelectAddress(e.target.value)}
+                    value={selectedAddressId}
+                    className="flex flex-col gap-4"
+                >
+                    {addresses.map((addr) => (
+                        <div
+                            key={addr.id}
+                            className="flex items-start justify-between p-3 border border-gray-200 rounded-md"
+                        >
+                            <Radio value={addr.id}>
+                                <div>
+                                    <p className="font-semibold">
+                                        {addr.name} ({addr.phone})
+                                    </p>
+                                    <p>{addr.address}</p>
+                                    {addr.default && (
+                                        <span className="text-red-500 text-sm font-bold">
+                                            Default
+                                        </span>
+                                    )}
+                                </div>
+                            </Radio>
+                            <Button
+                                type="link"
+                                onClick={() => {
+                                    setEditingAddress({ ...addr });
+                                    setIsModalVisible(false);
+                                }}
+                                className="text-blue-500"
+                            >
+                                Update
+                            </Button>
+                        </div>
+                    ))}
+                </Radio.Group>
+                <Button
+                    type="dashed"
+                    onClick={() => {
+                        setIsModalVisible(false);
+                        setIsAddAddressModalVisible(true);
+                    }}
+                    className="w-full mt-4"
+                >
+                    ➕ Add New Address
+                </Button>
+            </Modal>
+            <Modal
+                title="Add New Address"
+                visible={isAddAddressModalVisible}
+                onOk={handleAddAddress}
+                onCancel={() => setIsAddAddressModalVisible(false)}
+                okText="Add"
+                cancelText="Cancel"
+                width={600}
+            >
+                <div className="flex flex-col gap-4">
+                    <Input
+                        placeholder="Full Name"
+                        value={newAddress.name}
+                        onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
+                    />
+                    <Input
+                        placeholder="Phone Number"
+                        value={newAddress.phone}
+                        onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
+                    />
+                    <Input
+                        placeholder="Shipping Address"
+                        value={newAddress.address}
+                        onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
+                    />
+                </div>
+            </Modal>
+            <Modal
+                title="Update Address"
+                visible={!!editingAddress}
+                onOk={handleEditAddress}
+                onCancel={() => setEditingAddress(null)}
+                okText="Save"
+                cancelText="Cancel"
+                width={600}
+            >
+                <Input
+                    placeholder="Recipient Name"
+                    value={editingAddress?.name || ""}
+                    onChange={(e) =>
+                        setEditingAddress({ ...editingAddress, name: e.target.value })
+                    }
+                    className="mb-3"
+                />
+                <Input
+                    placeholder="Phone Number"
+                    value={editingAddress?.phone || ""}
+                    onChange={(e) =>
+                        setEditingAddress({ ...editingAddress, phone: e.target.value })
+                    }
+                    className="mb-3"
+                />
+                <Input
+                    placeholder="Address"
+                    value={editingAddress?.address || ""}
+                    onChange={(e) =>
+                        setEditingAddress({ ...editingAddress, address: e.target.value })
+                    }
+                />
+            </Modal>
         </div>
     );
 };
-
 export default Checkout;
