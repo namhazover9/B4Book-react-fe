@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Divider, InputNumber, message } from 'antd';
+import { Table, Button, Divider, InputNumber, message, Pagination } from 'antd';
 import 'antd/dist/reset.css';
 import { Link } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
@@ -9,17 +9,19 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceBeforeDiscount, setTotalPriceBeforeDiscount] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  
   const userId = useSelector((state) => state.user._id);
-  
-  // Fetch cart data when component mounts
+
+  // Fetch cart data with pagination when component mounts or page changes
   useEffect(() => {
     if (userId) {
       const fetchCart = async () => {
         try {
-          const response = await ShopingCartApi.getCart(userId);
-          setCartItems(response.data.data.cartItems); // Update cart items from API
+          const response = await ShopingCartApi.getCart(userId, currentPage, 5); // Truyền page và limit vào API
+          setCartItems(response.data.data); // Cập nhật dữ liệu giỏ hàng
+          setTotalPages(response.data.totalPages); // Cập nhật tổng số trang
         } catch (error) {
           message.error('Failed to fetch cart data');
           console.error(error);
@@ -27,7 +29,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       };
       fetchCart();
     }
-  }, [userId]);
+  }, [userId, currentPage]); // Chạy lại khi `userId` hoặc `currentPage` thay đổi
 
   useEffect(() => {
     const calculatedTotal = cartItems.reduce(
@@ -140,7 +142,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                 dataSource={groupedItems[shop]}
                 columns={columns}
                 rowKey='_id'
-                pagination={false}
+                pagination={false} // Không cần pagination ở đây, để Pagination ở dưới
                 bordered
                 scroll={{ x: 'max-content' }}
               />
@@ -178,6 +180,15 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <Link to='/order'>Checkout</Link>
             </Button>
           </div>
+
+          {/* Pagination */}
+          <Pagination
+            current={currentPage}
+            total={totalPages * 10} // Số lượng mục mỗi trang * tổng số trang
+            pageSize={10}
+            onChange={(page) => setCurrentPage(page)} // Cập nhật trang khi người dùng chuyển trang
+            className="mt-4"
+          />
         </div>
       </div>
     );
