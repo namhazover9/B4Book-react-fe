@@ -6,11 +6,7 @@ const USER_API_URL = '/user';
 const userApi = {
   getUser: () => {
     const url = USER_API_URL;
-      return axiosClient.get(url, {
-        params: {
-          token: localStorage.getItem(constants.ACCESS_TOKEN_KEY),
-        },
-      });
+      return axiosClient.get(url);
   },
   putUpdateUser: (userId = '', value = {}) => {
     const url = USER_API_URL + '/update';

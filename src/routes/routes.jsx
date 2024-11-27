@@ -68,6 +68,12 @@ export const routes_here = [
     isPrivate: false,
   },
   {
+    path: '/popupcart',
+    element: <PopupCart />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  {
     path: '/shops',
     element:<ShopPage />,
     layout: 'user',
