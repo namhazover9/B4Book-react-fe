@@ -19,11 +19,7 @@ const loginApi = {
 
   getAuth: () => {
     const url = LOGIN_API_ENDPOINT + '/auth';
-      return axiosClient.get(url, {
-        params: {
-          token: localStorage.getItem(constants.ACCESS_TOKEN_KEY),
-        },
-      });
+      return axiosClient.get(url);
   },
 
   postRefreshToken: (refreshToken) => {
