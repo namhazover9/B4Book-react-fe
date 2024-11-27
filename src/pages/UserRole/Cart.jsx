@@ -154,17 +154,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
             </div>
           ))}
 
-          {/* Voucher and Update Cart Section */}
-          <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-4">
-            <Button
-              type='primary'
-              onClick={handleUpdateItems}
-              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-            >
-              Update Cart
-            </Button>
-
-          </div>
 
           {/* Discount Section */}
           {discount > 0 && (

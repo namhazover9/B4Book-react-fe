@@ -8,11 +8,13 @@ import LoginPage from '../components/modalLogin/LoginPopup';
 import Translate from '../components/Common/Translate';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
+import PopupCart from '../pages/UserRole/PopupCart';
 
 export default function Layout({ children }) {
   const { switchLocale } = useLocalization();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,14 +22,17 @@ export default function Layout({ children }) {
     setIsLoginPopupOpen(!isLoginPopupOpen);
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   const handleChange = (value) => {
     switchLocale(value);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleCartSidebar = () => {
+    setIsCartOpen(!isCartOpen);
+  };
   const menuItems = [
     { name: 'Home', path: '/' },
     { name: 'Shops', path: '/shops' },
@@ -54,7 +59,7 @@ export default function Layout({ children }) {
 
           {/* Mobile View - Sidebar and Shopping Cart */}
           <div className='block sm:hidden flex items-center space-x-4'>
-            <Link to='/popupcart' className='hover:text-red-500'>
+            <Link to='/cart' className='hover:text-red-500'>
               <ShoppingCartOutlined className='text-2xl text-red-400 ' />
             </Link>
             <MenuUnfoldOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
@@ -67,8 +72,8 @@ export default function Layout({ children }) {
                 key={item.path}
                 to={item.path}
                 className={`relative font-bold transition duration-300 ${location.pathname === item.path
-                    ? 'text-red-500 text-lg after:w-full'
-                    : 'text-gray-700 text-lg after:w-0'
+                  ? 'text-red-500 text-lg after:w-full'
+                  : 'text-gray-700 text-lg after:w-0'
                   } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
@@ -87,17 +92,21 @@ export default function Layout({ children }) {
             />
             {/* Login Button */}
             <Link to='/login' className='hover:text-red-500'>
-            <button
-              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
-            >
-              Login
-            </button>
+              <button
+                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+              >
+                Login
+              </button>
             </Link>
-            
+
             {/* Shopping Cart */}
-            <Link to='/cart' className='hover:text-red-500'>
+            {/* <Link to='/cart' className='hover:text-red-500'>
               <ShoppingCartOutlined className='text-2xl text-red-400 hover:bg-red-500 hover:text-white p-2 rounded-full' />
-            </Link>
+            </Link> */}
+            <ShoppingCartOutlined
+              onClick={toggleCartSidebar}
+              className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
+            />
           </div>
         </div>
       </header>
@@ -163,7 +172,20 @@ export default function Layout({ children }) {
           </div>
         </div>
       )}
-
+      <div
+        className={`fixed inset-y-0 right-0 w-72 bg-white shadow-lg p-4 z-50 transition-transform duration-300 ${isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+      >
+        <div className='flex justify-between items-center'>
+          <Link to='/cart' onClick={toggleCartSidebar} className='hover:text-red-500'>
+            <h2 className='text-lg font-bold'>Your Cart</h2></Link>
+          <CloseOutlined onClick={toggleCartSidebar} className='text-2xl cursor-pointer' />
+        </div>
+        <div className='mt-4'>
+          {/* Add Cart Details Here */}
+          <PopupCart />
+        </div>
+      </div>
       {/* Page Content */}
       {children}
 
