@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import { Button, Carousel } from 'antd';
-import { ArrowRightOutlined, HeartOutlined, EyeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Button, Carousel, } from 'antd';
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Heart, Eye, ShoppingCart } from 'lucide-react';
+import { ArrowRightOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons';
 import pic1 from '../../assets/images/BestSelling/1.jpg';
 import pic2 from '../../assets/images/BestSelling/4.jpg';
 import pic3 from '../../assets/images/BestSelling/7.jpg';
@@ -144,12 +145,12 @@ const BookShowcase = () => {
                             <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                           </button>
                           <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
-                            <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                            <Link to='/details' className='hover:text-red-500'>
+                              <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                            </Link>
                           </button>
                           <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
-                            <Link to='/details' className='hover:text-red-500'>
-                              <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
-                            </Link>
+                            <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                           </button>
                         </div>
                       </div>
@@ -160,7 +161,7 @@ const BookShowcase = () => {
                         <button>{book.title}</button>
                       </h3>
                       <p className='text-gray-600 text-sm hover:text-red-600 truncate text-left'>
-                        <button className='truncate block w-full'>{book.author}</button>
+                        <button className='truncate block'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
