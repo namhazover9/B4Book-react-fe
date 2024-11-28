@@ -222,7 +222,7 @@ const Checkout = () => {
                                 {products.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="flex items-center justify-between bg-gray-200 p-4 rounded-lg shadow"
+                                        className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow"
                                     >
                                         <div className="flex items-center w-2/3">
                                             <div className="h-16 sm:h-20 w-16 sm:w-20 mr-2 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
@@ -259,7 +259,7 @@ const Checkout = () => {
                         {/* Right Section */}
                         <div className="w-full md:w-1/3 pl-0 sm:pl-10 sm:pt-5 lg:border-l sm:border-gray-300">
                             {/* Payment Section */}
-                            <div className="flex flex-col space-y-6 h-auto lg:h-80 sm:pt-5">
+                            <div className="flex flex-col space-y-4 h-auto lg:h-80 sm:pt-5">
                                 <Form.Item name="paymentMethod" required>
                                     <p className="text-base sm:text-lg font-bold underline">Payment Method</p>
                                     <Radio.Group onChange={handlePaymentChange} value={paymentMethod}>
