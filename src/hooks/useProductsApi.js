@@ -25,6 +25,11 @@ const productsApi = {
     const url = `/products/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
+
+  getProductByShop: (id) => {
+    const url = `/products/getProductByShop/${id}`; // Chỉnh lại URL đúng format
+    return axiosClient.get(url);
+  },
 };
 
 export default productsApi;

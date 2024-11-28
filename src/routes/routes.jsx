@@ -79,13 +79,13 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/home',
+    path: '/shop/:name/home/:id',
     element: <SellerPage />,
     layout: 'seller',
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/orders',
+    path: '/shop/:name/orders/:id',
     element: <OrderPageOfSeller />,
     layout: 'seller',
     isPrivate: false,

@@ -18,10 +18,11 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
     try {
       message.success('Đăng nhập thành công');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-      if (import.meta.env.MODE === 'production') {
-        localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      }
-
+      localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      // if (import.meta.env.MODE === 'production') {
+      //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      // }
+      navigate('/');
       dispatch(setIsAuth(true));
 
       // setTimeout(() => {

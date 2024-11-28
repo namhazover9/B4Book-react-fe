@@ -12,8 +12,11 @@ import pic1 from '../assets/images/BestSelling/1.jpg';
 import pic2 from '../assets/images/BestSelling/4.jpg';
 import pic3 from '../assets/images/BestSelling/7.jpg';
 import pic4 from '../assets/images/BestSelling/9.jpg';
+import userApi from '../hooks/userApi';
+import { useSelector } from 'react-redux';
 
 export default function Layout({ children }) {
+  const userId = useSelector((state) => state.user._id);
   const { switchLocale } = useLocalization();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +39,21 @@ export default function Layout({ children }) {
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
   };
+
+  const handleSwitchShop = async () => {
+    try {
+      const response = await userApi.getSwitchShop(); // Gọi API với userId
+      console.log("Response from switchShop API:", response.data); // Debug
+      const shop = response.data.data; // Truy cập data
+      const shopName = shop.shopName; // Lấy shopName
+      if (response.data.message === "success") {
+        navigate(`/shop/${shopName}/home/${shop._id}`); // Điều hướng
+      }
+    } catch (error) {
+      console.error("Error fetching shop detail:", error);
+    }
+  };
+  
   const menuItems = [
     { name: 'Home', path: '/' },
     { name: 'Shops', path: '/shops' },
@@ -140,6 +158,12 @@ export default function Layout({ children }) {
 
           {/* Right side - Search bar, icons, and language switch */}
           <div className='hidden sm:flex items-center space-x-4'>
+          <Button
+          lassName='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
+          onClick={() => {
+            handleSwitchShop();
+          }}
+          >Switch shop</Button>
             {/* Language Switcher */}
             <Select
               className='w-28'
@@ -202,6 +226,7 @@ export default function Layout({ children }) {
             onChange={handleChange}
             options={languages}
           />
+        
           {/* Login Button */}
           <button
             className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
