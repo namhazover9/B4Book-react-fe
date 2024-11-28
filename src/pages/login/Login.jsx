@@ -31,11 +31,10 @@ const onLoginSuccess = async (data, role) => {
     message.success('Đăng nhập thành công');
     
     localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-    if (process.env.NODE_ENV === 'production')
-      localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+    localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
     dispatch(setIsAuth(true));
     
-    // Check role and navigate accordingly
+    //Check role and navigate accordingly
     if (role === 'Admin') {
       navigate('/admin');
     } else if (role === 'Customer') {
