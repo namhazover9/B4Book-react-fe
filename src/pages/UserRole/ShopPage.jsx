@@ -13,6 +13,7 @@ import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
 import { useEffect } from 'react';
 import LoadingSpinner from '../../components/loading';
 import shopApi from '../../hooks/useShopApi';
+import { NavLink } from 'react-router-dom';
 
 export default function ShopPage() {
   const [filterShop, setFilterShop] = useState([]);
@@ -24,6 +25,8 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [selectedName, setSelectedName] = useState([]);
   const [selectedSort, setSelectedSort] = useState('default');
+
+
   const fetchShops = async () => {
     setLoading(true);
     try {
@@ -77,7 +80,10 @@ export default function ShopPage() {
     }
   };
 
+  const handleViewDetailShop = (id) => {
+    console.log(id);
 
+  }
   // View Change
   const [viewMode, setViewMode] = useState('block');
 
@@ -187,7 +193,7 @@ export default function ShopPage() {
                     ) : (
                       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
                         {shopList.map((shop, index) => {
-                          const imageUrl = shop.avartar[0] ? shop.avartar[0] : '';
+                          const imageUrl = shop.images[0] ? shop.images[0] : '';
 
                           return (
                             <div
@@ -201,7 +207,7 @@ export default function ShopPage() {
                                 <div className='relative group overflow-hidden rounded-lg mb-4'>
                                   <img
                                     src={imageUrl}
-                                    alt={shop.shopName}
+                                    alt={shop.avartar}
                                     className='w-full h-96 object-cover'
                                   />
                                   <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
@@ -210,7 +216,7 @@ export default function ShopPage() {
                                         <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
-                                        <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                     <NavLink to={`/shops/detailShop/${shop._id}`}><EyeOutlined  className='w-6 h-6 flex justify-center items-center text-black-500'  /></NavLink>
                                       </button>
                                       <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
                                         <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
@@ -218,7 +224,7 @@ export default function ShopPage() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className='text-2xl font-bold mb-2 truncate'>{shop.shopEmail}</p>
+                                <p className='text-2xl font-bold mb-2 truncate'>{shop.shopName}</p>
                                 <div className='flex justify-between mb-2 items-center mr-5'>
                                   <p className='text-lg text-gray-600 truncate'>{shop.phoneNumber}</p>
                                   <p className='text-md text-gray-600 italic truncate'>

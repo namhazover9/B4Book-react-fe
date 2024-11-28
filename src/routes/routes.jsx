@@ -18,6 +18,7 @@ const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Details = lazy(() => import('@pages/homepages/Details'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
+const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
@@ -109,6 +110,12 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+  {
+    path: '/shops/detailShop/:id',
+    element: <DetailShop />,
+    layout: 'user',
+    isPrivate: false,
+  }
   // {
   //   path: '/shops',
   //   element: <SellerPage />,

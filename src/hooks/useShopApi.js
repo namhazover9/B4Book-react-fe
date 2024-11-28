@@ -22,6 +22,10 @@ const shopApi = {
     return axiosClient.get(url);
   },
 
+  getDetailShop: (id) => {
+    const url = `/showDetailShop/${id}`; 
+    return axiosClient.get(url);
+  },
  
 };
 
