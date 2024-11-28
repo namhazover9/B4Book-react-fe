@@ -12,7 +12,6 @@ import LoginGoogle from '../../components/LoginGoogle';
 import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
 import { setIsAuth } from '../../reducers/auth';
-import { u } from 'framer-motion/client';
 import LoginFacebook from '../../components/LoginFacebook';
 
 function Login() {
@@ -22,53 +21,53 @@ function Login() {
   const [isDisableLogin, setIsDisableLogin] = useState(false);
   const dispatch = useDispatch();
 
- // Retrieve the role from Redux in the main function
-const userRole = useSelector((state) => state.user.role[0]?.name);
+  // Retrieve the role from Redux in the main function
+  const userRole = useSelector((state) => state.user.role[0]?.name);
 
-const onLoginSuccess = async (data, role) => {
-  try {
-    setIsSubmitting(false);
-    message.success('Đăng nhập thành công');
-    
-    localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-    if (process.env.NODE_ENV === 'production')
-      localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-    dispatch(setIsAuth(true));
-    
-    // Check role and navigate accordingly
-    if (role === 'Admin') {
-      navigate('/admin');
-    } else if (role === 'Customer') {
-      navigate('/');
-    }
-  } catch (error) {
-    message.error('Lỗi đăng nhập.');
-  }
-};
+  const onLoginSuccess = async (data, role) => {
+    try {
+      setIsSubmitting(false);
+      message.success('Đăng nhập thành công');
 
-const onLogin = async (account) => {
-  try {
-    setIsSubmitting(true);
-    const result = await loginApi.postLogin({ account });
-    if (result.status === 200) {
-      onLoginSuccess(result.data, userRole);
-    }
-  } catch (error) {
-    setIsSubmitting(false);
-    if (error.response) {
-      const { failedLoginTimes } = error.response.data;
-      const messageError = error.response.data.message;
-      if (failedLoginTimes >= constants.MAX_FAILED_LOGIN_TIMES) {
-        message.error('Vượt quá số lần đăng nhập.\nKiểm tra email hoặc nhấn "Quên mật khẩu"', 4);
-        setIsDisableLogin(true);
-      } else {
-        message.error(messageError);
+      localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
+      if (process.env.NODE_ENV === 'production')
+        localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      dispatch(setIsAuth(true));
+
+      // Check role and navigate accordingly
+      if (role === 'Admin') {
+        navigate('/admin');
+      } else if (role === 'Customer') {
+        navigate('/');
       }
-    } else {
-      message.error('Đăng nhập thất bại');
+    } catch (error) {
+      message.error('Lỗi đăng nhập.');
     }
-  }
-};
+  };
+
+  const onLogin = async (account) => {
+    try {
+      setIsSubmitting(true);
+      const result = await loginApi.postLogin({ account });
+      if (result.status === 200) {
+        onLoginSuccess(result.data, userRole);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      if (error.response) {
+        const { failedLoginTimes } = error.response.data;
+        const messageError = error.response.data.message;
+        if (failedLoginTimes >= constants.MAX_FAILED_LOGIN_TIMES) {
+          message.error('Vượt quá số lần đăng nhập.\nKiểm tra email hoặc nhấn "Quên mật khẩu"', 4);
+          setIsDisableLogin(true);
+        } else {
+          message.error(messageError);
+        }
+      } else {
+        message.error('Đăng nhập thất bại');
+      }
+    }
+  };
 
 
   // Giá trị khởi tạo cho Formik

@@ -3,22 +3,30 @@ import { User } from 'lucide-react';
 import { tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
+//home Page
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
-const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
-const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
+const Details = lazy(() => import('@pages/homepages/Details'));
+
+// user Role
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
-const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
-const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
 const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
-const Details = lazy(() => import('@pages/homepages/Details'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
+
+// seller Role
+const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
+
+// admin Role
+const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
+// const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
+const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
@@ -49,20 +57,14 @@ export const routes_here = [
   },
   {
     path: '/admin',
-    element: <AdminPage />,
-    layout: 'Admin',
-    isPrivate: true,
-  },
-  {
-    path: '/dashboard',
-    element: <Dashboard />,
+    element: <AccountManager />,
     layout: 'admin',
     isPrivate: false,
   },
   {
-    path: '/products',
-    element: <ProductPage />,
-    layout: 'user',
+    path: '/admin/dashboard',
+    element: <Dashboard />,
+    layout: 'admin',
     isPrivate: false,
   },
   {
