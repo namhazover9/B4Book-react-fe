@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MenuUnfoldOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Form, List, Button, InputNumber, Popconfirm } from "antd";
+import { Form, List, Button, InputNumber, Radio, Popconfirm } from "antd";
 import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
 import Translate from '../components/Common/Translate';
@@ -68,6 +68,30 @@ export default function Layout({ children }) {
       price: 420.50,
       quantity: 1,
       image: pic3,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
+      quantity: 1,
+      image: pic4,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
+      quantity: 1,
+      image: pic4,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
+      quantity: 1,
+      image: pic4,
     },
     {
       id: 4,
@@ -243,39 +267,45 @@ export default function Layout({ children }) {
         </div>
 
         {/* Cart Items - Scrollable */}
-        <div className=" px-4 mt-1 space-y-1 overflow-y-auto h-[calc(100vh-160px)]">
-          {cartItems.map((item) => (
-            <div key={item.id} className="flex items-center justify-between">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-16 h-20 object-cover rounded"
-              />
-              <div className="flex-1 ml-4 py-3">
-                <h3
-                  className="font-normal text-base truncate max-w-[120px]"
-                  title={item.title}
+        <div className=" px-4 mt-1 space-y-1 overflow-y-auto h-[calc(100vh-160px)] scrollbar-hide">
+          <Radio.Group
+            onChange={(e) => setCartItems(e.target.value)}
+            className="max-h-180 overflow-y-auto "
+          >
+            {cartItems.map((item) => (
+
+              <div key={item.id} className="flex items-center justify-between">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-16 h-20 object-cover rounded"
+                />
+                <div className="flex-1 ml-4 py-3">
+                  <h3
+                    className="font-normal text-base truncate max-w-[120px]"
+                    title={item.title}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-sm  m-0  text-gray-500">Vendor: {item.vendor}</p>
+                  <p className="text-base  m-0  font-semibold">
+                    {item.quantity} × ${item.price.toFixed(2)}
+                  </p>
+                </div>
+                <Popconfirm
+                  title="Are you sure you want to remove this item?"
+                  onConfirm={() => {
+                    setCartItems((prevItems) => prevItems.filter((cartItem) => cartItem.id !== item.id));
+                  }}
+                  okText="Yes"
+                  cancelText="No"
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
-                  {item.title}
-                </h3>
-                <p className="text-sm  m-0  text-gray-500">Vendor: {item.vendor}</p>
-                <p className="text-base  m-0  font-semibold">
-                  {item.quantity} × ${item.price.toFixed(2)}
-                </p>
+                  <CloseOutlined className="cursor-pointer text-gray-500 hover:text-red-500" />
+                </Popconfirm>
               </div>
-              <Popconfirm
-                title="Are you sure you want to remove this item?"
-                onConfirm={() => {
-                  setCartItems((prevItems) => prevItems.filter((cartItem) => cartItem.id !== item.id));
-                }}
-                okText="Yes"
-                cancelText="No"
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
-              >
-                <CloseOutlined className="cursor-pointer text-gray-500 hover:text-red-500" />
-              </Popconfirm>
-            </div>
-          ))}
+            ))}
+          </Radio.Group>
         </div>
 
         {/* Subtotal and View Cart Button */}

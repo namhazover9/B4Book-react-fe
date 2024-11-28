@@ -5,75 +5,45 @@ import vnp from '../../assets/images/vnpay.jpg';
 
 const Checkout = () => {
     const [addresses, setAddresses] = useState([
-        {
-            id: 1,
-            name: "Nguyen Dang Hoai",
-            phone: "+84 377 713 160",
-            address: "125 The Lu, An Hai Bac Ward, Son Tra District, Da Nang",
-            default: true,
-        },
-        {
-            id: 2,
-            name: "Nguyen Dang Hoai",
-            phone: "+84 377 713 160",
-            address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam",
-            default: false,
-        },
+        { id: 1, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "125 The Lu, An Hai Bac Ward, Son Tra District, Da Nang", default: true },
+        { id: 2, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 3, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 4, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 5, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 6, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 7, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 8, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
+        { id: 9, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "Tien Son Kindergarten, Tien Son, Tien Phuoc District, Quang Nam", default: false },
     ]);
-
-    const [selectedAddressId, setSelectedAddressId] = useState(
-        addresses.find((addr) => addr.default)?.id || null
-    );
+    const [selectedAddressId, setSelectedAddressId] = useState(addresses.find(addr => addr.default)?.id || null);
     const [voucherCode, setVoucherCode] = useState("");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddAddressModalVisible, setIsAddAddressModalVisible] = useState(false);
     const [isVoucherModalVisible, setIsVoucherModalVisible] = useState(false);
     const [editingAddress, setEditingAddress] = useState(null);
-    const [newAddress, setNewAddress] = useState({
-        name: "",
-        phone: "",
-        address: "",
-    });
+    const [newAddress, setNewAddress] = useState({ name: "", phone: "", address: "" });
     const [discount, setDiscount] = useState(0);
     const [shippingCost, setShippingCost] = useState(32700);
     const [paymentMethod, setPaymentMethod] = useState("");
     const [cardOption, setCardOption] = useState("");
 
     const products = [
-        {
-            key: "1",
-            name: "Healthy Book",
-            price: 15500,
-            quantity: 1,
-            total: 15500,
-        },
-        {
-            key: "2",
-            name: "Book: Clean Code",
-            price: 500000,
-            quantity: 1,
-            total: 500000,
-        },
-        {
-            key: "3",
-            name: "Book: The Pragmatic Programmer",
-            price: 450000,
-            quantity: 2,
-            total: 900000,
-        },
-        {
-            key: "4",
-            name: "Book: JavaScript: The Good Parts",
-            price: 300000,
-            quantity: 1,
-            total: 300000,
-        },
+        { key: "1", name: "Healthy Book", price: 15500, quantity: 1, total: 15500 },
+        { key: "2", name: "Book: Clean Code", price: 500000, quantity: 1, total: 500000 },
+        { key: "3", name: "Book: The Pragmatic Programmer", price: 450000, quantity: 2, total: 900000 },
+        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
     ];
 
     const vouchers = [
         { code: "DISCOUNT10", description: "10% off on your order", discountRate: 0.009 },
         { code: "FREESHIP", description: "Free Shipping", discountRate: 0 },
         { code: "SAVE20", description: "20% off on orders above 1,000,000₫", discountRate: 0.018 },
+        { code: "SAVE4", description: "20% off on orders above 1,000,000₫", discountRate: 0.018 },
+        { code: "SAVE21", description: "20% off on orders above 1,000,000₫", discountRate: 0.018 },
+        { code: "SAVE22", description: "20% off on orders above 1,000,000₫", discountRate: 0.018 },
     ];
 
     const calculateTotalAmount = () =>
@@ -248,9 +218,11 @@ const Checkout = () => {
             dataIndex: "quantity",
             key: "quantity",
             render: (quantity) => (
-                <div className="flex justify-center items-center">{quantity}</div>
+                <div className="flex justify-center items-center w-24">{quantity}</div>
             ),
+            width: 120,
         },
+
         {
             title: "Total",
             dataIndex: "total",
@@ -262,136 +234,155 @@ const Checkout = () => {
     return (
         <div className="flex flex-col items-center py-10 bg-gray-100 min-h-screen">
             <h1 className="text-xl sm:text-2xl font-bold mb-4">Checkout</h1>
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-6xl">
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
-                    {/* Address Section */}
-                    <div className="border-b border-gray-200 pb-4 mb-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-lg sm:text-xl font-semibold">Address</h2>
-                            <Button
-                                type="link"
-                                onClick={() => setIsModalVisible(true)}
-                                className="text-gray-800 hover:text-blue-700"
-                            >
-                                Select / Add Address
-                            </Button>
-                        </div>
-                        {selectedAddressId && (
-                            <div>
-                                <p>
-                                    {addresses.find((addr) => addr.id === selectedAddressId)?.name}{" "}
-                                    ({addresses.find((addr) => addr.id === selectedAddressId)?.phone})
-                                </p>
-                                <p>{addresses.find((addr) => addr.id === selectedAddressId)?.address}</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Products Table */}
-                    <div className="overflow-x-auto mb-6">
-                        <Table
-                            columns={columns}
-                            dataSource={products}
-                            pagination={false}
-                            className="min-w-full"
-                        />
-                    </div>
-
-                    {/* Payment and Total Cost */}
-                    <div className="flex flex-col sm:flex-row justify-between sm:space-x-8 mb-6">
-                        {/* Payment Section */}
-                        <div className="flex-1 mb-6 sm:mb-0">
-                            <Form.Item name="paymentMethod" label="Payment Method" required>
-                                <Radio.Group
-                                    onChange={handlePaymentChange}
-                                    value={paymentMethod}
-                                >
-                                    <Space direction="vertical">
-                                        <Radio value="cash">Cash on Delivery</Radio>
-                                        <Radio value="card">Credit/Debit Card</Radio>
-                                    </Space>
-                                </Radio.Group>
-                            </Form.Item>
-
-                            {paymentMethod === "card" && (
-                                <Form.Item name="cardOption" label="Select Payment Gateway" required>
-                                    <Radio.Group
-                                        onChange={handleCardOptionChange}
-                                        value={cardOption}
+                    <div className="flex flex-col-2">
+                        <div>
+                            {/* Address Section */}
+                            <div className="border-b border-gray-200 pb-4 mb-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-lg sm:text-xl font-semibold underline">Address</h2>
+                                    <Button
+                                        type="link"
+                                        onClick={() => setIsModalVisible(true)}
+                                        className="text-gray-800 hover:text-blue-700 underline"
                                     >
-                                        <Space direction="vertical">
-                                            <Radio value="stripe">
-                                                <div className="flex items-center">
-                                                    <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
-                                                    Stripe
-                                                </div>
-                                            </Radio>
-                                            <Radio value="vnpay">
-                                                <div className="flex items-center">
-                                                    <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
-                                                    VNPay
-                                                </div>
-                                            </Radio>
+                                        Select / Add Address
+                                    </Button>
+                                </div>
+                                {selectedAddressId && (
+                                    <div>
+                                        <p>
+                                            {addresses.find((addr) => addr.id === selectedAddressId)?.name}{" "}
+                                            ({addresses.find((addr) => addr.id === selectedAddressId)?.phone})
+                                        </p>
+                                        <p>{addresses.find((addr) => addr.id === selectedAddressId)?.address}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Products Table */}
+                            <div className="overflow-x-auto mb-6 scrollbar-hide">
+                                <Table
+                                    columns={columns}
+                                    dataSource={products}
+                                    pagination={false}
+                                    className="min-w-full scrollbar-hide"
+                                    scroll={{
+
+                                    }}
+                                />
+                            </div>
+
+                        </div>
+
+
+                        {/* Payment and Total Cost */}
+                        <div className="sm:flex-row justify-between sm:space-x-8 ml-9 h-80 ">
+                            {/* Payment Section */}
+                            <div className="flex-1 mb-6 sm:mb-0 ml-8 h-80">
+                                <Form.Item name="paymentMethod" required className="h-30">
+                                    <p className="text-[1.15em] font-bold underline">Payment Method</p>
+                                    <Radio.Group
+                                        onChange={handlePaymentChange}
+                                        value={paymentMethod}
+                                    >
+                                        <Space direction="vertical" className="mt-3">
+                                            <Radio value="cash">Cash on Delivery</Radio>
+                                            <Radio value="card">Credit/Debit Card</Radio>
                                         </Space>
                                     </Radio.Group>
                                 </Form.Item>
-                            )}
-                        </div>
 
-                        {/* Total Cost Section */}
-                        <div className="flex-1 text-right">
-                            <p className="text-lg">
-                                <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
-                            </p>
-                            <p className="text-lg">
-                                <span>Shipping Cost:</span> {shippingCost}$
-                            </p>
-                            <p className="text-lg">
-                                <span>Discount:</span> {discount}$
-                            </p>
-                            <p className="text-xl font-bold">
-                                <span>Total Amount:</span> {calculateTotalAmount()}$
-                            </p>
+                                {paymentMethod === "card" && (
+                                    <Form.Item name="cardOption" required>
+                                        <p className="text-[1.15em] font-bold underline">Select Payment Gateway</p>
+                                        <Radio.Group
+                                            onChange={handleCardOptionChange}
+                                            value={cardOption}
+                                        >
+                                            <Space direction="vertical" className="mt-3">
+                                                <Radio value="stripe">
+                                                    <div className="flex items-center">
+                                                        <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
+                                                        Stripe
+                                                    </div>
+                                                </Radio>
+                                                <Radio value="vnpay">
+                                                    <div className="flex items-center">
+                                                        <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
+                                                        VNPay
+                                                    </div>
+                                                </Radio>
+                                            </Space>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                )}
+                            </div>
+
+                            {/* Total Cost Section */}
+                            <div className="flex-1 text-left space-y-2 mt-14 ">
+                                <p className="text-md m-0">
+                                    <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
+                                </p>
+                                <p className="text-md m-0">
+                                    <span>Shipping Cost:</span> {shippingCost}$
+                                </p>
+                                <p className="text-md m-0">
+                                    <span>Discount:</span> {discount}$
+                                </p>
+                                <p className="text-[1.19em] font-bold m-0">
+                                    <span>Total Amount:</span> {calculateTotalAmount()}$
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    <div className="flex justify-end">
+                        <Button onClick={() => setIsVoucherModalVisible(true)} className="justify-end">
+                            Apply Voucher
+                        </Button>
+                    </div>
+                    <div className="flex justify-center">
+                        {/* Submit Button */}
+                        <Button type="primary" htmlType="submit" className="w-1/2 mt-4">
+                            Place Order
+                        </Button>
+                    </div>
 
-                    {/* Submit Button */}
-                    <Button type="primary" htmlType="submit" className="w-full">
-                        Place Order
-                    </Button>
                 </Form>
             </div>
 
-            {/* Modals */}
+            {/*Voucher Modals */}
             <Modal
-                title="Available Vouchers"
                 visible={isVoucherModalVisible}
                 onOk={handleApplyVoucher}
                 onCancel={() => setIsVoucherModalVisible(false)}
                 okText="Apply Voucher"
                 cancelText="Cancel"
-                width={600}
+                width={400}
             >
                 {/* Voucher Modal Content */}
+                <p className="underline text-[1.19em]">Apply Voucher</p>
                 <div className="flex flex-col gap-4">
-                    {vouchers.map((voucher) => (
-                        <div
-                            key={voucher.code}
-                            className="flex items-center justify-between p-3 border border-gray-200 rounded-md"
-                        >
-                            <div>
-                                <p className="font-semibold">{voucher.code}</p>
-                                <p className="text-gray-500">{voucher.description}</p>
-                            </div>
-                            <Button
-                                type="link"
-                                onClick={() => setVoucherCode(voucher.code)}
-                                className="text-black"
+                    <Radio.Group
+                        onChange={(e) => setVoucherCode(e.target.value)}
+                        value={voucherCode}
+                        className="max-h-60 overflow-y-auto scrollbar-hide"
+                    >
+                        {vouchers.map((voucher) => (
+                            <div
+                                key={voucher.code}
+                                className="flex items-center justify-between p-3 border border-gray-200 rounded-md space-y-3 m-3"
                             >
-                                Select
-                            </Button>
-                        </div>
-                    ))}
+                                <Radio key={voucher.code} value={voucher.code}>
+                                    <div>
+                                        <p className="font-semibold">{voucher.code}</p>
+                                        <p className="text-gray-500">{voucher.description}</p>
+                                    </div>
+                                </Radio>
+                            </div>
+                        ))}
+                    </Radio.Group>
                 </div>
             </Modal>
 
@@ -408,12 +399,12 @@ const Checkout = () => {
                 <Radio.Group
                     onChange={(e) => handleSelectAddress(e.target.value)}
                     value={selectedAddressId}
-                    className="flex flex-col gap-4"
+                    className="max-h-60 overflow-y-auto scrollbar-hide"
                 >
                     {addresses.map((addr) => (
                         <div
                             key={addr.id}
-                            className="flex items-start justify-between p-3 border border-gray-200 rounded-md"
+                            className="flex items-start justify-between p-3 border border-gray-200 rounded-md m-3"
                         >
                             <Radio value={addr.id}>
                                 <div>
