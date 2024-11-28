@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from '@layouts/Layout';
 import AdminLayout from '../layouts/AdminLayout';
+import SellerLayout from '../layouts/SellerLayout';
 import { routes_here } from './routes';
 import ScrollTop from '@components/ScrollTop';
 import NotFoundPage from '../pages/pageError/page404';
@@ -10,10 +11,14 @@ import ForbiddenPage from '../pages/pageError/page403';
 import LoadingSpinner from '../components/loading';
 import { getIsAuth } from '../reducers/auth';
 import { getUserRequest } from '../reducers/user';
+import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
+import { s } from 'framer-motion/client';
+
 
 const layoutMap = {
   admin: AdminLayout,
   user: Layout,
+  seller: SellerLayout,
 };
 
 const AppRoutes = () => {

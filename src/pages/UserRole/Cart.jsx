@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Divider, InputNumber, message, Pagination } from 'antd';
+import { Table, Button, Divider, InputNumber, message, Pagination, Popconfirm } from 'antd';
 import 'antd/dist/reset.css';
 import { Link } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
@@ -115,9 +115,17 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <Button type='danger' onClick={() => handleDelete(record._id)}>
-          Delete
-        </Button>
+        <Popconfirm
+          title="Are you sure you want to remove this item?"
+          onConfirm={() => handleDelete(record._id)}
+          okText="Yes"
+          cancelText="No"
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+        >
+          <Button type='danger'>
+            Delete
+          </Button>
+        </Popconfirm>
       ),
     },
   ];
@@ -149,16 +157,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               {index < Object.keys(groupedItems).length - 1 && <Divider />}
             </div>
           ))}
-
-          <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-4">
-            <Button
-              type='primary'
-              onClick={handleUpdateItems}
-              className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-            >
-              Update Cart
-            </Button>
-          </div>
 
           {discount > 0 && (
             <div className='mt-4 text-right'>
