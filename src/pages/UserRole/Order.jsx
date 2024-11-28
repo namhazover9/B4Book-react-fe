@@ -189,14 +189,15 @@ const Checkout = () => {
     };
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <div className="flex flex-col md:flex-row justify-center gap-8 p-8 bg-white shadow-lg rounded-lg md:w-3/4  overflow-auto w-full max-w-6xl">
+            <div className="flex flex-col md:flex-row justify-center gap-4 sm:gap-8 p-4 sm:p-8 bg-white shadow-lg rounded-lg md:w-3/4 overflow-auto w-full max-w-6xl">
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
-                    <div className="flex flex-wrap w-full ">
-                        <div className="w-full md:w-2/3 pr-7">
+                    <div className="flex flex-wrap w-full">
+                        {/* Left Section */}
+                        <div className="w-full md:w-2/3 pr-4 sm:pr-7">
                             {/* Address Section */}
-                            <div className="border-b border-gray-200 pb-4 mb-6">
+                            <div className="border-b border-gray-200 pb-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-lg sm:text-xl font-semibold underline">Address</h2>
+                                    <h2 className="text-base sm:text-lg font-semibold underline">Address</h2>
                                     <Button
                                         type="link"
                                         onClick={() => setIsModalVisible(true)}
@@ -215,59 +216,47 @@ const Checkout = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className="space-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide border-y-2 border-gray-500 ">
+
+                            {/* Product List Section */}
+                            <div className="space-y-4 max-h-[40vh] sm:max-h-[60vh] overflow-y-auto scrollbar-hide border-y-2 border-gray-500">
                                 {products.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="flex items-center justify-between bg-gray-300 p-4 rounded-lg shadow "
-
+                                        className="flex items-center justify-between bg-gray-300 p-4 rounded-lg shadow"
                                     >
                                         <div className="flex items-center w-2/3">
-                                            <div className="h-20 w-20 mr-2 bg-gray-200 rounded">
+                                            <div className="h-16 sm:h-20 w-16 sm:w-20 mr-2 bg-gray-200 rounded">
                                                 <img src={vnp} alt={item.name} />
                                             </div>
                                             <div>
-                                                <h3 className="font-semibold truncate">{item.name}</h3>
+                                                <h3 className="font-semibold truncate text-sm sm:text-base">{item.name}</h3>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4 w-1/3">
                                             <div className="flex items-center border rounded">
-                                                <span className="px-3">{item.quantity}</span>
-                                            </div>
-                                            {/* <div className="flex items-center border rounded">
-                                                <span className="font-semibold">{item.price}</span>
-                                            </div> */}
-                                            {/* <div>
-                                                <p>Quantity</p>
-                                                <p className="font-semibold"> Quantity: {item.quantity}</p>
-                                            </div> */}
-                                            <div>
-                                                <p className="font-bold">Price</p>
-                                                <p className="font-semibold">{item.price}</p>
+                                                <span className="px-2 sm:px-3">{item.quantity}</span>
                                             </div>
                                             <div>
-                                                <p className="font-bold">Total</p>
-                                                <p className="font-semibold">{item.total}</p>
+                                                <p className="font-bold text-sm sm:text-base">Price</p>
+                                                <p className="font-semibold text-sm sm:text-base">{item.price}</p>
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-sm sm:text-base">Total</p>
+                                                <p className="font-semibold text-sm sm:text-base">{item.total}</p>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-
-
                         </div>
 
-
-                        {/* Payment and Total Cost */}
-                        <div className="w-full md:w-1/3 pl-10 border-l border-gray-300">
+                        {/* Right Section */}
+                        <div className="w-full md:w-1/3 pl-0 sm:pl-10 border-l sm:border-gray-300">
                             {/* Payment Section */}
-                            <div className="flex flex-col space-y-6 h-60 ">
-                                <Form.Item name="paymentMethod" required className="">
-                                    <p className="text-lg font-bold underline">Payment Method</p>
-                                    <Radio.Group
-                                        onChange={handlePaymentChange}
-                                        value={paymentMethod}
-                                    >
+                            <div className="flex flex-col space-y-6 h-auto">
+                                <Form.Item name="paymentMethod" required>
+                                    <p className="text-base sm:text-lg font-bold underline">Payment Method</p>
+                                    <Radio.Group onChange={handlePaymentChange} value={paymentMethod}>
                                         <Space direction="vertical" className="mt-3">
                                             <Radio value="cash">Cash on Delivery</Radio>
                                             <Radio value="card">Credit/Debit Card</Radio>
@@ -277,11 +266,10 @@ const Checkout = () => {
 
                                 {paymentMethod === "card" && (
                                     <Form.Item name="cardOption" required>
-                                        <p className="text-lg font-bold underline">Select Payment Gateway</p>
-                                        <Radio.Group
-                                            onChange={handleCardOptionChange}
-                                            value={cardOption}
-                                        >
+                                        <p className="text-base sm:text-lg font-bold underline">
+                                            Select Payment Gateway
+                                        </p>
+                                        <Radio.Group onChange={handleCardOptionChange} value={cardOption}>
                                             <Space direction="vertical" className="mt-3">
                                                 <Radio value="stripe">
                                                     <div className="flex items-center">
@@ -302,42 +290,42 @@ const Checkout = () => {
                             </div>
 
                             {/* Total Cost Section */}
-                            <div className="flex-1 text-left space-y-2 mt-14 border-t border-gray-300">
-                                <p className="text-md font-bold mt-2">
+                            <div className="flex-1 text-left space-y-2 mt-6 border-t sm:border-gray-300">
+                                <p className="text-sm sm:text-md font-bold mt-2">
                                     <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
                                 </p>
-                                <p className="text-md m-0">
+                                <p className="text-sm sm:text-md m-0">
                                     <span>Shipping Cost:</span> {shippingCost}$
                                 </p>
-                                <p className="text-md m-0">
+                                <p className="text-sm sm:text-md m-0">
                                     <span>Discount:</span> {discount}$
                                 </p>
-                                <p className="text-lg font-bold m-0 underline">
+                                <p className="text-md sm:text-lg font-bold m-0 underline">
                                     <span>Total Amount:</span> {calculateTotalAmount()}$
                                 </p>
                             </div>
 
-
-                            <div className="flex justify-between items-center mt-6 space-x-5">
+                            {/* Buttons */}
+                            <div className="flex justify-between items-center mt-6 space-x-3 sm:space-x-5">
                                 <Button
                                     onClick={() => setIsVoucherModalVisible(true)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                                    className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded"
                                 >
                                     Apply Voucher
                                 </Button>
                                 <Button
                                     type="primary"
                                     htmlType="submit"
-                                    className="bg-orange-500 text-white px-4 py-2 rounded hover:text-orange-500 hover:bg-white"
+                                    className="bg-orange-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:text-orange-500 hover:bg-white"
                                 >
                                     Place Order
                                 </Button>
                             </div>
                         </div>
                     </div>
-
                 </Form>
             </div>
+
 
             {/*Voucher Modals */}
             <Modal
