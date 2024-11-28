@@ -193,7 +193,7 @@ const Checkout = () => {
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
                     <div className="flex flex-wrap w-full">
                         {/* Left Section */}
-                        <div className="w-full md:w-2/3 pr-4 sm:pr-7">
+                        <div className="w-full md:w-2/3 lg:pr-4 sm:">
                             {/* Address Section */}
                             <div className="border-b border-gray-200 pb-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center mb-4">
@@ -222,19 +222,25 @@ const Checkout = () => {
                                 {products.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="flex items-center justify-between bg-gray-300 p-4 rounded-lg shadow"
+                                        className="flex items-center justify-between bg-gray-200 p-4 rounded-lg shadow"
                                     >
                                         <div className="flex items-center w-2/3">
-                                            <div className="h-16 sm:h-20 w-16 sm:w-20 mr-2 bg-gray-200 rounded">
-                                                <img src={vnp} alt={item.name} />
+                                            <div className="h-16 sm:h-20 w-16 sm:w-20 mr-2 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
+                                                <img
+                                                    src={vnp}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-contain"
+                                                />
                                             </div>
-                                            <div>
-                                                <h3 className="font-semibold truncate text-sm sm:text-base">{item.name}</h3>
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-sm sm:text-base truncate max-w-[120px] sm:max-w-[200px]">
+                                                    {item.name}
+                                                </h3>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-4 w-1/3">
+                                        <div className="flex items-center gap-3 w-1/3">
                                             <div className="flex items-center border rounded">
-                                                <span className="px-2 sm:px-3">{item.quantity}</span>
+                                                <span className="px-1 sm:px-3">{item.quantity}</span>
                                             </div>
                                             <div>
                                                 <p className="font-bold text-sm sm:text-base">Price</p>
@@ -251,9 +257,9 @@ const Checkout = () => {
                         </div>
 
                         {/* Right Section */}
-                        <div className="w-full md:w-1/3 pl-0 sm:pl-10 border-l sm:border-gray-300">
+                        <div className="w-full md:w-1/3 pl-0 sm:pl-10 sm:pt-5 lg:border-l sm:border-gray-300">
                             {/* Payment Section */}
-                            <div className="flex flex-col space-y-6 h-auto">
+                            <div className="flex flex-col space-y-6 h-auto lg:h-80 sm:pt-5">
                                 <Form.Item name="paymentMethod" required>
                                     <p className="text-base sm:text-lg font-bold underline">Payment Method</p>
                                     <Radio.Group onChange={handlePaymentChange} value={paymentMethod}>
@@ -325,7 +331,6 @@ const Checkout = () => {
                     </div>
                 </Form>
             </div>
-
 
             {/*Voucher Modals */}
             <Modal
