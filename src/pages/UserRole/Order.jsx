@@ -27,16 +27,15 @@ const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState("");
     const [cardOption, setCardOption] = useState("");
 
-    const products = [
-        { key: "1", name: "Healthy Book", price: 15500, quantity: 1, total: 15500 },
-        { key: "2", name: "Book: Clean Code", price: 500000, quantity: 1, total: 500000 },
-        { key: "3", name: "Book: The Pragmatic Programmer", price: 450000, quantity: 2, total: 900000 },
-        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
-        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
-        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
-        { key: "4", name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
-    ];
-
+    const [products, setProducts] = useState([
+        { id: 1, name: "Healthy Book", price: 15500, quantity: 1, total: 15500 },
+        { id: 2, name: "Book: Clean Code", price: 500000, quantity: 1, total: 500000 },
+        { id: 3, name: "Book: The Pragmatic Programmer", price: 450000, quantity: 2, total: 900000 },
+        { id: 4, name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { id: 5, name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { id: 6, name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+        { id: 7, name: "Book: JavaScript: The Good Parts", price: 300000, quantity: 1, total: 300000 },
+    ]);
     const vouchers = [
         { code: "DISCOUNT10", description: "10% off on your order", discountRate: 0.009 },
         { code: "FREESHIP", description: "Free Shipping", discountRate: 0 },
@@ -56,7 +55,7 @@ const Checkout = () => {
             const totalPrice = products.reduce((sum, product) => sum + product.total, 0);
 
             if (selectedVoucher.code === "FREESHIP") {
-                setDiscount(0);
+                setDiscount(37200);
                 notification.success({
                     message: "Voucher Applied",
                     description: "Shipping cost has been waived!",
@@ -188,56 +187,12 @@ const Checkout = () => {
     const handleCardOptionChange = (e) => {
         setCardOption(e.target.value);
     };
-
-    const columns = [
-        {
-            title: "Product",
-            dataIndex: "name",
-            key: "name",
-            render: (text, record) => (
-                <div className="flex items-center">
-                    <img
-                        src="https://via.placeholder.com/50"
-                        alt={record.name}
-                        className="w-12 h-12 mr-4 object-cover rounded"
-                    />
-                    <div>
-                        <p>{text}</p>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
-            render: (price) => <p>{price}$</p>,
-        },
-        {
-            title: "Quantity",
-            dataIndex: "quantity",
-            key: "quantity",
-            render: (quantity) => (
-                <div className="flex justify-center items-center w-24">{quantity}</div>
-            ),
-            width: 120,
-        },
-
-        {
-            title: "Total",
-            dataIndex: "total",
-            key: "total",
-            render: (total) => <p>{total}$</p>,
-        },
-    ];
-
     return (
-        <div className="flex flex-col items-center py-10 bg-gray-100 min-h-screen">
-            <h1 className="text-xl sm:text-2xl font-bold mb-4">Checkout</h1>
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-6xl">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+            <div className="flex flex-col md:flex-row justify-center gap-8 p-8 bg-white shadow-lg rounded-lg md:w-3/4  overflow-auto w-full max-w-6xl">
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
-                    <div className="flex flex-col-2">
-                        <div>
+                    <div className="flex flex-wrap w-full ">
+                        <div className="w-full md:w-2/3 pr-7">
                             {/* Address Section */}
                             <div className="border-b border-gray-200 pb-4 mb-6">
                                 <div className="flex justify-between items-center mb-4">
@@ -260,29 +215,55 @@ const Checkout = () => {
                                     </div>
                                 )}
                             </div>
+                            <div className="space-y-4 max-h-[60vh] overflow-y-auto scrollbar-hide border-y-2 border-gray-500 ">
+                                {products.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="flex items-center justify-between bg-gray-300 p-4 rounded-lg shadow "
 
-                            {/* Products Table */}
-                            <div className="overflow-x-auto mb-6 scrollbar-hide">
-                                <Table
-                                    columns={columns}
-                                    dataSource={products}
-                                    pagination={false}
-                                    className="min-w-full scrollbar-hide"
-                                    scroll={{
-
-                                    }}
-                                />
+                                    >
+                                        <div className="flex items-center w-2/3">
+                                            <div className="h-20 w-20 mr-2 bg-gray-200 rounded">
+                                                <img src={vnp} alt={item.name} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-semibold truncate">{item.name}</h3>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4 w-1/3">
+                                            <div className="flex items-center border rounded">
+                                                <span className="px-3">{item.quantity}</span>
+                                            </div>
+                                            {/* <div className="flex items-center border rounded">
+                                                <span className="font-semibold">{item.price}</span>
+                                            </div> */}
+                                            {/* <div>
+                                                <p>Quantity</p>
+                                                <p className="font-semibold"> Quantity: {item.quantity}</p>
+                                            </div> */}
+                                            <div>
+                                                <p className="font-bold">Price</p>
+                                                <p className="font-semibold">{item.price}</p>
+                                            </div>
+                                            <div>
+                                                <p className="font-bold">Total</p>
+                                                <p className="font-semibold">{item.total}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
+
 
                         </div>
 
 
                         {/* Payment and Total Cost */}
-                        <div className="sm:flex-row justify-between sm:space-x-8 ml-9 h-80 ">
+                        <div className="w-full md:w-1/3 pl-10 border-l border-gray-300">
                             {/* Payment Section */}
-                            <div className="flex-1 mb-6 sm:mb-0 ml-8 h-80">
-                                <Form.Item name="paymentMethod" required className="h-30">
-                                    <p className="text-[1.15em] font-bold underline">Payment Method</p>
+                            <div className="flex flex-col space-y-6 h-60 ">
+                                <Form.Item name="paymentMethod" required className="">
+                                    <p className="text-lg font-bold underline">Payment Method</p>
                                     <Radio.Group
                                         onChange={handlePaymentChange}
                                         value={paymentMethod}
@@ -296,7 +277,7 @@ const Checkout = () => {
 
                                 {paymentMethod === "card" && (
                                     <Form.Item name="cardOption" required>
-                                        <p className="text-[1.15em] font-bold underline">Select Payment Gateway</p>
+                                        <p className="text-lg font-bold underline">Select Payment Gateway</p>
                                         <Radio.Group
                                             onChange={handleCardOptionChange}
                                             value={cardOption}
@@ -321,8 +302,8 @@ const Checkout = () => {
                             </div>
 
                             {/* Total Cost Section */}
-                            <div className="flex-1 text-left space-y-2 mt-14 ">
-                                <p className="text-md m-0">
+                            <div className="flex-1 text-left space-y-2 mt-14 border-t border-gray-300">
+                                <p className="text-md font-bold mt-2">
                                     <span>Total Cost of Goods:</span> {products.reduce((sum, product) => sum + product.total, 0)}$
                                 </p>
                                 <p className="text-md m-0">
@@ -331,22 +312,28 @@ const Checkout = () => {
                                 <p className="text-md m-0">
                                     <span>Discount:</span> {discount}$
                                 </p>
-                                <p className="text-[1.19em] font-bold m-0">
+                                <p className="text-lg font-bold m-0 underline">
                                     <span>Total Amount:</span> {calculateTotalAmount()}$
                                 </p>
                             </div>
+
+
+                            <div className="flex justify-between items-center mt-6 space-x-5">
+                                <Button
+                                    onClick={() => setIsVoucherModalVisible(true)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                                >
+                                    Apply Voucher
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="bg-orange-500 text-white px-4 py-2 rounded hover:text-orange-500 hover:bg-white"
+                                >
+                                    Place Order
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex justify-end">
-                        <Button onClick={() => setIsVoucherModalVisible(true)} className="justify-end">
-                            Apply Voucher
-                        </Button>
-                    </div>
-                    <div className="flex justify-center">
-                        {/* Submit Button */}
-                        <Button type="primary" htmlType="submit" className="w-1/2 mt-4">
-                            Place Order
-                        </Button>
                     </div>
 
                 </Form>
