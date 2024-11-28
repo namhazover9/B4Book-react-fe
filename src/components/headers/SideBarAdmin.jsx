@@ -14,18 +14,18 @@ import { Link } from 'react-router-dom';
 const items = [
   {
     key: '1',
-    icon: <PieChartOutlined />,
-    label: <Link to='/dashboard'>Dashboard</Link>,
+    icon: <DesktopOutlined />,
+    label: <Link to='/admin'>Account Manager</Link>,
   },
   {
     key: '2',
-    icon: <DesktopOutlined />,
-    label: <Link to='/products'>Product</Link>,
+    icon: <PieChartOutlined />,
+    label: <Link to='/admin/dashboard'>Dashboard</Link>,
   },
   {
     key: '3',
     icon: <ContainerOutlined />,
-    label: 'Option 3',
+    // label: <Link to='/home'>Home</Link>,
   },
   {
     key: 'sub1',
