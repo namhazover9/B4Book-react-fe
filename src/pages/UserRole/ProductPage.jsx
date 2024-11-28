@@ -193,7 +193,7 @@ export default function ProductPage() {
           <div className='price'>
             <div className='price-ipad hidden lg:block'>
               <Card
-                title=':heavy_dollar_sign:Filter by Price'
+                title='Filter by Price'
                 className='h-auto overflow-y-auto bg-gray-50'
                 bordered={false}
               >
@@ -266,10 +266,10 @@ export default function ProductPage() {
                   options={[
                     { value: 'default', label: 'Default sorting' },
                     { value: 'popularity', label: 'Sort by popularity' },
-                    { value: 'rating', label: 'Sort by average rating' },
+                    { value: 'averageRating', label: 'Sort by average rating' },
                     { value: 'latest', label: 'Sort by latest' },
-                    { value: 'price_low_to_high', label: 'Sort by price: low to high' },
-                    { value: 'price_high_to_low', label: 'Sort by price: high to low' },
+                    { value: 'priceLowToHigh', label: 'Sort by price: low to high' },
+                    { value: 'priceHighToLow', label: 'Sort by price: high to low' },
                   ]}
                 />
               </div>
