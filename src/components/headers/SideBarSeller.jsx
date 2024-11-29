@@ -1,13 +1,15 @@
 import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, WechatOutlined } from '@ant-design/icons';
 import { Button, Drawer, Menu } from 'antd';
 import Item from 'antd/es/list/Item';
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useParams } from 'react-router-dom';
+import shopApi from '../../hooks/useShopApi';
 
 export default function SideBarSeller({ onToggle, isOpen }) {
 
     const [open, setOpen] = useState(false);
-
+    const id = useParams().id;
+    const [shopDetail, setShopDetail] = useState();
     const Menus = [
         { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: "/shop-HoangNam/home" },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: "/shop-HoangNam/orders" },
@@ -16,7 +18,21 @@ export default function SideBarSeller({ onToggle, isOpen }) {
         { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: "/shop-HoangNam/chat" },
         { title: "Setting", icon: <SettingOutlined className='text-2xl' />, path: "/shop-HoangNam/setting" },
     ];
+    useEffect(() => {
+        const fetchShopDetail = async () => {
+          try {
+            const response = await shopApi.getDetailShop(id); // Gọi API
+            const { shop } = response.data; // Lấy dữ liệu từ response
+            setShopDetail(shop); // Lưu thông tin shop
+          } catch (error) {
+            console.error("Error fetching shop detail:", error);
+          }
+        };
+    
+        fetchShopDetail();
+      }, [id]);
 
+     
     // Tablet - Mobile - Ipad
     const [openDrawer, setOpenDrawer] = useState(false);
     const showDrawer = () => {
@@ -25,14 +41,14 @@ export default function SideBarSeller({ onToggle, isOpen }) {
     const onCloseDrawer = () => {
         setOpenDrawer(false);
     };
-
     return (
         <div className="">
             <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-screen bg-slate-200 hidden lg:block`}>
                 <div className="w-64 h-20">
                     <div className="w-3/5 flex justify-between items-center mx-2">
-                        <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg" alt="" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
-                        <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate ${!isOpen && "scale-0"}`}>Hoàng Nam</p>
+                        <img src={ shopDetail?.images[0] || "https://via.placeholder.com/150"} // Hiển thị ảnh đầu tiên
+                            alt="Shop" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
+                        <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate ${!isOpen && "scale-0"}`}>{shopDetail?.shopName}</p>
                     </div>
                 </div>
                 <RightOutlined className={`${isOpen && "rotate-180"} absolute text-3xl cursor-pointer -right-4 top-16 w-8 border-2 bg-slate-50 text-slate-500 border-slate-50 rounded-full`} onClick={onToggle} />
@@ -58,8 +74,8 @@ export default function SideBarSeller({ onToggle, isOpen }) {
                     <div className="">
                         <div className="w-64 h-20">
                             <div className="w-8/12 flex justify-between items-center mx-2">
-                                <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg" alt="" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
-                                <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate`}>Hoàng Nam</p>
+                                <img src={ shopDetail?.images[0] || "https://via.placeholder.com/150"}  alt="" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
+                                <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate`}>{shopDetail?.shopName}</p>
                             </div>
                         </div>
                         <ul className='pt-6'>
