@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
+import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -65,24 +66,24 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
 
   // Handle quantity change
-const handleQuantityChange = async (id, quantity) => {
-  try {
-    const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
-    if (response.status === 'success') {
-      setCartItems(
-        cartItems.map((item) =>
-          item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
-        ),
-      );
-      message.success('Quantity updated successfully!');
-    } else {
-      message.error('Failed to update quantity');
+  const handleQuantityChange = async (id, quantity) => {
+    try {
+      const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
+      if (response.status === 'success') {
+        setCartItems(
+          cartItems.map((item) =>
+            item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
+          ),
+        );
+        message.success('Quantity updated successfully!');
+      } else {
+        message.error('Failed to update quantity');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      message.error('Error updating quantity');
     }
-  } catch (error) {
-    console.error('Error updating quantity:', error);
-    message.error('Error updating quantity');
-  }
-};
+  };
 
 
   const clearUserCart = async () => {
@@ -155,7 +156,7 @@ const handleQuantityChange = async (id, quantity) => {
         />
       ),
     },
-    
+
     {
       title: 'Total',
       key: 'total',
@@ -173,7 +174,7 @@ const handleQuantityChange = async (id, quantity) => {
           cancelText='No'
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
-          <Button type='danger'>Delete</Button>
+          <Button type='danger'><CloseOutlined /></Button>
         </Popconfirm>
       ),
     },
@@ -187,9 +188,10 @@ const handleQuantityChange = async (id, quantity) => {
 
   if (!showUI)
     return (
+
       <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
-        <h1 className='text-2xl font-bold mb-4'>Shopping Cart</h1>
         <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
+          <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>Shopping Cart</h1>
           {loading ? (
             <div className='flex justify-center items-center py-10'>
               <Spin size='large' tip='Đang tải dữ liệu...' />
@@ -203,7 +205,22 @@ const handleQuantityChange = async (id, quantity) => {
               <div key={index}>
                 <div className='flex justify-between items-center mb-2'>
                   <h2 className='text-lg font-bold'>{shop}</h2>
+                  <Popconfirm
+                    title='Are you sure you want to remove this item?'
+                    onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+                    okText='Yes'
+                    cancelText='No'
+                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  >
+                    <button
+                      type='primary'
+                      className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
+                    >
+                      <DeleteOutlined className="text-xl text-white m-4" />
+                    </button>
+                  </Popconfirm>
                 </div>
+
                 <Table
                   dataSource={groupedItems[shop]}
                   columns={columns}
@@ -230,20 +247,7 @@ const handleQuantityChange = async (id, quantity) => {
               <h2 className='text-xl font-bold'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-              <Popconfirm
-                title='Are you sure you want to remove this item?'
-                onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
-                okText='Yes'
-                cancelText='No'
-                getPopupContainer={(triggerNode) => triggerNode.parentNode}
-              >
-                <Button
-                  type='primary'
-                  className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-                >
-                  Delete All
-                </Button>
-              </Popconfirm>
+
 
               <Button
                 type='primary'

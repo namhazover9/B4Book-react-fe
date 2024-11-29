@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Input, Button, Form, Modal, Radio, Table, notification, Space } from "antd";
 import stripe2 from '../../assets/images/stripe2.jpg';
+import { Link } from 'react-router-dom';
 import vnp from '../../assets/images/vnpay.jpg';
 
 const Checkout = () => {
@@ -188,14 +189,20 @@ const Checkout = () => {
         setCardOption(e.target.value);
     };
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <div className="flex flex-col md:flex-row justify-center gap-4 sm:gap-8 p-4 sm:p-8 bg-white shadow-lg rounded-lg md:w-3/4 overflow-auto w-full max-w-6xl">
+        <div className="flex items-center justify-center min-h-screen bg-gray-200 pb-12">
+            <div className="flex flex-col md:flex-grow-0 justify-center sm:gap-8 pb-8 my-7 sm:p-8 bg-white shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-6xl ">
                 <Form layout="vertical" onFinish={handlePlaceOrder}>
-                    <div className="flex flex-wrap w-full">
+                    <h1 className="flex items-center justify-center text-2xl underline text-red-700">Order</h1>
+                    <div className="mb-5 p-0">
+                        <Link to="/cart" >
+                            <Button>Back</Button>
+                        </Link>
+                    </div>
+                    <div className="flex flex-wrap w-full ">
                         {/* Left Section */}
-                        <div className="w-full md:w-2/3 lg:pr-4 sm:">
+                        <div className="w-full md:w-2/3 lg:pr-4">
                             {/* Address Section */}
-                            <div className="border-b border-gray-200 pb-4 mb-4 sm:mb-6">
+                            <div className="border-b border-gray-100 pb-4 mb-4 sm:mb-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-base sm:text-lg font-semibold underline">Address</h2>
                                     <Button
@@ -222,7 +229,7 @@ const Checkout = () => {
                                 {products.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="flex items-center justify-between bg-gray-200 p-4 rounded-lg shadow"
+                                        className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow"
                                     >
                                         <div className="flex items-center w-2/3">
                                             <div className="h-16 sm:h-20 w-16 sm:w-20 mr-2 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
@@ -259,7 +266,7 @@ const Checkout = () => {
                         {/* Right Section */}
                         <div className="w-full md:w-1/3 pl-0 sm:pl-10 sm:pt-5 lg:border-l sm:border-gray-300">
                             {/* Payment Section */}
-                            <div className="flex flex-col space-y-6 h-auto lg:h-80 sm:pt-5">
+                            <div className="flex flex-col space-y-4 h-auto lg:h-80 sm:pt-5">
                                 <Form.Item name="paymentMethod" required>
                                     <p className="text-base sm:text-lg font-bold underline">Payment Method</p>
                                     <Radio.Group onChange={handlePaymentChange} value={paymentMethod}>
@@ -319,13 +326,11 @@ const Checkout = () => {
                                 >
                                     Apply Voucher
                                 </Button>
-                                <Button
-                                    type="primary"
+                                <button type="primary"
                                     htmlType="submit"
-                                    className="bg-orange-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded hover:text-orange-500 hover:bg-white"
-                                >
+                                    className='text-sm bg-red-500 hover:bg-red-400 text-white px-3 py-2 sm:px-4 sm:py-2 rounded'>
                                     Place Order
-                                </Button>
+                                </button>
                             </div>
                         </div>
                     </div>
