@@ -36,7 +36,7 @@ const onLoginSuccess = async (data, role) => {
     //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
     dispatch(setIsAuth(true));
     
-    // Check role and navigate accordingly
+    //Check role and navigate accordingly
     if (role === 'Admin') {
       navigate('/admin');
     } else if (role === 'Customer') {
