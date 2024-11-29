@@ -9,7 +9,6 @@ export default function DetailShop() {
   const { id: shopId } = useParams(); // Lấy shopId từ URL
   const [shopDetail, setShopDetail] = useState(null);
   const [bestSellers, setBestSellers] = useState([]);
-console.log(shopId);
   // Fetch dữ liệu khi component mount
   useEffect(() => {
     const fetchShopDetail = async () => {

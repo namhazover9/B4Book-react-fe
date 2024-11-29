@@ -13,6 +13,10 @@ import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
 import { useEffect } from 'react';
 import productsApi from '../../hooks/useProductsApi';
 import LoadingSpinner from '../../components/loading';
+import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
+import { useSelector } from 'react-redux';
+import { Spin } from 'antd';
+
 
 export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
@@ -33,11 +37,13 @@ export default function ProductPage() {
     'Romance',
     'History',
   ];
-
+  const [addingToCart, setAddingToCart] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAuthors, setSelectedAuthors] = useState([]);
   const [selectedSort, setSelectedSort] = useState('default');
+
+  const userId = useSelector((state) => state.user._id);
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -73,6 +79,20 @@ export default function ProductPage() {
       console.error('Error searching books:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddToCart = async (productId) => {
+    try {
+      setAddingToCart(true);
+      const response = await ShopingCartApi.addProductToCart(productId);
+      console.log('Product added to cart:', response.data);
+      alert('Product successfully added to cart!');
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart. Please try again.');
+    } finally {
+      setAddingToCart(false);
     }
   };
 
@@ -335,9 +355,22 @@ export default function ProductPage() {
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
                                         <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
-                                      <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
-                                        <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
-                                      </button>
+                                      <button
+  className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
+    addingToCart
+      ? 'opacity-50 cursor-not-allowed'
+      : 'hover:bg-red-500 hover:text-white'
+  } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+  onClick={() => handleAddToCart(book._id)}
+  disabled={addingToCart} // Vô hiệu hóa khi đang thêm
+>
+  {addingToCart ? (
+    <Spin size="small" /> // Icon loading từ Ant Design
+  ) : (
+    <ShoppingCartOutlined className="w-6 h-6 flex justify-center items-center text-black-500" />
+  )}
+</button>
+                                      
                                     </div>
                                   </div>
                                 </div>

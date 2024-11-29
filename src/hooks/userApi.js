@@ -12,6 +12,11 @@ const userApi = {
     const url = USER_API_URL + '/update';
     return axiosClient.put(url, { userId, value });
   },
+  
+  // switch shop
+  getSwitchShop: async () => {
+    return await axiosClient.get('/switchShop', {});
+  },
 };
 
 export default userApi;
