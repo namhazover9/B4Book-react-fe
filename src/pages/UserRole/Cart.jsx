@@ -108,6 +108,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
+    console.log('/checkout')
   };
 
   const columns = [
@@ -224,10 +225,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                 cancelText='No'
                 getPopupContainer={(triggerNode) => triggerNode.parentNode}
               >
-                <Button
-                  type='primary'
-                  className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-                >
+                <Button type='primary' className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'>
                   Delete All
                 </Button>
               </Popconfirm>

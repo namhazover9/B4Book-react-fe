@@ -18,6 +18,8 @@ const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
+const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
+const Checkout = lazy(() => import('@pages/UserRole/Checkout'));
 
 // seller Role
 const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
@@ -104,7 +106,6 @@ export const routes_here = [
     isPrivate: false,
   },
 
-
   {
     path: '/details',
     element: <Details />,
@@ -122,7 +123,13 @@ export const routes_here = [
     element: <DetailShop />,
     layout: 'user',
     isPrivate: false,
-  }
+  },
+  {
+    path: '/orderconfirm',
+    element: <OrderConfirm />,
+    layout: 'user',
+    isPrivate: false,
+  },
   // {
   //   path: '/shops',
   //   element: <SellerPage />,
