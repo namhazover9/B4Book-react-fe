@@ -37,4 +37,5 @@ export default {
       },
     },
   },
+  plugins: [require('tailwind-scrollbar-hide')], // Thêm plugin tại đây
 };

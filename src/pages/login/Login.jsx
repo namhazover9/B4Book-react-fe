@@ -144,7 +144,7 @@ function Login() {
               </Button>
               <div className='text-center text-gray-500 mb-4'>HOẶC</div>
               <LoginGoogle title={windowWidth > 375 ? 'Đăng nhập với Gmail' : 'Gmail'} />
-              <LoginFacebook title={windowWidth > 375 ? 'Đăng nhập với Facebook' : 'Facebook'} />
+              <LoginFacebook className='mt-4 bg-blue-600 hover:bg-blue-500 text-white' title={windowWidth > 375 ? ' Đăng nhập với Facebook' : 'Facebook'} />
               <div className='text-center mt-4'>
                 Bạn chưa có tài khoản?
                 <Link to={constants.ROUTES.SIGNUP} className='text-blue-500 ml-1'>
