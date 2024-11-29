@@ -65,13 +65,25 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
 
   // Handle quantity change
-  const handleQuantityChange = (id, quantity) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
-      ),
-    );
-  };
+const handleQuantityChange = async (id, quantity) => {
+  try {
+    const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
+    if (response.status === 'success') {
+      setCartItems(
+        cartItems.map((item) =>
+          item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
+        ),
+      );
+      message.success('Quantity updated successfully!');
+    } else {
+      message.error('Failed to update quantity');
+    }
+  } catch (error) {
+    console.error('Error updating quantity:', error);
+    message.error('Error updating quantity');
+  }
+};
+
 
   const clearUserCart = async () => {
     try {
@@ -138,11 +150,12 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         <InputNumber
           min={1}
           value={record.quantity}
-          onChange={(value) => handleQuantityChange(record._id, value)}
+          onChange={(value) => handleQuantityChange(record._id, value)} // Gọi API cập nhật
           className='w-16'
         />
       ),
     },
+    
     {
       title: 'Total',
       key: 'total',
