@@ -9,14 +9,14 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
+import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch, message } from 'antd';
 import { useEffect } from 'react';
 import productsApi from '../../hooks/useProductsApi';
 import LoadingSpinner from '../../components/loading';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { Spin } from 'antd';
-
 
 export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
@@ -25,6 +25,7 @@ export default function ProductPage() {
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
+  const navigate = useNavigate();
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
@@ -83,18 +84,35 @@ export default function ProductPage() {
   };
 
   const handleAddToCart = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center">
+          <span className="mr-2 font-medium">Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className="text-blue-600 underline font-semibold hover:text-blue-800"
+          >
+            login
+          </button>
+          <span className="ml-2">to add products to your cart.</span>
+        </div>
+      );
+      return;
+    }
+    
     try {
       setAddingToCart(true);
       const response = await ShopingCartApi.addProductToCart(productId);
       console.log('Product added to cart:', response.data);
-      alert('Product successfully added to cart!');
+      message.success('Product successfully added to cart!');
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      alert('Failed to add product to cart. Please try again.');
+      message.error('Failed to add product to cart. Please try again.');
     } finally {
       setAddingToCart(false);
     }
   };
+  
 
   // Call fetchBooks when the component first loads
   useEffect(() => {
@@ -356,21 +374,20 @@ export default function ProductPage() {
                                         <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
                                       <button
-  className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
-    addingToCart
-      ? 'opacity-50 cursor-not-allowed'
-      : 'hover:bg-red-500 hover:text-white'
-  } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
-  onClick={() => handleAddToCart(book._id)}
-  disabled={addingToCart} // Vô hiệu hóa khi đang thêm
->
-  {addingToCart ? (
-    <Spin size="small" /> // Icon loading từ Ant Design
-  ) : (
-    <ShoppingCartOutlined className="w-6 h-6 flex justify-center items-center text-black-500" />
-  )}
-</button>
-                                      
+                                        className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
+                                          addingToCart
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'hover:bg-red-500 hover:text-white'
+                                        } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+                                        onClick={() => handleAddToCart(book._id)}
+                                        disabled={addingToCart} // Vô hiệu hóa khi đang thêm
+                                      >
+                                        {addingToCart ? (
+                                          <Spin size='small' /> // Icon loading từ Ant Design
+                                        ) : (
+                                          <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        )}
+                                      </button>
                                     </div>
                                   </div>
                                 </div>

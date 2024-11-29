@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
-
+import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -66,29 +66,42 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
 
   // Handle quantity change
-  const handleQuantityChange = (id, quantity) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
-      ),
-    );
+  const handleQuantityChange = async (id, quantity) => {
+    try {
+      const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
+      if (response.status === 'success') {
+        setCartItems(
+          cartItems.map((item) =>
+            item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
+          ),
+        );
+        message.success('Quantity updated successfully!');
+      } else {
+        message.error('Failed to update quantity');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      message.error('Error updating quantity');
+    }
   };
+
 
   const clearUserCart = async () => {
     try {
-        await ShopingCartApi.clearCart(userId);
-        console.log('Giỏ hàng đã được xóa.');
+      await ShopingCartApi.clearCart(userId);
+      setCartItems([]); // Cập nhật trạng thái giỏ hàng
+      console.log('Giỏ hàng đã được xóa.');
+      message.success('All products deleted');
     } catch (error) {
-        console.error('Không thể xóa giỏ hàng:', error);
+      console.error('Không thể xóa giỏ hàng:', error);
     }
-};
+  };
 
-  // Handle item deletion 
+  // Handle item deletion
   const handleDelete = async (id) => {
-    
     try {
       const response = await ShopingCartApi.deleteProductFromCart(id);
-      
+
       if (response.status === 'success') {
         setCartItems(cartItems.filter((item) => item._id !== id)); // Xóa sản phẩm khỏi danh sách
         message.success('Product removed from cart');
@@ -138,11 +151,12 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         <InputNumber
           min={1}
           value={record.quantity}
-          onChange={(value) => handleQuantityChange(record._id, value)}
+          onChange={(value) => handleQuantityChange(record._id, value)} // Gọi API cập nhật
           className='w-16'
         />
       ),
     },
+
     {
       title: 'Total',
       key: 'total',
@@ -160,7 +174,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           cancelText='No'
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
-          <Button type='danger'>Delete</Button>
+          <Button type='danger'><CloseOutlined /></Button>
         </Popconfirm>
       ),
     },
@@ -174,9 +188,10 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   if (!showUI)
     return (
+
       <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
-        <h1 className='text-2xl font-bold mb-4'>Shopping Cart</h1>
         <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
+          <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>Shopping Cart</h1>
           {loading ? (
             <div className='flex justify-center items-center py-10'>
               <Spin size='large' tip='Đang tải dữ liệu...' />
@@ -190,7 +205,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <div key={index}>
                 <div className='flex justify-between items-center mb-2'>
                   <h2 className='text-lg font-bold'>{shop}</h2>
+                  <Popconfirm
+                    title='Are you sure you want to remove this item?'
+                    onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+                    okText='Yes'
+                    cancelText='No'
+                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  >
+                    <button
+                      type='primary'
+                      className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
+                    >
+                      <DeleteOutlined className="text-xl text-white m-4" />
+                    </button>
+                  </Popconfirm>
                 </div>
+
                 <Table
                   dataSource={groupedItems[shop]}
                   columns={columns}
@@ -217,13 +247,8 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <h2 className='text-xl font-bold'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-              <Button
-                type='primary'
-                className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-                onClick={clearUserCart}
-              >
-                Delete All
-              </Button>
+
+
               <Button
                 type='primary'
                 className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'

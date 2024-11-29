@@ -47,14 +47,13 @@ const useStyle = createStyles(({ css, token }) => {
 });
 
 export default function SellerPage() {
-  const productId = null;
   const id = useParams().id;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
-
+  const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -109,6 +108,30 @@ export default function SellerPage() {
     }
   };
 
+  const searchProducts = async (keyword) => {
+    setLoading(true);
+    try {
+      const response = await productsApi.searchProducts(keyword);
+      const data = await response.data;
+      setProductList(data);
+    } catch (error) {
+      console.error('Error searching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleSearchChange = (e) => {
+    const keyword = e.target.value;
+    setSearchKeyword(keyword);
+
+    if (keyword.trim() === '') {
+      // If search keyword is empty, fetch all products
+      fetchProducts();
+    } else {
+      // Fetch products based on the search keyword
+      searchProducts(keyword);
+    }
+  };
   const handleDeleteProduct = async (productId) => {
     console.log(productId);
     try {
@@ -334,7 +357,7 @@ export default function SellerPage() {
           <div className='header-shop-page px-5 flex items-center justify-between'>
             <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
             <div className='w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between'>
-              <Input placeholder='Search Book ...' className='w-full lg:w-2/3 py-3' />
+              <Input  onChange={handleSearchChange} placeholder='Search Book ...' className='w-full lg:w-2/3 py-3' />
               <div className='w-full lg:ml-4 lg:w-1/3 mt-5 lg:mt-0 flex items-center justify-between'>
                 <button className='flex items-center hover:bg-slate-200 duration-300 py-2 px-4 rounded-full'>
                  <div onClick={handleExportFile}>

@@ -2,11 +2,43 @@ import { CloudDownloadOutlined, EditOutlined, SearchOutlined } from "@ant-design
 import { Breadcrumb, Input, Select, Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { text } from "framer-motion/client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import orderApi from "../../hooks/useOrderApi";
+import { useParams } from "react-router-dom";
 
 export default function OrderPageOfSeller() {
+    const [orders, setOrders] = useState([]); // Dữ liệu bảng
+    const [loading, setLoading] = useState(false); // Trạng thái loading
+    const shopId = useParams().id;
+   
+    const fetchOrders = async () => {
+        setLoading(true);
+        try {
+          const response = await orderApi.getAllOrderByShop(shopId); 
+         
+          setOrders(
+            response.data.orders.map((order, index) => ({
+              key: index + 1, 
+              id: order._id,
+              name: order.customer?.userName || "Unknown", 
+              email: order.customer?.email || "N/A", 
+              phoneNumber: order.customer?.phoneNumber || "N/A", 
+              status: order.status || "Unknown", 
+              totalPrice: `$${order.totalOrderPrice || 0}`, 
+            }))
+          );
+        } catch (error) {
+          message.error("Failed to fetch orders!"); 
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      useEffect(() => {
+        fetchOrders(); // Gọi API khi component được mount
+      }, [shopId]);
 
-    // Biến cấu hình để căn giữa
+       // Biến cấu hình để căn giữa
     const alignCenter = {
         onHeaderCell: () => ({
             style: { textAlign: 'center' },
@@ -16,6 +48,7 @@ export default function OrderPageOfSeller() {
         }),
     };
 
+   
     const columns = [
         {
             title: 'ID',
@@ -75,17 +108,7 @@ export default function OrderPageOfSeller() {
         },
     ];
 
-    const dataSource = Array.from({
-        length: 50,
-    }).map((_, i) => ({
-        key: '1',
-        id: i + 1,
-        name: 'Truong Nguyen Viet Duc',
-        email: 'vietduc2811@gmail.com',
-        phoneNumber: '0905050550',
-        status: 'Pending',
-        totalPrice: '$1000',
-    }));
+
 
     const onChange = (sorter) => {
         console.log('params', sorter);
@@ -137,7 +160,7 @@ export default function OrderPageOfSeller() {
                     <div className="data-shop-page my-4 lg:my-6">
                         <Table
                             columns={columns}
-                            dataSource={dataSource}
+                            dataSource={orders}
                             onChange={onChange}
                             scroll={{
                                 x: 'max-content',
