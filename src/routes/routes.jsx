@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { User } from 'lucide-react';
-import { tr } from 'framer-motion/client';
+import { path, tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
 //home Page
@@ -70,10 +70,15 @@ export const routes_here = [
   {
     path: '/cart',
     element: <Cart />,
+    layout: 'customer',
+    isPrivate: true,
+  },
+  {
+    path: '/products',
+    element: <ProductPage />,
     layout: 'user',
     isPrivate: false,
   },
-
   {
     path: '/shops',
     element: <ShopPage />,
@@ -81,13 +86,13 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/home',
+    path: '/shop/:name/home/:id',
     element: <SellerPage />,
     layout: 'seller',
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/orders',
+    path: '/shop/:name/orders/:id',
     element: <OrderPageOfSeller />,
     layout: 'seller',
     isPrivate: false,

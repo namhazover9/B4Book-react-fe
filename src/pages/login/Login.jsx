@@ -22,6 +22,7 @@ function Login() {
   const dispatch = useDispatch();
 
   // Retrieve the role from Redux in the main function
+
   const userRole = useSelector((state) => state.user.role[0]?.name);
 
   const onLoginSuccess = async (data, role) => {
@@ -30,14 +31,17 @@ function Login() {
       message.success('Đăng nhập thành công');
 
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-      if (process.env.NODE_ENV === 'production')
-        localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+      // if (process.env.NODE_ENV === 'production')
+      //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
 
-      // Check role and navigate accordingly
-      if (role === 'Admin') {
+      //Check role and navigate accordingly
+
+      console.log(userRole);
+      if (userRole === 'Admin') {
         navigate('/admin');
-      } else if (role === 'Customer') {
+      } else if (userRole === 'Customer') {
         navigate('/');
       }
     } catch (error) {
@@ -68,7 +72,6 @@ function Login() {
       }
     }
   };
-
 
   // Giá trị khởi tạo cho Formik
   const initialValue = {
