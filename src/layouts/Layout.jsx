@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MenuUnfoldOutlined, CloseOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Form, List, Button, InputNumber, Popconfirm } from 'antd';
+import { Form, List, Button, InputNumber, Radio, Popconfirm } from "antd";
 import { Select } from 'antd';
 import Footer from '../components/footer/Footer';
 import Translate from '../components/Common/Translate';
@@ -93,6 +93,30 @@ export default function Layout({ children }) {
       title: 'Math Book',
       vendor: 'BookStore',
       price: 120.5,
+      quantity: 1,
+      image: pic4,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
+      quantity: 1,
+      image: pic4,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
+      quantity: 1,
+      image: pic4,
+    },
+    {
+      id: 4,
+      title: "Math Book",
+      vendor: "BookStore",
+      price: 120.50,
       quantity: 1,
       image: pic4,
     },

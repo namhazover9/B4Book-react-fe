@@ -87,8 +87,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const handleDelete = async (id) => {
     
     try {
-      console.log("user",userId);
-      console.log("item",id)
       const response = await ShopingCartApi.deleteProductFromCart(id);
       
       if (response.status === 'success') {

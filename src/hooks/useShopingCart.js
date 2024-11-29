@@ -21,8 +21,7 @@ const ShopingCartApi = {
   },
 
   // Xóa sản phẩm khỏi giỏ hàng
-  deleteProductFromCart: async (userId, itemId) => {
-    console.log(itemId, userId);
+  deleteProductFromCart: async (itemId) => {
     try {
       const url = `${SPC_API_ENDPOINT}/${itemId}`; // Địa chỉ endpoint xóa sản phẩm khỏi giỏ
       const response = await axiosClient.delete(url, { });
