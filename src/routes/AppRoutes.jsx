@@ -19,6 +19,7 @@ const layoutMap = {
   admin: AdminLayout,
   user: Layout,
   seller: SellerLayout,
+  customer: Layout,
 };
 
 const AppRoutes = () => {
