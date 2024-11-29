@@ -6,7 +6,6 @@ import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
 
-
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPriceBeforeDiscount, setTotalPriceBeforeDiscount] = useState(0);
@@ -76,19 +75,20 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   const clearUserCart = async () => {
     try {
-        await ShopingCartApi.clearCart(userId);
-        console.log('Giỏ hàng đã được xóa.');
+      await ShopingCartApi.clearCart(userId);
+      setCartItems([]); // Cập nhật trạng thái giỏ hàng
+      console.log('Giỏ hàng đã được xóa.');
+      message.success('All products deleted');
     } catch (error) {
-        console.error('Không thể xóa giỏ hàng:', error);
+      console.error('Không thể xóa giỏ hàng:', error);
     }
-};
+  };
 
-  // Handle item deletion 
+  // Handle item deletion
   const handleDelete = async (id) => {
-    
     try {
       const response = await ShopingCartApi.deleteProductFromCart(id);
-      
+
       if (response.status === 'success') {
         setCartItems(cartItems.filter((item) => item._id !== id)); // Xóa sản phẩm khỏi danh sách
         message.success('Product removed from cart');
@@ -217,13 +217,21 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <h2 className='text-xl font-bold'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-              <Button
-                type='primary'
-                className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-                onClick={clearUserCart}
+              <Popconfirm
+                title='Are you sure you want to remove this item?'
+                onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+                okText='Yes'
+                cancelText='No'
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
               >
-                Delete All
-              </Button>
+                <Button
+                  type='primary'
+                  className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
+                >
+                  Delete All
+                </Button>
+              </Popconfirm>
+
               <Button
                 type='primary'
                 className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
