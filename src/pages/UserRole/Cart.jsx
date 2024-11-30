@@ -192,6 +192,11 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
         <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
           <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>Shopping Cart</h1>
+          <div className="mb-5 p-0">
+            <Link to="/">
+              <Button>Back</Button>
+            </Link>
+          </div>
           {loading ? (
             <div className='flex justify-center items-center py-10'>
               <Spin size='large' tip='Đang tải dữ liệu...' />
