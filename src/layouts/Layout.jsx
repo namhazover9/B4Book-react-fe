@@ -69,19 +69,19 @@ export default function Layout({ children }) {
   };
 
   useEffect(() => {
-    // Gọi API lấy thông tin người dùng
+    if (!userId) return; // Kiểm tra userId trước khi gọi API
     const fetchUserProfile = async () => {
       try {
-        const response = await userApi.getUserProfile();
-        //console.log(response.data);
+        const response = await userApi.getUserProfile(userId);
         setUserInfo(response.data); // Lưu dữ liệu vào state
       } catch (error) {
         console.error('Failed to fetch user profile:', error);
       }
     };
-
+  
     fetchUserProfile();
-  }, [userInfo]);
+  }, [userId]); // Chạy lại khi userId thay đổi
+  
 
   useEffect(() => {
     const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
@@ -138,6 +138,8 @@ export default function Layout({ children }) {
   }, [cartItems]);
 
   useEffect(() => {
+    if (!userId) return; // Kiểm tra userId trước khi gọi API
+
     const fetchCartItems = async () => {
       try {
         const response = await ShopingCartApi.getCart();
@@ -152,7 +154,7 @@ export default function Layout({ children }) {
     };
 
     fetchCartItems();
-  }, [cartItems]);
+  }, [userId]);
 
   const menuItems = [
     { name: 'Home', path: '/' },
