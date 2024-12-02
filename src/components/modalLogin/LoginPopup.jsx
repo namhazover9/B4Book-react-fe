@@ -30,7 +30,7 @@ function LoginPopup() {
       setIsSubmitting(false);
       message.success('Đăng nhập thành công');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-
+      localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       if (process.env.NODE_ENV === 'production')
         localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));

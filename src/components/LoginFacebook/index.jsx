@@ -11,7 +11,6 @@ import { setIsAuth } from '../../reducers/auth';
 function LoginFacebook({ title = 'Facebook', className = '' }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log(import.meta.env.VITE_FACEBOOK_APP_ID)
     const responseFacebook = async (response) => {
       try {
         const res = await loginApi.postLoginWithFacebook({
@@ -22,10 +21,8 @@ function LoginFacebook({ title = 'Facebook', className = '' }) {
         if (status === 200) {
           message.success('Đăng nhập thành công');
           localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
-          if (import.meta.env.MODE === 'production') {
-            localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-          }
-  
+          localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+          
           dispatch(setIsAuth(true));
           navigate('/');
         }

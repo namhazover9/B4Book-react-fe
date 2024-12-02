@@ -19,6 +19,7 @@ const layoutMap = {
   admin: AdminLayout,
   user: Layout,
   seller: SellerLayout,
+  customer: Layout,
 };
 
 const AppRoutes = () => {
@@ -28,8 +29,6 @@ const AppRoutes = () => {
   const isAuth = useSelector((state) => state.authenticate.isAuth);
   const userRole = useSelector((state) => state.user.role[0]?.name);
   const userId = useSelector((state) => state.user._id);
-  console.log(userId);
-  console.log(userRole);
 
   // Kiểm tra xác thực
   useEffect(() => {

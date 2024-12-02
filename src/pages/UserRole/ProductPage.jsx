@@ -9,10 +9,14 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
+import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch, message } from 'antd';
 import { useEffect } from 'react';
 import productsApi from '../../hooks/useProductsApi';
 import LoadingSpinner from '../../components/loading';
+import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
+import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { Spin } from 'antd';
 
 export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
@@ -21,6 +25,7 @@ export default function ProductPage() {
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
+  const navigate = useNavigate();
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
@@ -33,11 +38,13 @@ export default function ProductPage() {
     'Romance',
     'History',
   ];
-
+  const [addingToCart, setAddingToCart] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAuthors, setSelectedAuthors] = useState([]);
   const [selectedSort, setSelectedSort] = useState('default');
+
+  const userId = useSelector((state) => state.user._id);
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -75,6 +82,37 @@ export default function ProductPage() {
       setLoading(false);
     }
   };
+
+  const handleAddToCart = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center">
+          <span className="mr-2 font-medium">Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className="text-blue-600 underline font-semibold hover:text-blue-800"
+          >
+            login
+          </button>
+          <span className="ml-2">to add products to your cart.</span>
+        </div>
+      );
+      return;
+    }
+    
+    try {
+      setAddingToCart(true);
+      const response = await ShopingCartApi.addProductToCart(productId);
+      console.log('Product added to cart:', response.data);
+      message.success('Product successfully added to cart!');
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      message.error('Failed to add product to cart. Please try again.');
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+  
 
   // Call fetchBooks when the component first loads
   useEffect(() => {
@@ -193,7 +231,7 @@ export default function ProductPage() {
           <div className='price'>
             <div className='price-ipad hidden lg:block'>
               <Card
-                title=':heavy_dollar_sign:Filter by Price'
+                title='Filter by Price'
                 className='h-auto overflow-y-auto bg-gray-50'
                 bordered={false}
               >
@@ -266,10 +304,10 @@ export default function ProductPage() {
                   options={[
                     { value: 'default', label: 'Default sorting' },
                     { value: 'popularity', label: 'Sort by popularity' },
-                    { value: 'rating', label: 'Sort by average rating' },
+                    { value: 'averageRating', label: 'Sort by average rating' },
                     { value: 'latest', label: 'Sort by latest' },
-                    { value: 'price_low_to_high', label: 'Sort by price: low to high' },
-                    { value: 'price_high_to_low', label: 'Sort by price: high to low' },
+                    { value: 'priceLowToHigh', label: 'Sort by price: low to high' },
+                    { value: 'priceHighToLow', label: 'Sort by price: high to low' },
                   ]}
                 />
               </div>
@@ -335,8 +373,20 @@ export default function ProductPage() {
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
                                         <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
-                                      <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
-                                        <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                      <button
+                                        className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
+                                          addingToCart
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'hover:bg-red-500 hover:text-white'
+                                        } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+                                        onClick={() => handleAddToCart(book._id)}
+                                        disabled={addingToCart} // Vô hiệu hóa khi đang thêm
+                                      >
+                                        {addingToCart ? (
+                                          <Spin size='small' /> // Icon loading từ Ant Design
+                                        ) : (
+                                          <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        )}
                                       </button>
                                     </div>
                                   </div>

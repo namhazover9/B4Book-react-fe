@@ -1,14 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
 import { User } from 'lucide-react';
-import { tr } from 'framer-motion/client';
+import { path, tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
+//home Page
 const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
-const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
-const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
+const Details = lazy(() => import('@pages/homepages/Details'));
+
+// user Role
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
@@ -17,8 +19,14 @@ const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller
 const OrderDetailPage = lazy(() => import('@pages/SellerRole/OrderDetailPage'));
 const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
-const Details = lazy(() => import('@pages/homepages/Details'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
+const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
+const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
+
+// admin Role
+const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
+// const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
+const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
@@ -49,15 +57,21 @@ export const routes_here = [
   },
   {
     path: '/admin',
-    element: <AdminPage />,
-    layout: 'Admin',
-    isPrivate: true,
+    element: <AccountManager />,
+    layout: 'admin',
+    isPrivate: false,
   },
   {
-    path: '/dashboard',
+    path: '/admin/dashboard',
     element: <Dashboard />,
     layout: 'admin',
     isPrivate: false,
+  },
+  {
+    path: '/cart',
+    element: <Cart />,
+    layout: 'customer',
+    isPrivate: true,
   },
   {
     path: '/products',
@@ -66,26 +80,19 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/cart',
-    element: <Cart />,
-    layout: 'user',
-    isPrivate: false,
-  },
-
-  {
     path: '/shops',
     element: <ShopPage />,
     layout: 'user',
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/home',
+    path: '/shop/:name/home/:id',
     element: <SellerPage />,
     layout: 'seller',
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/orders',
+    path: '/shop/:name/orders/:id',
     element: <OrderPageOfSeller />,
     layout: 'seller',
     isPrivate: false,
@@ -116,6 +123,18 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+  {
+    path: '/shops/detailShop/:id',
+    element: <DetailShop />,
+    layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/orderconfirm',
+    element: <OrderConfirm />,
+    layout: 'user',
+    isPrivate: false,
+  }
   // {
   //   path: '/shops',
   //   element: <SellerPage />,

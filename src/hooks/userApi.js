@@ -12,6 +12,20 @@ const userApi = {
     const url = USER_API_URL + '/update';
     return axiosClient.put(url, { userId, value });
   },
+  
+  // switch shop
+  getSwitchShop: async () => {
+    return await axiosClient.get('/switchShop', {});
+  },
+
+  getUserProfile: () => {
+    return axiosClient.get('/Userprofile');
+  },
+
+  updateUserProfile: (data) => {
+    return axiosClient.put('/updateProfile', data); // Gửi yêu cầu PUT đến endpoint update
+},
+
 };
 
 export default userApi;
