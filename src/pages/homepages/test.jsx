@@ -4,6 +4,8 @@ import { Table, notification, Radio, Button, Modal, Input, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import vnp from '../../assets/images/vnpay.jpg';
 import stripe2 from '../../assets/images/vnpay.jpg';
+
+
 const Checkout = () => {
     const [addresses, setAddresses] = useState([
         { id: 1, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "125 The Lu, An Hai Bac Ward, Son Tra District, Da Nang", default: true },
@@ -15,7 +17,6 @@ const Checkout = () => {
     const [isVoucherModalVisible, setIsVoucherModalVisible] = useState(false);
     const [discount, setDiscount] = useState(0);
     const [shippingCost, setShippingCost] = useState(30000);
-    const [shipcost, setShipCost] = useState(30000);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("");
     const [cardOption, setCardOption] = useState("");
@@ -24,6 +25,47 @@ const Checkout = () => {
     const [editingAddress, setEditingAddress] = useState(null);
     const [newAddress, setNewAddress] = useState({ name: "", phone: "", address: "" });
 
+
+
+    const handleStoreChange = (storeIndex) => {
+        setStores((prevStores) =>
+            prevStores.map((store, index) => {
+                if (index === storeIndex) {
+                    const newChecked = !store.checked;
+                    return {
+                        ...store,
+                        checked: newChecked,
+                        products: store.products.map((product) => ({
+                            ...product,
+                            checked: newChecked,
+                        })),
+                    };
+                }
+                return store;
+            })
+        );
+    };
+    const handleProductChange = (storeIndex, productIndex) => {
+        setStores((prevStores) =>
+            prevStores.map((store, index) => {
+                if (index === storeIndex) {
+                    return {
+                        ...store,
+                        products: store.products.map((product, pIndex) => {
+                            if (pIndex === productIndex) {
+                                return {
+                                    ...product,
+                                    checked: !product.checked,
+                                };
+                            }
+                            return product;
+                        }),
+                    };
+                }
+                return store;
+            })
+        );
+    };
     const [stores, setStores] = useState([
         {
             name: 'Wear Saka Store',
@@ -41,7 +83,8 @@ const Checkout = () => {
             vouchers: [
                 { code: "DISCOUNT10", description: "10% off on your order", discountRate: 0.10 },
                 { code: "FREESHIP", description: "Free Shipping", discountRate: 0 },
-            ]
+            ],
+            shipcost: 20000
         },
         {
             name: 'BaiLo Store',
@@ -57,10 +100,9 @@ const Checkout = () => {
                 },
             ],
             vouchers: [
-                { code: "DISCOUNT15", description: "15% off on your order", discountRate: 0.15 },
-                { code: "DISCOUNT20", description: "15% off on your order", discountRate: 0.2 },
-
-            ]
+                { code: "DISCOUNT15", description: "15% off on your order", discountRate: 0.15 }
+            ],
+            shipcost: 30000
         },
     ]);
 
@@ -97,7 +139,6 @@ const Checkout = () => {
                 if (selectedVoucher.discountRate) {
                     const discountAmount = totalPrice * selectedVoucher.discountRate;
                     setDiscount(discountAmount);
-                    setShippingCost(30000);
                     notification.success({
                         message: 'Voucher Applied',
                         description: `You received a discount of ${discountAmount.toLocaleString()}$!`,
@@ -122,32 +163,26 @@ const Checkout = () => {
     const calculateTotalAmount = () => {
         let totalPrice = 0;
         let totalDiscount = 0;
+        let totalShippingCost = 0;
 
         stores.forEach((store, storeIndex) => {
             const storeTotal = store.products.reduce((sum, product) => {
                 return sum + (product.price * product.quantity);
             }, 0);
+
+            // Apply discount for the store if any
             const voucherCode = voucherCodes[storeIndex];
             const selectedVoucher = store.vouchers.find(voucher => voucher.code === voucherCode);
             const storeDiscount = selectedVoucher ? storeTotal * selectedVoucher.discountRate : 0;
 
             totalPrice += storeTotal;
             totalDiscount += storeDiscount;
+
+            // Add shipping cost for each store
+            totalShippingCost += shippingCost;
         });
-        const totalShippingCost = shippingCost * stores.length;
 
         return totalPrice - totalDiscount + totalShippingCost;
-    };
-    const totalProducts = () => {
-        let totalPrice = 0;
-        stores.forEach((store, storeIndex) => {
-            const storeTotal = store.products.reduce((sum, product) => {
-                return sum + (product.price * product.quantity);
-            }, 0);
-            totalPrice += storeTotal;
-        });
-
-        return totalPrice;
     };
 
     const columns = (storeName, storeIndex) => [
@@ -188,32 +223,24 @@ const Checkout = () => {
                     }}
                     className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded"
                 >
-                    Voucher
+                    Apply Voucher
                 </Button>
             ),
         },
     ];
 
-    const handlePlaceOrder = (values) => {
-        const { paymentMethod, cardOption } = values;
-
-        if (!selectedAddressId) {
+    const handlePlaceOrder = () => {
+        if (selectedStore === null) {
             notification.error({
-                message: "Please add an address",
-                description: "You need to select or add an address to continue.",
-            });
-            return;
-        }
-        if (!paymentMethod || (paymentMethod === "card" && !cardOption)) {
-            notification.error({
-                message: "Invalid Payment Method",
-                description: "Please select a valid payment method.",
+                message: "Please select a store",
+                description: "You need to select a store to continue.",
             });
             return;
         }
 
+        // Tạo dữ liệu đơn hàng
         const orderData = {
-            address: addresses.find((addr) => addr.id === selectedAddressId),
+            address: addresses.find((addr) => addr.id === selectedAddressId), // Địa chỉ đã chọn
             products: stores
                 .flatMap(store =>
                     store.products
@@ -222,6 +249,7 @@ const Checkout = () => {
                             storeName: store.name,
                         }))
                 ),
+
             vouchers: stores.map((store, storeIndex) => {
                 const voucherCode = voucherCodes[storeIndex];
                 const selectedVoucher = store.vouchers.find(voucher => voucher.code === voucherCode);
@@ -231,10 +259,9 @@ const Checkout = () => {
                     storeName: store.name
                 } : null;
             }).filter(voucher => voucher !== null),
-            cardOption,
-            paymentMethod,
             totalAmount: calculateTotalAmount(),
-            shippingCost: shippingCost * stores.length,
+            shippingCost: shippingCost,
+            discount: discount,
         };
 
         console.log("Complete Order Data:", orderData);
@@ -245,55 +272,7 @@ const Checkout = () => {
         });
     };
 
-    const handleAddAddress = () => {
-        if (!newAddress.name || !newAddress.phone || !newAddress.address) {
-            notification.error({ message: "Please fill in all fields for the new address." });
-            return;
-        }
 
-        const newAddr = {
-            ...newAddress,
-            id: addresses.length + 1,
-            default: false,
-        };
-        setAddresses([...addresses, newAddr]);
-        setNewAddress({ name: "", phone: "", address: "" });
-        setIsAddAddressModalVisible(false);
-        setIsModalVisible(true);
-        notification.success({ message: "Address added successfully!" });
-    };
-
-    const handleUpdateDefault = () => {
-        setAddresses(
-            addresses.map((addr) => ({
-                ...addr,
-                default: addr.id === selectedAddressId,
-            }))
-        );
-        setIsModalVisible(false);
-        notification.success({ message: "Default address updated successfully!" });
-    };
-    const handleEditAddress = () => {
-        if (!editingAddress.name || !editingAddress.phone || !editingAddress.address) {
-            notification.error({ message: "Please fill in all fields." });
-            return;
-        }
-
-        setAddresses(
-            addresses.map((addr) =>
-                addr.id === editingAddress.id ? editingAddress : addr
-            )
-        );
-        setEditingAddress(null);
-        notification.success({ message: "Address updated successfully!" });
-    };
-
-    const handleSelectAddress = (id) => {
-        setSelectedAddressId(id);
-    };
-    const handlePaymentChange = (e) => {
-        setFieldValue("paymentMethod", e.target.value);
-    };
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-200 sm:px-5 pb-12">
             <div className="flex flex-col md:flex-grow-0 justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-white shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-6xl">
@@ -352,62 +331,59 @@ const Checkout = () => {
                                 {/* Right Section */}
                                 <div className="w-full md:w-1/3">
 
-                                    {/* Payment Section */}
-                                    <div className="flex flex-col space-y-4 h-auto lg:h-80 sm:pt-5">
-                                        <div className="text-base sm:text-lg font-bold underline">Payment Method</div>
-                                        <Field name="paymentMethod">
-                                            {({ field }) => (
-                                                <Radio.Group
-                                                    {...field}
-                                                    onChange={(e) => setFieldValue("paymentMethod", e.target.value)}
-                                                    value={field.value}
-                                                >
-                                                    <Space direction="vertical" className="mt-3">
-                                                        <Radio value="cash">Cash on Delivery</Radio>
-                                                        <Radio value="card">Credit/Debit Card</Radio>
-                                                    </Space>
-                                                </Radio.Group>
-                                            )}
-                                        </Field>
-
-                                        {values.paymentMethod === "card" && (
-                                            <div>
-                                                <div className="text-base sm:text-lg font-bold underline">
-                                                    Select Payment Gateway
-                                                </div>
-                                                <Field name="cardOption">
-                                                    {({ field }) => (
-                                                        <Radio.Group
-                                                            {...field}
-                                                            onChange={(e) => setFieldValue("cardOption", e.target.value)}
-                                                            value={values.cardOption}
-                                                        >
-                                                            <Space direction="vertical" className="mt-3">
-                                                                <Radio value="stripe">
-                                                                    <div className="flex items-center">
-                                                                        <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
-                                                                        Stripe
-                                                                    </div>
-                                                                </Radio>
-                                                                <Radio value="vnpay">
-                                                                    <div className="flex items-center">
-                                                                        <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
-                                                                        VNPay
-                                                                    </div>
-                                                                </Radio>
-                                                            </Space>
-                                                        </Radio.Group>
-                                                    )}
-                                                </Field>
-                                            </div>
-
-                                        )}
-                                    </div>
-
                                     <div className="bg-gray-100 p-5 rounded-lg">
+                                        <div className="flex flex-col space-y-4 h-auto lg:h-80 sm:pt-5">
+                                            <div className="text-base sm:text-lg font-bold underline">Payment Method</div>
+                                            <Field name="paymentMethod">
+                                                {({ field }) => (
+                                                    <Radio.Group
+                                                        {...field}
+                                                        onChange={(e) => setFieldValue("paymentMethod", e.target.value)}
+                                                        value={field.value}
+                                                    >
+                                                        <Space direction="vertical" className="mt-3">
+                                                            <Radio value="cash">Cash on Delivery</Radio>
+                                                            <Radio value="card">Credit/Debit Card</Radio>
+                                                        </Space>
+                                                    </Radio.Group>
+                                                )}
+                                            </Field>
+
+                                            {values.paymentMethod === "card" && (
+                                                <div>
+                                                    <div className="text-base sm:text-lg font-bold underline">
+                                                        Select Payment Gateway
+                                                    </div>
+                                                    <Field name="cardOption">
+                                                        {({ field }) => (
+                                                            <Radio.Group
+                                                                {...field}
+                                                                onChange={(e) => setFieldValue("cardOption", e.target.value)}
+                                                                value={values.cardOption}
+                                                            >
+                                                                <Space direction="vertical" className="mt-3">
+                                                                    <Radio value="stripe">
+                                                                        <div className="flex items-center">
+                                                                            <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
+                                                                            Stripe
+                                                                        </div>
+                                                                    </Radio>
+                                                                    <Radio value="vnpay">
+                                                                        <div className="flex items-center">
+                                                                            <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
+                                                                            VNPay
+                                                                        </div>
+                                                                    </Radio>
+                                                                </Space>
+                                                            </Radio.Group>
+                                                        )}
+                                                    </Field>
+                                                </div>
+
+                                            )}
+                                        </div>
                                         <h2 className="text-xl font-semibold">Order Summary</h2>
-                                        <p className="mt-3">Shipping Cost: {shipcost * stores.length}$</p>
-                                        <p className="mt-3">Total Cost of Goods: {totalProducts().toLocaleString()}$</p>
+                                        <p className="mt-3">Shipping Cost: 30000$</p>
                                         <p className="mt-3">Total Amount: {calculateTotalAmount().toLocaleString()}$</p>
                                         <div className="mt-3">
                                             <button
@@ -424,6 +400,7 @@ const Checkout = () => {
                     )}
                 </Formik>
             </div>
+            {/* Voucher Modal */}
             <Modal
                 visible={isVoucherModalVisible}
                 onOk={handleApplyVoucher}
@@ -468,125 +445,10 @@ const Checkout = () => {
                     )}
                 </div>
             </Modal>
-            {/* Address Modals */}
-            <Modal
-                title="My Addresses"
-                visible={isModalVisible}
-                onOk={handleUpdateDefault}
-                onCancel={() => setIsModalVisible(false)}
-                okText="Confirm"
-                cancelText="Cancel"
-                width={600}
-            >
-                <Radio.Group
-                    onChange={(e) => handleSelectAddress(e.target.value)}
-                    value={selectedAddressId}
-                    className="max-h-60 overflow-y-auto scrollbar-hide"
-                >
-                    {addresses.map((addr) => (
-                        <div
-                            key={addr.id}
-                            className="flex items-start justify-between p-3 border border-gray-200 rounded-md m-3"
-                        >
-                            <Radio value={addr.id}>
-                                <div>
-                                    <p className="font-semibold">
-                                        {addr.name} ({addr.phone})
-                                    </p>
-                                    <p>{addr.address}</p>
-                                    {addr.default && (
-                                        <span className="text-red-500 text-sm font-bold">
-                                            Default
-                                        </span>
-                                    )}
-                                </div>
-                            </Radio>
-                            <Button
-                                type="link"
-                                onClick={() => {
-                                    setEditingAddress({ ...addr });
-                                    setIsModalVisible(false);
-                                }}
-                                className="text-blue-500"
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    ))}
-                </Radio.Group>
-                <Button
-                    type="dashed"
-                    onClick={() => {
-                        setIsModalVisible(false);
-                        setIsAddAddressModalVisible(true);
-                    }}
-                    className="w-full mt-4"
-                >
-                    ➕ Add New Address
-                </Button>
-            </Modal>
-            <Modal
-                title="Add New Address"
-                visible={isAddAddressModalVisible}
-                onOk={handleAddAddress}
-                onCancel={() => setIsAddAddressModalVisible(false)}
-                okText="Add"
-                cancelText="Cancel"
-                width={600}
-            >
-                <div className="flex flex-col gap-4">
-                    <Input
-                        placeholder="Full Name"
-                        value={newAddress.name}
-                        onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
-                    />
-                    <Input
-                        placeholder="Phone Number"
-                        value={newAddress.phone}
-                        onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-                    />
-                    <Input
-                        placeholder="Shipping Address"
-                        value={newAddress.address}
-                        onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
-                    />
-                </div>
-            </Modal>
-            <Modal
-                title="Update Address"
-                visible={!!editingAddress}
-                onOk={handleEditAddress}
-                onCancel={() => setEditingAddress(null)}
-                okText="Save"
-                cancelText="Cancel"
-                width={600}
-            >
-                <Input
-                    placeholder="Recipient Name"
-                    value={editingAddress?.name || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, name: e.target.value })
-                    }
-                    className="mb-3"
-                />
-                <Input
-                    placeholder="Phone Number"
-                    value={editingAddress?.phone || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, phone: e.target.value })
-                    }
-                    className="mb-3"
-                />
-                <Input
-                    placeholder="Address"
-                    value={editingAddress?.address || ""}
-                    onChange={(e) =>
-                        setEditingAddress({ ...editingAddress, address: e.target.value })
-                    }
-                />
-            </Modal>
+
         </div>
     );
 };
 
 export default Checkout;
+
