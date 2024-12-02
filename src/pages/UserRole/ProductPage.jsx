@@ -15,6 +15,7 @@ import productsApi from '../../hooks/useProductsApi';
 import LoadingSpinner from '../../components/loading';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { Spin } from 'antd';
 
 export default function ProductPage() {
@@ -24,6 +25,7 @@ export default function ProductPage() {
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
+  const navigate = useNavigate();
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
@@ -82,6 +84,22 @@ export default function ProductPage() {
   };
 
   const handleAddToCart = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center">
+          <span className="mr-2 font-medium">Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className="text-blue-600 underline font-semibold hover:text-blue-800"
+          >
+            login
+          </button>
+          <span className="ml-2">to add products to your cart.</span>
+        </div>
+      );
+      return;
+    }
+    
     try {
       setAddingToCart(true);
       const response = await ShopingCartApi.addProductToCart(productId);
@@ -89,11 +107,12 @@ export default function ProductPage() {
       message.success('Product successfully added to cart!');
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      message.success('Failed to add product to cart. Please try again.');
+      message.error('Failed to add product to cart. Please try again.');
     } finally {
       setAddingToCart(false);
     }
   };
+  
 
   // Call fetchBooks when the component first loads
   useEffect(() => {

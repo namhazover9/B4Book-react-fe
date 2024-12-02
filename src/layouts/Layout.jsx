@@ -15,10 +15,6 @@ import Translate from '../components/Common/Translate';
 import LoginPage from '../components/modalLogin/LoginPopup';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
-import pic1 from '../assets/images/BestSelling/1.jpg';
-import pic2 from '../assets/images/BestSelling/4.jpg';
-import pic3 from '../assets/images/BestSelling/7.jpg';
-import pic4 from '../assets/images/BestSelling/9.jpg';
 import userApi from '../hooks/userApi';
 import { useSelector } from 'react-redux';
 import ShopingCartApi from '../hooks/useShopingCart'; // Đường dẫn đến file API
@@ -26,6 +22,7 @@ import constants from '../constants/constants'; // Adjust the path as necessary
 
 import useLogin from '../hooks/useLogin';
 import { Dropdown, Menu } from 'antd';
+import { u } from 'framer-motion/client';
 
 export default function Layout({ children }) {
   const userId = useSelector((state) => state.user._id);
@@ -36,6 +33,7 @@ export default function Layout({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!userId);
+  const [userInfo, setUserInfo] = useState(null);
 
   const userMenu = (
     <Menu>
@@ -69,6 +67,21 @@ export default function Layout({ children }) {
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
   };
+
+  useEffect(() => {
+    if (!userId) return; // Kiểm tra userId trước khi gọi API
+    const fetchUserProfile = async () => {
+      try {
+        const response = await userApi.getUserProfile(userId);
+        setUserInfo(response.data); // Lưu dữ liệu vào state
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, [userId]); // Chạy lại khi userId thay đổi
+  
 
   useEffect(() => {
     const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
@@ -125,6 +138,8 @@ export default function Layout({ children }) {
   }, [cartItems]);
 
   useEffect(() => {
+    if (!userId) return; // Kiểm tra userId trước khi gọi API
+
     const fetchCartItems = async () => {
       try {
         const response = await ShopingCartApi.getCart();
@@ -139,7 +154,7 @@ export default function Layout({ children }) {
     };
 
     fetchCartItems();
-  }, [cartItems]);
+  }, [userId]);
 
   const menuItems = [
     { name: 'Home', path: '/' },
@@ -229,11 +244,11 @@ export default function Layout({ children }) {
               <Dropdown overlay={userMenu} trigger={['click']}>
                 <div className='flex items-center space-x-2 cursor-pointer'>
                   <img
-                    src='https://via.placeholder.com/40' // Replace with real user avatar URL
-                    alt='User Avatar'
+                    src={userInfo?.avartar || "https://via.placeholder.com/150"}
+                    alt='Avatar'
                     className='w-10 h-10 rounded-full'
                   />
-                  <span className='text-gray-700 font-medium'>Hello, User</span>
+                  <span className='text-gray-700 font-medium'>Hi, {userInfo?.userName || "Guest"}</span>
                 </div>
               </Dropdown>
             ) : (

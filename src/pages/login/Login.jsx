@@ -38,7 +38,6 @@ function Login() {
 
       //Check role and navigate accordingly
 
-      console.log(userRole);
       if (userRole === 'Admin') {
         navigate('/admin');
       } else if (userRole === 'Customer') {
