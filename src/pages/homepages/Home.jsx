@@ -14,12 +14,14 @@ import GalleryImage from './GalleryImage';
 import LogoGallery from './LogoGallery';
 import LogoShopBook from './LogoShopbook';
 import Banner from './Banner';
+import B from './test2';
 
 export default function Home() {
   // testBackendConnection();
   return (
     <div className='flex flex-col gap-y-4'>
-      <BannerSlider />
+      <B />
+      {/* <BannerSlider />
       <CategorySlider />
       <DiscountBanners />
       <TopVendor />
@@ -30,7 +32,7 @@ export default function Home() {
       <LogoShopBook />
       <Banner />
       <GalleryImage />
-      <LogoGallery />
+      <LogoGallery /> */}
     </div>
   );
 }

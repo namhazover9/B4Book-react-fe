@@ -57,9 +57,7 @@ const Checkout = () => {
                 },
             ],
             vouchers: [
-                { code: "DISCOUNT15", description: "15% off on your order", discountRate: 0.15 },
-                { code: "DISCOUNT20", description: "15% off on your order", discountRate: 0.2 },
-
+                { code: "DISCOUNT15", description: "15% off on your order", discountRate: 0.15 }
             ]
         },
     ]);
@@ -85,6 +83,7 @@ const Checkout = () => {
 
                 if (selectedVoucher.code === 'FREESHIP') {
                     setDiscount(0);
+                    setShippingCost(30000);
                     setShippingCost(0);
                     notification.success({
                         message: 'Voucher Applied',
