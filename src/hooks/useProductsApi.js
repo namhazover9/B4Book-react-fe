@@ -40,6 +40,7 @@ const productsApi = {
     return axiosClient.get(url,{ responseType: 'blob' });
   },
 
+
   postCreateProduct: (formData) => {
     const url = `${ACCOUNT_API_ENDPOINT}/create`;
     return axiosClient.post(url, formData, {
@@ -47,6 +48,7 @@ const productsApi = {
         "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
       },
     });
+
   },
   
   deleteProduct: (id) => {
