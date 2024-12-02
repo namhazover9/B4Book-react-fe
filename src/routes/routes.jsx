@@ -14,15 +14,14 @@ const Details = lazy(() => import('@pages/homepages/Details'));
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
+const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
+const OrderDetailPage = lazy(() => import('@pages/SellerRole/OrderDetailPage'));
 const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
 const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
 const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
-
-// seller Role
-const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
-const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
 
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
@@ -95,6 +94,12 @@ export const routes_here = [
   {
     path: '/shop/:name/orders/:id',
     element: <OrderPageOfSeller />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop-HoangNam/orders/order-detail/:1',
+    element: <OrderDetailPage />,
     layout: 'seller',
     isPrivate: false,
   },
