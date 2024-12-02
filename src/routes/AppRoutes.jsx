@@ -30,6 +30,7 @@ const AppRoutes = () => {
   const userRole = useSelector((state) => state.user.role[0]?.name);
   const userId = useSelector((state) => state.user._id);
 
+
   // Kiểm tra xác thực
   useEffect(() => {
     dispatch(getIsAuth());
