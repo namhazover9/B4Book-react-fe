@@ -4,9 +4,13 @@ const ORDER_API_ENDPOINT = '/order';
 
 const orderApi = {
   // fn: get all shop
-  getAllOrderByShop: (id) => {
-    const url = `${ORDER_API_ENDPOINT}/getAllOrderByShop/${id}`;
-    return axiosClient.get(url,{});
+  getAllOrderByShop: (id, sort) => {
+    const queryParams = new URLSearchParams({
+      status: sort, // Truyền sort dưới dạng status (nếu API yêu cầu)
+    }).toString();
+  
+    const url = `${ORDER_API_ENDPOINT}/getAllOrderByShop/${id}?${queryParams}`;
+    return axiosClient.get(url);
   },
 
   // Tìm kiếm sản phẩm theo keyword
