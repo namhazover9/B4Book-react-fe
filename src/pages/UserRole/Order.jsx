@@ -13,7 +13,7 @@ const Checkout = () => {
     const [voucherCodes, setVoucherCodes] = useState({});
     const [selectedStore, setSelectedStore] = useState(null);
     const [isVoucherModalVisible, setIsVoucherModalVisible] = useState(false);
-    const [discount, setDiscount] = useState(0);
+    const [discount, setDiscount] = useState(0);    
     const [shippingCost, setShippingCost] = useState(30000);
     const [shipcost, setShipCost] = useState(30000);
     const [isModalVisible, setIsModalVisible] = useState(false);
