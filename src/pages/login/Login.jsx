@@ -1,7 +1,7 @@
 import { EyeInvisibleOutlined, EyeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip } from 'antd';
 import { FastField, Form, Formik } from 'formik';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,6 +13,7 @@ import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
 import { setIsAuth } from '../../reducers/auth';
 import LoginFacebook from '../../components/LoginFacebook';
+import { u } from 'framer-motion/client';
 
 function Login() {
   const navigate = useNavigate();
@@ -23,7 +24,8 @@ function Login() {
 
   // Retrieve the role from Redux in the main function
 
-  const userRole = useSelector((state) => state.user.role[0]?.name);
+  const userRole = useSelector((state) => state.user.role[0]?.name);;
+  const isAuth = useSelector((state) => state.authenticate.isAuth);
 
   const onLoginSuccess = async (data, role) => {
     try {
@@ -36,23 +38,29 @@ function Login() {
       //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
 
-      //Check role and navigate accordingly
+      
+    } catch (error) {
+      message.error('Lỗi đăng nhập.');
+    }
+  };
 
+  // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
+  useEffect(() => {
+    if (isAuth && userRole) {
       if (userRole === 'Admin') {
         navigate('/admin');
       } else if (userRole === 'Customer') {
         navigate('/');
       }
-    } catch (error) {
-      message.error('Lỗi đăng nhập.');
     }
-  };
+  }, [isAuth, userRole, navigate]);
 
   const onLogin = async (account) => {
     try {
       setIsSubmitting(true);
       const result = await loginApi.postLogin({ account });
       if (result.status === 200) {
+        
         onLoginSuccess(result.data, userRole);
       }
     } catch (error) {
