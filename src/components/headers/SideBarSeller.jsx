@@ -28,7 +28,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
 
     return (
         <div className="">
-            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-screen bg-slate-200 hidden lg:block`}>
+            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-slate-200 hidden lg:block rounded-l-lg`}>
                 <div className="w-64 h-20">
                     <div className="w-3/5 flex justify-between items-center mx-2">
                         <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg" alt="" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />

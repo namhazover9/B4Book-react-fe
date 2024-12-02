@@ -100,13 +100,13 @@ export default function OrderPageOfSeller() {
                 </Breadcrumb>
                 <div className='p-4 min-h-96 bg-white rounded-lg'>
                     <div className="header-shop-page px-5 flex items-center justify-between">
-                        <h1 className='text-3xl font-semibold hidden lg:block'>Orders List</h1>
+                        <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block'>Orders List</h1>
                         <div className="w-full lg:w-4/5 flex flex-col items-start lg:flex-row lg:items-center justify-between">
                             <Input placeholder="Search Order ..." className='w-full lg:w-2/3 py-3' />
-                            <div className='mt-4 option-show'>
+                            <div className='mt-4 lg:mt-0 option-show lg:ml-5'>
                                 <Select
                                     defaultValue='All Order'
-                                    className='w-52 mr-2'
+                                    className='lg:w-48 xl:w-52 mr-2 lg:mr-0'
                                     // onChange={handleChange}
                                     options={[
                                         {

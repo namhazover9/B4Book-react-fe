@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Button, Form, Input, InputNumber, Layout, Menu, message, Modal, Popconfirm, Table, theme, Upload } from 'antd';
+import { Breadcrumb, Button, Input, InputNumber, Layout, Menu, message, Modal, Popconfirm, Select, Table, theme, Upload } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 const { Header, Content, Footer, Sider } = Layout;
+import * as Yup from 'yup';
 import { createStyles } from 'antd-style';
 import TextArea from 'antd/es/input/TextArea';
+import { Field, Form, Formik } from 'formik';
 
 const useStyle = createStyles(({ css, token }) => {
     const { antCls } = token;
@@ -106,7 +108,7 @@ export default function SellerPage() {
             width: 100,
             ...alignCenter,
             render: () => <div className="flex items-center justify-center">
-                <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'><EditOutlined onClick={showModalEditProduct} /></button>
+                <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'><EditOutlined onClick={() => setVisibleEdit(true)} /></button>
                 <Popconfirm
                     title="Delete the Product"
                     description="Are you sure to delete this task?"
@@ -140,15 +142,9 @@ export default function SellerPage() {
     };
 
     // Add Product
-    const [isModalOpenAddProduct, setIsModalOpenAddProduct] = useState(false);
-    const showModalAddProduct = () => {
-        setIsModalOpenAddProduct(true);
-    };
-    const handleOkAddProduct = () => {
-        setIsModalOpenAddProduct(false);
-    };
-    const handleCancelAddProduct = () => {
-        setIsModalOpenAddProduct(false);
+    const [visibleAdd, setVisibleAdd] = useState(false);
+    const handleCancelAdd = () => {
+        setVisibleAdd(false);
     };
 
     const { TextArea } = Input;
@@ -159,23 +155,37 @@ export default function SellerPage() {
         return e?.fileList;
     };
 
-    // Edit Product
-    const [isModalOpenEditProduct, setIsModalOpenEditProduct] = useState(false);
-    const showModalEditProduct = () => {
-        setIsModalOpenEditProduct(true);
-    };
-    const handleOkEditProduct = () => {
-        setIsModalOpenEditProduct(false);
-    };
-    const handleCancelEditProduct = () => {
-        setIsModalOpenEditProduct(false);
-    };
+    const validationSchema = Yup.object().shape({
+        title: Yup.string().required('Title is required'),
+        price: Yup.number()
+            .typeError('Enter numbers only')
+            .positive('Enter positive numbers only')
+            .required('Price is required'),
+        description: Yup.string().required('Description is required'),
+        author: Yup.string().required('Author is required'),
+        publisher: Yup.string().required('Publisher is required'),
+        isbn: Yup.number()
+            .typeError('Enter numbers only')
+            .positive('Enter positive numbers only')
+            .integer('Enter integers only')
+            .required('ISBN is required'),
+        stock: Yup.number()
+            .typeError('Enter numbers only')
+            .positive('Enter positive numbers only')
+            .integer('Enter integers only')
+            .required('Stock is required'),
+        category: Yup.array()
+            .min(1, 'At least one category is required')
+            .required('Category is required'),
+        uploadImage: Yup.array()
+            .min(1, 'At least one image is required')
+            .required('Image is required'),
+    });
 
-    const normFileEditProduct = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
+    // Edit Product
+    const [visibleEdit, setVisibleEdit] = useState(false);
+    const handleCancelEdit = () => {
+        setVisibleEdit(false);
     };
 
     // Delete Product
@@ -205,7 +215,7 @@ export default function SellerPage() {
                                     <CloudDownloadOutlined className='text-3xl' />
                                     <span className='ml-2 text-lg text-bold'>Export</span>
                                 </button>
-                                <button className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600' type="primary" onClick={showModalAddProduct}>
+                                <button className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600' type="primary" onClick={() => setVisibleAdd(true)}>
                                     Add Product
                                 </button>
                             </div>
@@ -231,148 +241,362 @@ export default function SellerPage() {
                 </div>
             </Content>
             {/* Add Product */}
-            <Modal width={600} className='text-center' title="New Product" open={isModalOpenAddProduct} onOk={handleOkAddProduct} onCancel={handleCancelAddProduct}>
-                <>
-                    <Form
-                        labelCol={{
-                            span: 4,
-                        }}
-                        wrapperCol={{
-                            span: 14,
-                        }}
-                        layout="horizontal"
-                        style={{
-                            maxWidth: 750,
-                        }}
-                        className='mt-5'
-                    >
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Title</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Price</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd truncate'>Description</label>
-                            <TextArea rows={4} className='w-2/3 lg:w-3/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Author</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Publisher</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>ISBN</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Stock</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Category</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex items-center justify-flex-start" valuePropName="fileList" getValueFromEvent={normFileAddProduct}>
-                            <label className='label-input-tnvd truncate'>Upload Image</label>
-                            <Upload action="/upload.do" listType="picture-card">
-                                <button
-                                    style={{
-                                        border: 0,
-                                        background: 'none',
-                                    }}
-                                    type="button"
-                                >
-                                    <PlusOutlined />
-                                    <div
+            <Modal open={visibleAdd} className='text-center' title="Add New Product" onCancel={handleCancelAdd} footer={null}>
+                <Formik
+                    initialValues={{
+                        title: '',
+                        price: '',
+                        description: '',
+                        author: '',
+                        publisher: '',
+                        isbn: '',
+                        stock: '',
+                        category: [],
+                        uploadImage: [],
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={(values) => {
+                        console.log('Form Values:', values);
+                    }}
+                >
+                    {({ setFieldValue, errors, touched }) => (
+                        <Form className="mt-5">
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Title</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="title"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.title && errors.title && <div className="error text-red-500 ml-1">{errors.title}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Price</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="price"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.price && errors.price && <div className="error text-red-500 ml-1">{errors.price}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd truncate">Description</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="description"
+                                        as={TextArea}
+                                        rows={4}
+                                        className="w-full py-1"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.description && errors.description && <div className="error text-red-500 ml-1">{errors.description}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Author</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="author"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.author && errors.author && <div className="error text-red-500 ml-1">{errors.author}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Publisher</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="publisher"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.publisher && errors.publisher && <div className="error text-red-500 ml-1">{errors.publisher}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">ISBN</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="isbn"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.isbn && errors.isbn && <div className="error text-red-500 ml-1">{errors.isbn}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Stock</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="stock"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.stock && errors.stock && <div className="error text-red-500 ml-1">{errors.stock}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd truncate">Category</label>
+                                {/* <Field
+                                    name="category"
+                                    as={Input}
+                                    className="w-2/3 py-2"
+                                /> */}
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Select
+                                        className="w-4/5"
+                                        mode="multiple"
+                                        placeholder="Select categories"
                                         style={{
-                                            marginTop: 8,
+                                            flex: 1,
+                                        }}
+                                        onChange={(value) => setFieldValue('category', value)}
+                                    >
+                                        <Select.Option value="Comedy">Comedy</Select.Option>
+                                        <Select.Option value="Drama">Drama</Select.Option>
+                                        <Select.Option value="Horror">Horror</Select.Option>
+                                    </Select>
+                                    <div className="h-8 py-1">
+                                        {touched.category && errors.category && (
+                                            <div className="error text-red-500 ml-1">{errors.category}</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-flex-start justify-flex-start">
+                                <label className="label-input-tnvd truncate">Upload Image</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Upload
+                                        action="/upload.do"
+                                        listType="picture-card"
+                                        onChange={(info) => {
+                                            setFieldValue(
+                                                'uploadImage',
+                                                info.fileList.map((file) => file.originFileObj)
+                                            );
                                         }}
                                     >
-                                        Upload
+                                        <Button
+                                            type="button"
+                                            style={{
+                                                border: 0,
+                                                background: 'none',
+                                            }}
+                                        >
+                                            <PlusOutlined />
+                                            <div>Upload</div>
+                                        </Button>
+                                    </Upload>
+                                    <div className="h-8 py-1">
+                                        {touched.uploadImage && errors.uploadImage && (
+                                            <div className="error text-red-500 ml-1">{errors.uploadImage}</div>
+                                        )}
                                     </div>
-                                </button>
-                            </Upload>
-                        </div>
-                    </Form>
-                </>
+                                </div>
+                            </div>
+                            <button className='text-end text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600' type="primary">
+                                Add Product
+                            </button>
+                        </Form>
+                    )}
+                </Formik>
             </Modal>
             {/* Edit Product */}
-            <Modal title="Edit Product" className='text-center' open={isModalOpenEditProduct} onOk={handleOkEditProduct} onCancel={handleCancelEditProduct}>
-                <>
-                    <Form
-                        labelCol={{
-                            span: 4,
-                        }}
-                        wrapperCol={{
-                            span: 14,
-                        }}
-                        layout="horizontal"
-                        style={{
-                            maxWidth: 750,
-                        }}
-                        className='mt-5'
-                    >
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Title</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Price</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd truncate'>Description</label>
-                            <TextArea rows={4} className='w-2/3 lg:w-3/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Author</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Publisher</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>ISBN</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Stock</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Category</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex items-center justify-flex-start" valuePropName="fileList" getValueFromEvent={normFileEditProduct}>
-                            <label className='label-input-tnvd truncate'>Upload Image</label>
-                            <Upload action="/upload.do" listType="picture-card">
-                                <button
-                                    style={{
-                                        border: 0,
-                                        background: 'none',
-                                    }}
-                                    type="button"
-                                >
-                                    <PlusOutlined />
-                                    <div
+            <Modal open={visibleEdit} className='text-center' title="Edit Product" onCancel={handleCancelEdit} footer={null}>
+                <Formik
+                    initialValues={{
+                        title: '',
+                        price: '',
+                        description: '',
+                        author: '',
+                        publisher: '',
+                        isbn: '',
+                        stock: '',
+                        category: [],
+                        uploadImage: [],
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={(values) => {
+                        console.log('Form Values:', values);
+                    }}
+                >
+                    {({ setFieldValue, errors, touched }) => (
+                        <Form className="mt-5">
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Title</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="title"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.title && errors.title && <div className="error text-red-500 ml-1">{errors.title}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Price</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="price"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.price && errors.price && <div className="error text-red-500 ml-1">{errors.price}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd truncate">Description</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="description"
+                                        as={TextArea}
+                                        rows={4}
+                                        className="w-full py-1"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.description && errors.description && <div className="error text-red-500 ml-1">{errors.description}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Author</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="author"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.author && errors.author && <div className="error text-red-500 ml-1">{errors.author}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Publisher</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="publisher"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.publisher && errors.publisher && <div className="error text-red-500 ml-1">{errors.publisher}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">ISBN</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="isbn"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.isbn && errors.isbn && <div className="error text-red-500 ml-1">{errors.isbn}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd">Stock</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Field
+                                        name="stock"
+                                        as={Input}
+                                        className="w-full py-2"
+                                    />
+                                    <div className="h-8 py-1">
+                                        {touched.stock && errors.stock && <div className="error text-red-500 ml-1">{errors.stock}</div>}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-input-tnvd">
+                                <label className="label-input-tnvd truncate">Category</label>
+                                {/* <Field
+                                    name="category"
+                                    as={Input}
+                                    className="w-2/3 py-2"
+                                /> */}
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Select
+                                        className="w-4/5"
+                                        mode="multiple"
+                                        placeholder="Select categories"
                                         style={{
-                                            marginTop: 8,
+                                            flex: 1,
+                                        }}
+                                        onChange={(value) => setFieldValue('category', value)}
+                                    >
+                                        <Select.Option value="Comedy">Comedy</Select.Option>
+                                        <Select.Option value="Drama">Drama</Select.Option>
+                                        <Select.Option value="Horror">Horror</Select.Option>
+                                    </Select>
+                                    <div className="h-8 py-1">
+                                        {touched.category && errors.category && (
+                                            <div className="error text-red-500 ml-1">{errors.category}</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-flex-start justify-flex-start">
+                                <label className="label-input-tnvd truncate">Upload Image</label>
+                                <div className="w-2/3 flex flex-col items-start">
+                                    <Upload
+                                        action="/upload.do"
+                                        listType="picture-card"
+                                        onChange={(info) => {
+                                            setFieldValue(
+                                                'uploadImage',
+                                                info.fileList.map((file) => file.originFileObj)
+                                            );
                                         }}
                                     >
-                                        Upload
+                                        <Button
+                                            type="button"
+                                            style={{
+                                                border: 0,
+                                                background: 'none',
+                                            }}
+                                        >
+                                            <PlusOutlined />
+                                            <div>Upload</div>
+                                        </Button>
+                                    </Upload>
+                                    <div className="h-8 py-1">
+                                        {touched.uploadImage && errors.uploadImage && (
+                                            <div className="error text-red-500 ml-1">{errors.uploadImage}</div>
+                                        )}
                                     </div>
-                                </button>
-                            </Upload>
-                        </div>
-                    </Form>
-                </>
+                                </div>
+                            </div>
+                            <button className='text-end text-base bg-blue-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-500' type="primary">
+                                Edit Product
+                            </button>
+                        </Form>
+                    )}
+                </Formik>
             </Modal>
         </div>
     );
