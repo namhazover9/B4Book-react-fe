@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useGoogleLogin } from '@react-oauth/google';
 import { message } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
@@ -12,6 +12,8 @@ import { setIsAuth } from '../../reducers/auth';
 function LoginGoogle({ title = 'Google+', className = '' }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userRole = useSelector((state) => state.user.role[0]?.name);
+  const isAuth = useSelector((state) => state.authenticate.isAuth);
 
   // Xử lý khi đăng nhập thành công
   const onLoginSuccess = async (data) => {
@@ -19,20 +21,25 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
       message.success('Đăng nhập thành công');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      // if (import.meta.env.MODE === 'production') {
-      //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      // }
-      navigate('/');
-      dispatch(setIsAuth(true));
 
-      // setTimeout(() => {
-      //   navigate(-1);
-      // }, constants.DELAY_TIME);
+      // Đánh dấu là đã xác thực
+      dispatch(setIsAuth(true));
     } catch (error) {
       message.error('Lỗi đăng nhập.');
       console.log(error, 'error');
     }
   };
+
+  // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
+  useEffect(() => {
+    if (isAuth && userRole) {
+      if (userRole === 'Admin') {
+        navigate('/admin');
+      } else if (userRole === 'Customer') {
+        navigate('/');
+      }
+    }
+  }, [isAuth, userRole, navigate]);
 
   const handleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -44,7 +51,7 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
         const { status, data } = response;
 
         if (status === 200) {
-          onLoginSuccess(data);
+          await onLoginSuccess(data);
         }
       } catch (error) {
         if (error.response) {

@@ -96,9 +96,18 @@ body {
 
 /* Form Input */
 .flex-input-tnvd {
-  @apply flex items-center justify-start mb-3
+  @apply flex items-baseline justify-start
 }
 
 .label-input-tnvd {
   @apply w-3/12 sm:w-28 font-medium text-start text-base mr-1
+}
+
+/* Style Text Info User Ordered */
+.h4-info-user {
+  @apply text-base font-semibold text-gray-800 underline mr-2
+}
+
+.p-info-user {
+  @apply m-0 text-gray-500 text-base truncate
 }

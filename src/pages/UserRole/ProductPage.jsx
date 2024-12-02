@@ -288,9 +288,8 @@ export default function ProductPage() {
                 onClick={() => handleViewModeChange('block')}
               />
               <BarsOutlined
-                className={`choice-icon-tnvd hidden md:block ${
-                  viewMode === 'line' ? 'text-blue-500' : ''
-                }`}
+                className={`choice-icon-tnvd hidden md:block ${viewMode === 'line' ? 'text-blue-500' : ''
+                  }`}
                 onClick={() => handleViewModeChange('line')}
               />
             </div>

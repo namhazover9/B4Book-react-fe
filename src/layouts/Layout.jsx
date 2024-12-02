@@ -16,10 +16,10 @@ import LoginPage from '../components/modalLogin/LoginPopup';
 import { languages } from '../constants/constants';
 import { useLocalization } from '../context/LocalizationWrapper';
 import userApi from '../hooks/userApi';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ShopingCartApi from '../hooks/useShopingCart'; // Đường dẫn đến file API
 import constants from '../constants/constants'; // Adjust the path as necessary
-
+import { setIsAuth } from '../reducers/auth';
 import useLogin from '../hooks/useLogin';
 import { Dropdown, Menu } from 'antd';
 import { u } from 'framer-motion/client';
@@ -34,6 +34,7 @@ export default function Layout({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!userId);
   const [userInfo, setUserInfo] = useState(null);
+  const dispatch = useDispatch();
 
   const userMenu = (
     <Menu>
@@ -67,19 +68,22 @@ export default function Layout({ children }) {
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
   };
+  const handleNavigate = () => {
+    navigate('/login'); // Điều hướng đến trang login
+  };
 
   useEffect(() => {
-    if (!userId) return; // Kiểm tra userId trước khi gọi API
-    const fetchUserProfile = async () => {
-      try {
-        const response = await userApi.getUserProfile(userId);
-        setUserInfo(response.data); // Lưu dữ liệu vào state
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error);
-      }
-    };
-  
-    fetchUserProfile();
+    if (userId) {
+      const fetchUserProfile = async () => {
+        try {
+          const response = await userApi.getUserProfile(userId);
+          setUserInfo(response.data); // Lưu thông tin người dùng
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+        }
+      };
+      fetchUserProfile();
+    }
   }, [userId]); // Chạy lại khi userId thay đổi
   
 
@@ -91,7 +95,6 @@ export default function Layout({ children }) {
       setIsLoggedIn(false); // User is not logged in
     }
   }, []);
-  
 
   const handleLogout = async () => {
     try {
@@ -104,10 +107,11 @@ export default function Layout({ children }) {
 
       // Clear the localStorage (client-side)
       localStorage.removeItem(constants.ACCESS_TOKEN_KEY);
+      localStorage.removeItem(constants.REFRESH_TOKEN_KEY);
 
       // Update the login state to reflect that the user is logged out
       setIsLoggedIn(false);
-
+      dispatch(setIsAuth(false));
       // Optionally, reset any Redux state or global state related to user authentication
 
       // Navigate to the login page or wherever you'd like to redirect after logout
@@ -244,19 +248,22 @@ export default function Layout({ children }) {
               <Dropdown overlay={userMenu} trigger={['click']}>
                 <div className='flex items-center space-x-2 cursor-pointer'>
                   <img
-                    src={userInfo?.avartar || "https://via.placeholder.com/150"}
+                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
                     alt='Avatar'
                     className='w-10 h-10 rounded-full'
                   />
-                  <span className='text-gray-700 font-medium'>Hi, {userInfo?.userName || "Guest"}</span>
+                  <span className='text-gray-700 font-medium'>
+                    Hi, {userInfo?.userName || 'Guest'}
+                  </span>
                 </div>
               </Dropdown>
             ) : (
-              <Link to='/login' className='hover:text-red-500'>
-                <button className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'>
-                  Login
-                </button>
-              </Link>
+              <button
+                onClick={handleNavigate}
+                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+              >
+                Login
+              </button>
             )}
           </div>
         </div>
