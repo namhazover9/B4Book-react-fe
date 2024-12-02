@@ -98,7 +98,7 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shop-HoangNam/orders/order-detail/:1',
+    path: '/shop/:name/orders/order-detail/:orderId',
     element: <OrderDetailPage />,
     layout: 'seller',
     isPrivate: false,
