@@ -41,7 +41,7 @@ const productsApi = {
   },
 
   postCreateProduct: (data) => {
-    const url = `${ACCOUNT_API_ENDPOINT}/createVoucher`;
+    const url = `${ACCOUNT_API_ENDPOINT}/create`;
     return axiosClient.post(url,{}, data);
   },
 
