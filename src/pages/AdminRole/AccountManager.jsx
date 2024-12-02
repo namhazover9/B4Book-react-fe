@@ -1,43 +1,36 @@
 import React, { useState } from 'react';
-import { Avatar, Breadcrumb, Button, Form, Input, InputNumber, Layout, Menu, message, Modal, Popconfirm, Table, theme, Upload } from 'antd';
-import { CloudDownloadOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-const { Header, Content, Footer, Sider } = Layout;
-import { createStyles } from 'antd-style';
-import TextArea from 'antd/es/input/TextArea';
-import { use } from 'framer-motion/client';
-import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { Layout, message, Modal, Table, Upload, Input, Button, Select } from 'antd';
+import { Formik, Field, Form } from 'formik';
+import { PlusOutlined, CloudDownloadOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import * as Yup from 'yup';
 
+const { Content } = Layout;
+const { Option } = Select;
 
-const useStyle = createStyles(({ css, token }) => {
-    const { antCls } = token;
-    return {
-        customTable: css`
-        ${antCls}-table {
-          ${antCls}-table-container {
-            ${antCls}-table-body,
-            ${antCls}-table-content {
-              scrollbar-width: thin;
-              scrollbar-color: #eaeaea transparent;
-              scrollbar-gutter: stable;
-            }
-          }
-        }
-      `,
-    };
-});
-
-export default function AccountManager() {
-
-    const { styles } = useStyle();
-
-    // Biến cấu hình để căn giữa
+const AccountManager = () => {
     const alignCenter = {
         onHeaderCell: () => ({
-            style: { textAlign: 'center' },
+            style: { textAlign: 'center', fontSize: '18px' },
         }),
         onCell: () => ({
             style: { textAlign: 'center' },
         }),
+    };
+
+    const toggleLock = (key) => {
+        setDataSource((prevDataSource) => {
+            const updatedDataSource = prevDataSource.map((item) => {
+                if (item.key === key) {
+                    const newLockStatus = !item.isLocked;
+                    message.success(`${newLockStatus ? 'Unlocked' : 'Locked'} account for ${item.username}`);
+                    return { ...item, isLocked: newLockStatus };
+                }
+                return item;
+            });
+
+            setFilteredDataSource(updatedDataSource);
+            return updatedDataSource;
+        });
     };
 
     const columns = [
@@ -47,11 +40,7 @@ export default function AccountManager() {
             dataIndex: 'avatar',
             key: 'avatar',
             ...alignCenter,
-            render: (text, record, index) => (
-                <div>
-                    <img src={text} alt="..." className='w-full h-auto' />
-                </div>
-            ),
+            render: (text) => <img src={text} alt="Avatar" className='w-full h-auto' />,
         },
         {
             title: 'Email',
@@ -59,10 +48,7 @@ export default function AccountManager() {
             dataIndex: 'email',
             key: 'email',
             ...alignCenter,
-            // fixed: 'left',
-            render: (text, record) => (
-                <span className="text-red-500">{text}</span>
-            ),
+            render: (text) => <span className="text-red-500 text-lg">{text}</span>,
         },
         {
             title: 'User Name',
@@ -70,6 +56,7 @@ export default function AccountManager() {
             key: 'username',
             width: 150,
             ...alignCenter,
+            render: (text) => <span className="text-lg">{text}</span>,
         },
         {
             title: 'Address',
@@ -77,6 +64,7 @@ export default function AccountManager() {
             key: 'address',
             width: 150,
             ...alignCenter,
+            render: (text) => <span className="text-lg">{text}</span>,
         },
         {
             title: 'Phone Number',
@@ -84,6 +72,7 @@ export default function AccountManager() {
             key: 'phonenumber',
             width: 75,
             ...alignCenter,
+            render: (text) => <span className="text-lg">{text}</span>,
         },
         {
             title: 'Role',
@@ -92,6 +81,7 @@ export default function AccountManager() {
             width: 75,
             ...alignCenter,
             sorter: (a, b) => a.role - b.role,
+            render: (text) => <span className="text-lg">{text}</span>,
         },
         {
             title: 'Action',
@@ -100,10 +90,9 @@ export default function AccountManager() {
             ...alignCenter,
             render: (text, record) => (
                 <button
-                    className={`px-4 py-2 rounded-full text-white transition duration-300 ${record.isLocked
+                    className={`text-lg px-4 py-2 rounded-full text-white transition duration-300 ${record.isLocked
                         ? 'bg-green-600 hover:bg-green-400'
-                        : 'bg-red-600 hover:bg-red-400'
-                        }`}
+                        : 'bg-red-600 hover:bg-red-400'}`}
                     onClick={() => toggleLock(record.key)}
                 >
                     {record.isLocked ? (
@@ -117,200 +106,152 @@ export default function AccountManager() {
                     )}
                 </button>
             ),
-
         }
-
     ];
 
     const [dataSource, setDataSource] = useState(
         Array.from({ length: 50 }).map((_, i) => ({
             key: i,
-            avatar: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164414/h6_cat3_tiz7yl.png',
-            email: 'Anh hen em Pickerball',
+            avatar: 'https://via.placeholder.com/50',
+            email: `user${i + 1}@example.com`,
             username: `User ${i + 1}`,
-            address: 'New York No. 1 Lake Park',
-            phonenumber: '123456789',
-            role: 'customer',
-            isLocked: false, // Trạng thái khóa ban đầu
+            address: `Address ${i + 1}`,
+            phonenumber: `12345678${i}`,
+            role: i % 2 === 0 ? 'Seller' : 'User',
+            isLocked: false,
         }))
     );
 
-    const toggleLock = (key) => {
-        setDataSource(prevData =>
-            prevData.map(item =>
-                item.key === key ? { ...item, isLocked: !item.isLocked } : item
-            )
-        );
-        const user = dataSource.find(item => item.key === key);
-        message.info(user?.isLocked ? `Unlocked ${user.username}` : `Locked ${user.username}`);
+    const [filteredDataSource, setFilteredDataSource] = useState(dataSource);
+
+    const handleFilterChange = (value) => {
+        if (value === 'all') {
+            setFilteredDataSource(dataSource);
+        } else {
+            const isLocked = value === 'locked';
+            setFilteredDataSource(dataSource.filter((account) => account.isLocked === isLocked));
+        }
     };
 
-
-    const onChange = (sorter) => {
-        console.log('params', sorter);
-    };
-
-    // Add Product
     const [isModalOpenAddProduct, setIsModalOpenAddProduct] = useState(false);
-    const showModalAddProduct = () => {
-        setIsModalOpenAddProduct(true);
-    };
-    const handleOkAddProduct = () => {
-        setIsModalOpenAddProduct(false);
-    };
-    const handleCancelAddProduct = () => {
-        setIsModalOpenAddProduct(false);
-    };
+    const showModalAddProduct = () => setIsModalOpenAddProduct(true);
+    const handleCancelAddProduct = () => setIsModalOpenAddProduct(false);
 
-    const { TextArea } = Input;
-    const normFileAddProduct = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
-
-    // Edit Product
-    const [isModalOpenEditProduct, setIsModalOpenEditProduct] = useState(false);
-    const showModalEditProduct = () => {
-        setIsModalOpenEditProduct(true);
-    };
-    const handleOkEditProduct = () => {
-        setIsModalOpenEditProduct(false);
-    };
-    const handleCancelEditProduct = () => {
-        setIsModalOpenEditProduct(false);
-    };
-
-    const normFileEditProduct = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
-
-    // Delete Product
-    const confirm = (e) => {
-        console.log(e);
-        message.success('Click on Yes');
-    };
-    const cancel = (e) => {
-        console.log(e);
-        message.error('Click on No');
-    };
+    const validationSchema = Yup.object().shape({
+        title: Yup.string().required('Title is required'),
+        price: Yup.number().required('Price is required').positive(),
+        description: Yup.string().required('Description is required'),
+        author: Yup.string().required('Author is required'),
+        publisher: Yup.string().required('Publisher is required'),
+        isbn: Yup.string().required('ISBN is required'),
+        stock: Yup.number().required('Stock is required').min(0),
+        category: Yup.string().required('Category is required'),
+    });
 
     return (
-        <div className=''>
-            <Content className='mx-2 lg:mx-5'>
+        <div className="overflow-x-hidden px-2 md:px-4 lg:px-6">
+            <Content className="mx-2 lg:mx-5">
                 <br />
-                <div className='p-4 min-h-96 bg-white rounded-lg'>
-                    <div className="header-shop-page px-5 flex items-center justify-between">
-                        <h1 className='text-3xl font-semibold hidden lg:block'>Account Manager</h1>
-                        <div className="w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between">
-                            <Input placeholder="Search Book ..." className='w-full lg:w-2/3 py-3' />
-                            <div className="w-full lg:ml-4 lg:w-1/3 mt-5 lg:mt-0 flex items-center justify-between lg:justify-between">
-                                <button className='flex items-center hover:bg-slate-200 duration-300 py-2 px-4 rounded-full'>
-                                    <CloudDownloadOutlined className='text-3xl' />
-                                    <span className='ml-2 text-lg text-bold'>Export</span>
+                <div className="p-4 min-h-screen bg-white rounded-lg">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <h1 className="text-xl lg:text-3xl font-semibold">Account Manager</h1>
+                        <div className="w-full lg:w-4/5 flex flex-col md:flex-row items-center gap-4">
+                            {/* Thanh tìm kiếm */}
+                            <Input placeholder="Search Account ..." className="w-full md:w-2/3 py-2 md:py-3" />
+
+                            {/* Phần các nút Export, Filter và Add Product */}
+                            <div className="flex flex-wrap gap-4 w-full md:w-auto justify-between md:justify-start">
+                                <button className="flex items-center hover:bg-slate-200 duration-300 py-2 px-4 rounded-full">
+                                    <CloudDownloadOutlined className="text-2xl md:text-3xl" />
+                                    <span className="ml-2 text-sm md:text-lg font-bold">Export</span>
                                 </button>
-                                <button className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600' type="primary" onClick={showModalAddProduct}>
+
+                                {/* Filter Select */}
+                                <Select
+                                    defaultValue="all"
+                                    style={{ width: '150px' }}
+                                    onChange={handleFilterChange}
+                                    className="w-full md:w-32"
+                                >
+                                    <Option value="all">All Accounts</Option>
+                                    <Option value="locked">Locked</Option>
+                                    <Option value="unlocked">Unlocked</Option>
+                                </Select>
+
+                                <Button
+                                    className="text-sm md:text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 hover:text-green-600 duration-300"
+                                    onClick={showModalAddProduct}
+                                >
                                     Add Product
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
-                    <div className="data-shop-page my-4 lg:my-6">
-                        <Table
-                            // className={styles.customTable}
-                            className='text-center'
-                            columns={columns}
-                            dataSource={dataSource}
-                            // scroll={{
-                            //     x: 'max-content',
-                            //     y: 55 * 5,
-                            // }}
-                            onChange={onChange}
-                            scroll={{
-                                x: 'max-content',
-                                y: 500,
+
+                    <br />
+                    <Table
+                        columns={columns}
+                        dataSource={filteredDataSource}
+                        scroll={{ x: 'max-content', y: 600 }}
+                    />
+
+                    <Modal
+                        title="Add Product"
+                        open={isModalOpenAddProduct}
+                        onCancel={handleCancelAddProduct}
+                        footer={[
+                            <Button key="cancel" onClick={() => {
+                                handleCancelAddProduct();
+                                resetForm();
+                            }} className="bg-gray-500 text-white">
+                                Cancel
+                            </Button>,
+                            <Button key="submit" type="primary" htmlType="submit" className="bg-blue-500 text-white">
+                                Submit
+                            </Button>,
+                        ]}
+                        width={600}
+                    >
+                        <Formik
+                            initialValues={{
+                                title: '',
+                                price: '',
+                                description: '',
+                                author: '',
+                                publisher: '',
+                                isbn: '',
+                                stock: '',
+                                category: '',
                             }}
-                        />
-                    </div>
+                            validationSchema={validationSchema}
+                            onSubmit={(values) => {
+                                console.log(values);
+                                message.success('Product added successfully!');
+                                setIsModalOpenAddProduct(false);
+                            }}
+                        >
+                            {({ errors, touched, resetForm }) => (
+                                <Form>
+                                    {['title', 'price', 'description', 'author', 'publisher', 'isbn', 'stock', 'category'].map((field) => (
+                                        <div key={field} className="mb-4">
+                                            <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                                            <Field name={field} className="w-full p-2 border" />
+                                            {errors[field] && touched[field] && (
+                                                <div className="text-red-500">{errors[field]}</div>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <Upload listType="picture-card">
+                                        <Button icon={<PlusOutlined />}>Upload</Button>
+                                    </Upload>
+                                </Form>
+                            )}
+                        </Formik>
+                    </Modal>
                 </div>
             </Content>
-            {/* Add Product */}
-            <Modal width={600} className='text-center' title="New Product" open={isModalOpenAddProduct} onOk={handleOkAddProduct} onCancel={handleCancelAddProduct}>
-                <>
-                    <Form
-                        labelCol={{
-                            span: 4,
-                        }}
-                        wrapperCol={{
-                            span: 14,
-                        }}
-                        layout="horizontal"
-                        style={{
-                            maxWidth: 750,
-                        }}
-                        className='mt-5'
-                    >
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Title</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Price</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd truncate'>Description</label>
-                            <TextArea rows={4} className='w-2/3 lg:w-3/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Author</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Publisher</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>ISBN</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Stock</label>
-                            <InputNumber className='w-1/4 py-1' />
-                        </div>
-                        <div className="flex-input-tnvd">
-                            <label className='label-input-tnvd'>Category</label>
-                            <Input className='w-2/3 py-2' />
-                        </div>
-                        <div className="flex items-center justify-flex-start" valuePropName="fileList" getValueFromEvent={normFileAddProduct}>
-                            <label className='label-input-tnvd truncate'>Upload Image</label>
-                            <Upload action="/upload.do" listType="picture-card">
-                                <button
-                                    style={{
-                                        border: 0,
-                                        background: 'none',
-                                    }}
-                                    type="button"
-                                >
-                                    <PlusOutlined />
-                                    <div
-                                        style={{
-                                            marginTop: 8,
-                                        }}
-                                    >
-                                        Upload
-                                    </div>
-                                </button>
-                            </Upload>
-                        </div>
-                    </Form>
-                </>
-            </Modal>
-
         </div>
     );
-}
+};
+
+export default AccountManager;
