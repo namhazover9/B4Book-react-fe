@@ -84,6 +84,45 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       message.error('Error updating quantity');
     }
   };
+  const handleShopChange = (storeIndex) => {
+    // setStores((prevStores) =>
+    //   prevStores.map((store, index) => {
+    //     if (index === storeIndex) {
+    //       const newChecked = !store.checked;
+    //       return {
+    //         ...store,
+    //         checked: newChecked,
+    //         products: store.products.map((product) => ({
+    //           ...product,
+    //           checked: newChecked,
+    //         })),
+    //       };
+    //     }
+    //     return store;
+    //   })
+    // );
+  };
+  const handleItemChange = (storeIndex, productIndex) => {
+    // setStores((prevStores) =>
+    //   prevStores.map((store, index) => {
+    //     if (index === storeIndex) {
+    //       return {
+    //         ...store,
+    //         products: store.products.map((product, pIndex) => {
+    //           if (pIndex === productIndex) {
+    //             return {
+    //               ...product,
+    //               checked: !product.checked,
+    //             };
+    //           }
+    //           return product;
+    //         }),
+    //       };
+    //     }
+    //     return store;
+    //   })
+    // );
+  };
 
 
   const clearUserCart = async () => {
@@ -124,6 +163,9 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   };
 
   const columns = [
+    {
+      title: 'Select',
+    },
     {
       title: 'Image',
       dataIndex: 'images',
@@ -230,6 +272,10 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                   dataSource={groupedItems[shop]}
                   columns={columns}
                   rowKey='_id'
+                  rowSelection={{
+                    type: 'checkbox',
+                    selectedRowKeys: shop.cartItems
+                  }}
                   pagination={false}
                   bordered
                   scroll={{ x: 'max-content' }}

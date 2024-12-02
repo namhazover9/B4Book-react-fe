@@ -88,9 +88,7 @@ export default function SellerPage() {
   }, [currentPage, productsPerPage, id]); // Đảm bảo fetch lại dữ liệu khi các tham số này thay đổi
 
   // Handle thay đổi trang khi người dùng chuyển trang
-  const handlePageChange = (page) => {
-    setCurrentPage(page); // Cập nhật trang
-  };
+
 
   const handleExportFile = async () => {
     try {
@@ -143,8 +141,6 @@ export default function SellerPage() {
       console.error('Error deleting product:', error);
     }
   };
-
-  
 
   const { styles } = useStyle();
 
@@ -219,34 +215,37 @@ export default function SellerPage() {
       sorter: (a, b) => a.price - b.price,
     },
     {
-        title: 'Action',
-        key: 'operation',
-        // fixed: 'right',
-        width: 100,
-        ...alignCenter,
-        render: (text, record) => (
-            <div className='flex items-center justify-center'>
-               <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'><EditOutlined onClick={() => setVisibleEdit(true)} /></button>
-              <Popconfirm
-                title='Delete the Product'
-                description='Are you sure to delete this task?'
-                onConfirm={() => { handleDeleteProduct(record.key)}}
-                onCancel={cancel}
-                okText='Yes'
-                cancelText='No'
-              >
-                <button
-                  className='text-base bg-red-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-red-600 ml-3'
-                  danger
-                >
-                  <DeleteOutlined />
-                </button>
-              </Popconfirm>
-            </div>
-          ),
-        },
+      title: 'Action',
+      key: 'operation',
+      // fixed: 'right',
+      width: 100,
+      ...alignCenter,
+      render: (text, record) => (
+        <div className='flex items-center justify-center'>
+          <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'>
+            <EditOutlined onClick={() => setVisibleEdit(true)} />
+          </button>
+          <Popconfirm
+            title='Delete the Product'
+            description='Are you sure to delete this task?'
+            onConfirm={() => {
+              handleDeleteProduct(record.key);
+            }}
+            onCancel={cancel}
+            okText='Yes'
+            cancelText='No'
+          >
+            <button
+              className='text-base bg-red-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-red-600 ml-3'
+              danger
+            >
+              <DeleteOutlined />
+            </button>
+          </Popconfirm>
+        </div>
+      ),
+    },
   ];
-
 
   const onChange = (sorter) => {
     console.log('params', sorter);
@@ -276,7 +275,7 @@ export default function SellerPage() {
     author: Yup.string().required('Author is required'),
     publisher: Yup.string().required('Publisher is required'),
     language: Yup.string().required('Language is required'),
-    isbn: Yup.number()
+    ISBN: Yup.number()
       .typeError('Enter numbers only')
       .positive('Enter positive numbers only')
       .integer('Enter integers only')
@@ -319,9 +318,16 @@ export default function SellerPage() {
           <div className='header-shop-page px-5 flex items-center justify-between'>
             <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
             <div className='w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between'>
-            <Input  onChange={handleSearchChange} placeholder='Search Book ...' className='w-full lg:w-2/3 py-3' />
+              <Input
+                onChange={handleSearchChange}
+                placeholder='Search Book ...'
+                className='w-full lg:w-2/3 py-3'
+              />
               <div className='w-full lg:ml-4 lg:w-1/3 mt-5 lg:mt-0 flex items-center justify-between lg:justify-between'>
-                <button className='flex items-center hover:bg-slate-200 duration-300 py-2 px-4 rounded-full' onClick={handleExportFile}>
+                <button
+                  className='flex items-center hover:bg-slate-200 duration-300 py-2 px-4 rounded-full'
+                  onClick={handleExportFile}
+                >
                   <CloudDownloadOutlined className='text-3xl' />
                   <span className='ml-2 text-lg text-bold'>Export</span>
                 </button>
@@ -336,7 +342,7 @@ export default function SellerPage() {
             </div>
           </div>
           <div className='data-shop-page my-4 lg:my-6'>
-          <Table
+            <Table
               className='text-center'
               columns={columns}
               dataSource={
@@ -355,11 +361,11 @@ export default function SellerPage() {
               }
               loading={loading}
               // Thay vì gọi `handlePageChange(currentPage)` trực tiếp, bạn chỉ cần truyền hàm:
+              
               scroll={{
                 x: 'max-content',
                 y: 420,
               }}
-              
             />
           </div>
         </div>
@@ -375,22 +381,47 @@ export default function SellerPage() {
         <Formik
           initialValues={{
             title: '',
-            price: '',
+            price: 0,
             description: '',
             author: '',
             publisher: '',
             language: '',
-            isbn: '',
-            stock: '',
+            ISBN: '',
+            stock: 0,
             category: [],
             uploadImage: [],
           }}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log('Form Values:', values);
+          onSubmit={async (values, { setSubmitting, setFieldError }) => {
+            try {
+              // Preparing form data to match the API expected format (if necessary)
+              const formData = new FormData();
+              formData.append('title', values.title);
+              formData.append('price', values.price);
+              formData.append('description', values.description);
+              formData.append('author', values.author);
+              formData.append('publisher', values.publisher);
+              formData.append('language', values.language);
+              formData.append('ISBN', values.ISBN);
+              formData.append('stock', values.stock);
+              formData.append('category', values.category); // If needed
+              values.uploadImage.forEach((file) => formData.append('images', file)); // Assuming 'images' is the field name
+
+              // Make the API call to post the new product
+              console.log('Form Data:', Object.fromEntries(formData));
+              const response = await productsApi.postCreateProduct(formData);
+              message.success('Product added successfully!');
+              handleCancelAdd(); // Assuming handleCancelAdd closes the modal
+            } catch (error) {
+              // Handle network errors or other unexpected issues
+              console.error('Error adding product:', error);
+              message.error('An error occurred while adding the product.');
+            } finally {
+              setSubmitting(false); // Stop the form submission spinner/loading
+            }
           }}
         >
-          {({ setFieldValue, errors, touched }) => (
+          {({ setFieldValue, errors, touched, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>Title</label>
@@ -406,7 +437,8 @@ export default function SellerPage() {
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>Price</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='price' as={Input} className='w-full py-2' />
+                  <Field name='price' as={Input} className='w-full py-2' type='number'
+            step="0.01" />
                   <div className='h-8 py-1'>
                     {touched.price && errors.price && (
                       <div className='error text-red-500 ml-1'>{errors.price}</div>
@@ -461,10 +493,10 @@ export default function SellerPage() {
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>ISBN</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='isbn' as={Input} className='w-full py-2' />
+                  <Field name='ISBN' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
-                    {touched.isbn && errors.isbn && (
-                      <div className='error text-red-500 ml-1'>{errors.isbn}</div>
+                    {touched.ISBN && errors.ISBN && (
+                      <div className='error text-red-500 ml-1'>{errors.ISBN}</div>
                     )}
                   </div>
                 </div>
@@ -472,7 +504,7 @@ export default function SellerPage() {
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>Stock</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='stock' as={Input} className='w-full py-2' />
+                  <Field name='stock' as={Input} className='w-full py-2' type='number' />
                   <div className='h-8 py-1'>
                     {touched.stock && errors.stock && (
                       <div className='error text-red-500 ml-1'>{errors.stock}</div>
@@ -512,7 +544,6 @@ export default function SellerPage() {
                 <label className='label-input-tnvd truncate'>Upload Image</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
-                    action='/upload.do'
                     listType='picture-card'
                     onChange={(info) => {
                       setFieldValue(
@@ -541,14 +572,16 @@ export default function SellerPage() {
               </div>
               <button
                 className='text-end text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
-                type='primary'
+                type='submit'
+                disabled={isSubmitting} // Disable button while submitting
               >
-                Add Product
+                Add
               </button>
             </Form>
           )}
         </Formik>
       </Modal>
+
       {/* Edit Product */}
       <Modal
         open={visibleEdit}
@@ -565,7 +598,7 @@ export default function SellerPage() {
             author: '',
             publisher: '',
             language: '',
-            isbn: '',
+            ISBN: '',
             stock: '',
             category: [],
             uploadImage: [],
@@ -646,10 +679,10 @@ export default function SellerPage() {
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>ISBN</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='isbn' as={Input} className='w-full py-2' />
+                  <Field name='ISBN' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
-                    {touched.isbn && errors.isbn && (
-                      <div className='error text-red-500 ml-1'>{errors.isbn}</div>
+                    {touched.ISBN && errors.ISBN && (
+                      <div className='error text-red-500 ml-1'>{errors.ISBN}</div>
                     )}
                   </div>
                 </div>
