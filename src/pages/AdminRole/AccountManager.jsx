@@ -79,8 +79,6 @@ const AccountManager = () => {
     }
   };
   
-  
-  
 
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
