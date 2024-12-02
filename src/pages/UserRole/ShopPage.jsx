@@ -80,10 +80,6 @@ export default function ShopPage() {
     }
   };
 
-  const handleViewDetailShop = (id) => {
-    console.log(id);
-
-  }
   // View Change
   const [viewMode, setViewMode] = useState('block');
 

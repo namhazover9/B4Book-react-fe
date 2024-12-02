@@ -22,13 +22,32 @@ const productsApi = {
 
   // Tìm kiếm sản phẩm theo keyword
   searchProducts: (keyword) => {
-    const url = `/products/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
+    const url = `${ACCOUNT_API_ENDPOINT}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
 
-  getProductByShop: (id) => {
-    const url = `/products/getProductByShop/${id}`; // Chỉnh lại URL đúng format
+  getProductByShop: (id,{page = 1, limit = 10 }) => {
+    const queryParams = new URLSearchParams({
+      page,
+      limit,
+    }).toString();
+    const url = `${ACCOUNT_API_ENDPOINT}/getProductByShop/${id}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
+  },
+
+  exportFileProducts: () => {
+    const url =`${ACCOUNT_API_ENDPOINT}/exportFile`; // Chỉnh lại URL đúng format
+    return axiosClient.get(url,{ responseType: 'blob' });
+  },
+
+  postCreateProduct: (data) => {
+    const url = `${ACCOUNT_API_ENDPOINT}/create`;
+    return axiosClient.post(url,{}, data);
+  },
+
+  deleteProduct: (id) => {
+    const url = `${ACCOUNT_API_ENDPOINT}/${id}`;
+    return axiosClient.delete(url,{});
   },
 };
 

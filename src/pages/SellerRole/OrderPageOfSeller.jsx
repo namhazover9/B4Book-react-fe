@@ -3,9 +3,7 @@ import { Breadcrumb, Input, Select, Table } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { text } from "framer-motion/client";
 import React from "react";
-
 export default function OrderPageOfSeller() {
-
     // Biến cấu hình để căn giữa
     const alignCenter = {
         onHeaderCell: () => ({
@@ -15,7 +13,6 @@ export default function OrderPageOfSeller() {
             style: { textAlign: 'center' },
         }),
     };
-
     const columns = [
         {
             title: 'ID',
@@ -74,7 +71,6 @@ export default function OrderPageOfSeller() {
             </div>,
         },
     ];
-
     const dataSource = Array.from({
         length: 50,
     }).map((_, i) => ({
@@ -86,11 +82,9 @@ export default function OrderPageOfSeller() {
         status: 'Pending',
         totalPrice: '$1000',
     }));
-
     const onChange = (sorter) => {
         console.log('params', sorter);
     };
-
     return (
         <div className=''>
             <Content className='mx-2 lg:mx-5'>
