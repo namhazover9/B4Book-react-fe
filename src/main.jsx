@@ -13,7 +13,6 @@ const store = configStore();
 const clientId = import.meta.env.VITE_CLIENT_ID;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
       <LocalizationProvider>
         <Provider store={store}>
@@ -23,5 +22,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </Provider>
       </LocalizationProvider>
     </GoogleOAuthProvider>
-  </React.StrictMode>,
 );
