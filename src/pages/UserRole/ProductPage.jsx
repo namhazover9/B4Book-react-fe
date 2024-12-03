@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   BarsOutlined,
   EyeOutlined,
@@ -6,17 +5,15 @@ import {
   QrcodeOutlined,
   ReadOutlined,
   SearchOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
-import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch, message } from 'antd';
-import { useEffect } from 'react';
-import productsApi from '../../hooks/useProductsApi';
-import LoadingSpinner from '../../components/loading';
-import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
-import { useSelector } from 'react-redux';
+import { Card, Checkbox, Menu, Pagination, Select, Slider, Spin, Switch, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { Spin } from 'antd';
+import LoadingSpinner from '../../components/loading';
+import productsApi from '../../hooks/useProductsApi';
+import { addToCart } from '../../reducers/carts';
 
 export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
@@ -26,6 +23,7 @@ export default function ProductPage() {
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
@@ -83,7 +81,7 @@ export default function ProductPage() {
     }
   };
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = (productId) => {
     if (!userId) {
       message.warning(
         <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center">
@@ -99,18 +97,15 @@ export default function ProductPage() {
       );
       return;
     }
-    
-    try {
-      setAddingToCart(true);
-      const response = await ShopingCartApi.addProductToCart(productId);
-      console.log('Product added to cart:', response.data);
-      message.success('Product successfully added to cart!');
-    } catch (error) {
-      console.error('Error adding product to cart:', error);
-      message.error('Failed to add product to cart. Please try again.');
-    } finally {
-      setAddingToCart(false);
-    }
+  
+    dispatch(addToCart(productId))
+      .then(() => {
+        message.success('Product successfully added to cart!');
+      })
+      .catch((error) => {
+        console.error('Error adding product to cart:', error);
+        message.error('Failed to add product to cart. Please try again.');
+      });
   };
   
 

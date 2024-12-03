@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
 import {
   BarsOutlined,
   EyeOutlined,
   HeartOutlined,
   QrcodeOutlined,
-  ReadOutlined,
   SearchOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
-import { Card, Checkbox, Menu, Pagination, Select, Slider, Switch } from 'antd';
-import { useEffect } from 'react';
+import { Pagination, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import LoadingSpinner from '../../components/loading';
 import shopApi from '../../hooks/useShopApi';
-import { NavLink } from 'react-router-dom';
 
 export default function ShopPage() {
   const [filterShop, setFilterShop] = useState([]);
@@ -241,7 +238,7 @@ export default function ShopPage() {
                     <div className='grid grid-cols-2 gap-4'>
                       {shopList.map((shop, index) => (
                         <div key={index} className='card'>
-                          <img src={shop.avartar[0]} alt={shop.shopName} />
+                          <img src={shop?.avartar[0]} alt={shop.shopName} />
                           <h3>{shop.shopEmail}</h3>
                           <p>{shop.phoneNumber}</p>
                           <p>{shop.shopAddress}</p>

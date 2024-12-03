@@ -1,28 +1,24 @@
-import { useState, useEffect } from 'react';
 import {
-  MenuUnfoldOutlined,
   CloseOutlined,
+  LogoutOutlined,
+  MenuUnfoldOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-  LogoutOutlined,
   UserSwitchOutlined,
 } from '@ant-design/icons';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Form, List, Button, InputNumber, Radio, Popconfirm } from 'antd';
-import { Select } from 'antd';
-import Footer from '../components/footer/Footer';
+import { Button, Dropdown, Menu, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Translate from '../components/Common/Translate';
+import Footer from '../components/footer/Footer';
 import LoginPage from '../components/modalLogin/LoginPopup';
-import { languages } from '../constants/constants';
+import constants, { languages } from '../constants/constants'; // Adjust the path as necessary
 import { useLocalization } from '../context/LocalizationWrapper';
-import userApi from '../hooks/userApi';
-import { useSelector, useDispatch } from 'react-redux';
-import ShopingCartApi from '../hooks/useShopingCart'; // Đường dẫn đến file API
-import constants from '../constants/constants'; // Adjust the path as necessary
-import { setIsAuth } from '../reducers/auth';
 import useLogin from '../hooks/useLogin';
-import { Dropdown, Menu } from 'antd';
-import { u } from 'framer-motion/client';
+import userApi from '../hooks/userApi';
+import { setIsAuth } from '../reducers/auth';
+import { fetchCart } from '../reducers/carts';
 
 export default function Layout({ children }) {
   const userId = useSelector((state) => state.user._id);
@@ -30,11 +26,11 @@ export default function Layout({ children }) {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!userId);
   const [userInfo, setUserInfo] = useState(null);
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.carts.items); // Lấy danh sách giỏ hàng từ Redux store
 
   const userMenu = (
     <Menu>
@@ -52,6 +48,15 @@ export default function Layout({ children }) {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+
+  console.log('Cart items:', cartItems); // Debug
+  useEffect(() => {
+    if (!userId) return; // Nếu không có userId, không cần gọi API
+
+    // Gọi action fetchCartItems từ Redux
+    dispatch(fetchCart());
+  }, [userId, dispatch]);
 
   const toggleLoginPopup = () => {
     setIsLoginPopupOpen(!isLoginPopupOpen);
@@ -137,28 +142,30 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     setTotalPriceBeforeDiscount(
-      (cartItems || []).reduce((sum, item) => sum + item.price * item.quantity, 0),
+      Array.isArray(cartItems) 
+      ? cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+      : 0
     );
   }, [cartItems]);
 
-  useEffect(() => {
-    if (!userId) return; // Kiểm tra userId trước khi gọi API
+  // useEffect(() => {
+  //   if (!userId) return; // Kiểm tra userId trước khi gọi API
 
-    const fetchCartItems = async () => {
-      try {
-        const response = await ShopingCartApi.getCart();
-        // console.log('Response from API:', response); // Kiểm tra toàn bộ response
-        //console.log('Items:', response.data.data); // Kiểm tra trường items
+  //   const fetchCartItems = async () => {
+  //     try {
+  //       const response = await ShopingCartApi.getCart();
+  //       // console.log('Response from API:', response); // Kiểm tra toàn bộ response
+  //       //console.log('Items:', response.data.data); // Kiểm tra trường items
 
-        setCartItems(response.data.data || []); // Nếu items là undefined, sử dụng mảng rỗng
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-        setCartItems([]); // Đảm bảo cartItems không bị undefined trong trường hợp lỗi
-      }
-    };
+  //       setCartItems(response.data.data || []); // Nếu items là undefined, sử dụng mảng rỗng
+  //     } catch (error) {
+  //       console.error('Error fetching cart items:', error);
+  //       setCartItems([]); // Đảm bảo cartItems không bị undefined trong trường hợp lỗi
+  //     }
+  //   };
 
-    fetchCartItems();
-  }, [userId]);
+  //   fetchCartItems();
+  // }, [userId]);
 
   const menuItems = [
     { name: 'Home', path: '/' },
@@ -171,9 +178,9 @@ export default function Layout({ children }) {
 
   const [totalPriceBeforeDiscount, setTotalPriceBeforeDiscount] = useState(0);
 
-  const removeCartItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
+  // const removeCartItem = (id) => {
+  //   setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  // };
 
   const handleSubmit = (values) => {
     console.log('Form data submitted:', values);
@@ -181,11 +188,15 @@ export default function Layout({ children }) {
   };
   useEffect(() => {
     setTotalPriceBeforeDiscount(
-      cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      Array.isArray(cartItems) ? cartItems.reduce((sum, item) => {
+        return sum + item.price * item.quantity;
+      }, 0) : 0,
     );
   }, [cartItems]);
 
-  const subtotal = (cartItems || []).reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = Array.isArray(cartItems) ? cartItems.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0) : 0;
 
   return (
     <div className='font-cairoRegular'>
@@ -351,7 +362,7 @@ export default function Layout({ children }) {
           {isLoading ? (
             <p>Loading...</p> // Hiển thị khi đang tải
           ) : (
-            cartItems.map((item) => (
+            Array.isArray(cartItems) && cartItems.map((item, index) => (
               <div key={item.id} className='flex items-center justify-between'>
                 <img
                   src={

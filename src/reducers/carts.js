@@ -1,105 +1,133 @@
 //======= imports =======//
-
 import constants from "../constants/constants";
+import ShopingCartApi from "../hooks/useShopingCart";
 
-
-//======= constant action type =======//
-const ADD_PRODUCT = 'ADD_PRODUCT';
-const RESET_CART = 'RESET_CART';
-const DEL_CART_ITEM = 'DEL_CART_ITEM';
-const UPDATE_CART_ITEM = 'UPDATE_CART_ITEM';
-//======= actions request (call API) =======//
-
-//======= actions =======//
-const addToCart = (item) => {
-  return {
-    type: ADD_PRODUCT,
-    payload: item,
-  };
-};
-
-const resetCart = () => {
-  return {
-    type: RESET_CART,
-  };
-};
-
-const delCartItem = (index) => {
-  return {
-    type: DEL_CART_ITEM,
-    payload: index,
-  };
-};
-
-// cấp nhật số lượng sản phẩm của 1 item
-const updateCartItem = (index, value) => {
-  return {
-    type: UPDATE_CART_ITEM,
-    payload: { index, value },
-  };
-};
+//======= constant action types =======//
+const ADD_PRODUCT = "ADD_PRODUCT";
+const RESET_CART = "RESET_CART";
+const DELETE_CART_ITEM = "DELETE_CART_ITEM";
+const UPDATE_CART_ITEM = "UPDATE_CART_ITEM";
+const FETCH_CART_SUCCESS = "FETCH_CART_SUCCESS";
+const FETCH_CART_FAILURE = "FETCH_CART_FAILURE";
+const START_LOADING = "START_LOADING";
+const STOP_LOADING = "STOP_LOADING";
 
 //======= initial state =======//
-const carts = JSON.parse(localStorage.getItem(constants.CARTS));
-const initialState = carts ? carts : [];
+const initialState = {
+  items: [], // Danh sách sản phẩm trong giỏ
+  loading: false, // Trạng thái đang tải
+  error: null, // Lỗi nếu có
+};
 
 //======= reducer =======//
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_PRODUCT: {
-      const item = action.payload;
-      let newCart = [...state];
-
-      // Kiểm tra trong giỏ hàng đã có item đó hay chưa
-      let isExist = false;
-      for (let i = 0; i < newCart.length; ++i) {
-        if (newCart[i].code === item.code) {
-          newCart[i].amount += item.amount;
-          isExist = true;
-          break;
-        }
-      }
-      if (!isExist) newCart = [...newCart, item];
-
-      // cập nhật lại local storage
-      localStorage.setItem(constants.CARTS, JSON.stringify(newCart));
-      return [...newCart];
-    }
-    case RESET_CART: {
-      localStorage.removeItem(constants.CARTS);
-      return [];
-    }
-    case DEL_CART_ITEM: {
-      const index = action.payload;
-      let newCart = [
-        ...state.slice(0, index),
-        ...state.slice(index + 1, state.length),
-      ];
-      // cập nhật lại local storage
-      localStorage.setItem(constants.CARTS, JSON.stringify(newCart));
-      return [...newCart];
-    }
-    case UPDATE_CART_ITEM: {
-      const { index, value } = action.payload;
-      let newCart = state.map((item, i) =>
-        i === index ? { ...item, amount: value } : { ...item },
-      );
-      // cập nhật lại local storage
-      localStorage.setItem(constants.CARTS, JSON.stringify(newCart));
-      return [...newCart];
-    }
+    case START_LOADING:
+      return { ...state, loading: true, error: null };
+    case STOP_LOADING:
+      return { ...state, loading: false };
+    case FETCH_CART_SUCCESS:
+      return { ...state, items: action.payload, loading: false, error: null };
+    case FETCH_CART_FAILURE:
+      return { ...state, error: action.payload, loading: false };
+    case ADD_PRODUCT:
+      return { ...state, items: action.payload, loading: false };
+    case RESET_CART:
+      return { ...state, items: [], loading: false };
+    case DELETE_CART_ITEM:
+      return { ...state, items: action.payload, loading: false };
+    case UPDATE_CART_ITEM:
+      return { ...state, items: action.payload, loading: false };
     default:
-      return [...state];
+      return state;
+  }
+};
+
+//======= action creators =======//
+
+// Bắt đầu tải
+const startLoading = () => ({ type: START_LOADING });
+
+// Dừng tải
+const stopLoading = () => ({ type: STOP_LOADING });
+
+// Lấy giỏ hàng từ API
+const fetchCart = () => async (dispatch) => {
+  dispatch(startLoading());
+  try {
+    const response = await ShopingCartApi.getCart();
+    dispatch({ type: FETCH_CART_SUCCESS, payload: response.data.data });
+  } catch (error) {
+    dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+  } finally {
+    dispatch(stopLoading());
+  }
+};
+
+// Thêm sản phẩm vào giỏ
+const addToCart = (productId) => async (dispatch) => {
+  dispatch(startLoading());
+  try {
+    const response = await ShopingCartApi.addProductToCart(productId);
+    dispatch({ type: ADD_PRODUCT, payload: response.data.data.cartItems });
+  } catch (error) {
+    dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+  } finally {
+    dispatch(stopLoading());
+  }
+};
+
+// Xóa một sản phẩm khỏi giỏ
+const deleteCartItem = (itemId) => async (dispatch) => {
+  dispatch(startLoading());
+  try {
+    const response = await ShopingCartApi.deleteProductFromCart(itemId);
+    dispatch({ type: DELETE_CART_ITEM, payload: response.data.data });
+  } catch (error) {
+    dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+  } finally {
+    dispatch(stopLoading());
+  }
+};
+
+// Xóa toàn bộ giỏ hàng
+const resetCart = () => async (dispatch) => {
+  dispatch(startLoading());
+  try {
+    await ShopingCartApi.clearCart();
+    dispatch({ type: RESET_CART });
+  } catch (error) {
+    dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+  } finally {
+    dispatch(stopLoading());
+  }
+};
+
+// Cập nhật số lượng sản phẩm
+const updateCartItem = (itemId, quantity) => async (dispatch) => {
+  dispatch(startLoading());
+  try {
+    const response = await ShopingCartApi.updateCartItemQuantity(itemId, quantity);
+    dispatch({ type: UPDATE_CART_ITEM, payload: response.data.data });
+  } catch (error) {
+    dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+  } finally {
+    dispatch(stopLoading());
   }
 };
 
 //======= exports =======//
 export {
+  fetchCart,
   addToCart,
-  ADD_PRODUCT,
+  deleteCartItem,
   resetCart,
-  delCartItem,
   updateCartItem,
+  ADD_PRODUCT,
+  RESET_CART,
+  DELETE_CART_ITEM,
+  UPDATE_CART_ITEM,
+  FETCH_CART_SUCCESS,
 };
 
 export default cartReducer;
