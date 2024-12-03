@@ -142,22 +142,24 @@ export default function Layout({ children }) {
   }, [cartItems]);
 
   useEffect(() => {
-    if (!userId) return; // Kiểm tra userId trước khi gọi API
-
-    const fetchCartItems = async () => {
-      try {
-        const response = await ShopingCartApi.getCart();
-        // console.log('Response from API:', response); // Kiểm tra toàn bộ response
-        //console.log('Items:', response.data.data); // Kiểm tra trường items
-
-        setCartItems(response.data.data || []); // Nếu items là undefined, sử dụng mảng rỗng
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-        setCartItems([]); // Đảm bảo cartItems không bị undefined trong trường hợp lỗi
-      }
-    };
-
-    fetchCartItems();
+    //if (!userId) return; // Kiểm tra userId trước khi gọi API
+    if (userId){
+      const fetchCartItems = async () => {
+        try {
+          const response = await ShopingCartApi.getCart();
+          // console.log('Response from API:', response); // Kiểm tra toàn bộ response
+          //console.log('Items:', response.data.data); // Kiểm tra trường items
+  
+          setCartItems(response.data.data || []); // Nếu items là undefined, sử dụng mảng rỗng
+          console.log('Cart items:', cartItems);
+          
+        } catch (error) {
+          console.error('Error fetching cart items:', error);
+          setCartItems([]); // Đảm bảo cartItems không bị undefined trong trường hợp lỗi
+        }
+      };
+      fetchCartItems();
+    }
   }, [userId]);
 
   const menuItems = [
