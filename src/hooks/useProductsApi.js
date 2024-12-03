@@ -50,10 +50,21 @@ const productsApi = {
     });
 
   },
+
+    // Cập nhật sản phẩm
+    updateProduct: (id, formData) => {
+      const url = `${ACCOUNT_API_ENDPOINT}/${id}`;
+      return axiosClient.put(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
+        },
+      });
+    },
+  
   
   deleteProduct: (id) => {
     const url = `${ACCOUNT_API_ENDPOINT}/${id}`;
-    return axiosClient.delete(url,{});
+    return axiosClient.delete(url);
   },
 };
 
