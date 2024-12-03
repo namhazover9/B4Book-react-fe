@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Table, Button, Divider, InputNumber, message, Pagination, Popconfirm } from 'antd';
 import 'antd/dist/reset.css';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true); // Thêm trạng thái loading
-
   const userId = useSelector((state) => state.user._id);
 
   // Fetch cart data with pagination when component mounts or page changes
@@ -27,6 +26,8 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           // Kiểm tra nếu API trả về dữ liệu
           if (response.data && response.data.data) {
             setCartItems(response.data.data);
+
+            //console.log('Stock:', response.data.data[0].product.stock);
             setTotalPages(response.data.totalPages);
           } else {
             // Xử lý khi không có dữ liệu
@@ -68,6 +69,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   // Handle quantity change
   const handleQuantityChange = async (id, quantity) => {
     try {
+      const itemToUpdate = cartItems.find((item) => item._id === id);
+
+      if (!itemToUpdate) {
+        console.error('Item not found in cart');
+        message.error('Item not found');
+        return;
+      }
+
+      // Kiểm tra nếu số lượng vượt quá số lượng có sẵn
+      // if (quantity > itemToUpdate.product.stock) {
+      //   console.log('Quantity exceeds stock'); // Debug log
+      //   message.error(`Quantity cannot exceed available stock (${itemToUpdate.product.stock})`);
+      //   return; // Dừng lại không gọi API nếu số lượng không hợp lệ
+      // }
+
+      // Nếu số lượng hợp lệ, gọi API cập nhật
       const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
       if (response.status === 'success') {
         setCartItems(
@@ -75,7 +92,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
             item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
           ),
         );
-        message.success('Quantity updated successfully!');
+        //message.success('Quantity updated successfully!');
       } else {
         message.error('Failed to update quantity');
       }
@@ -123,7 +140,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     //   })
     // );
   };
-
 
   const clearUserCart = async () => {
     try {
@@ -192,9 +208,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       render: (_, record) => (
         <InputNumber
           min={1}
+          //max={record.product.stock} // Giới hạn max để không thể nhập giá trị vượt quá stock
           value={record.quantity}
-          onChange={(value) => handleQuantityChange(record._id, value)} // Gọi API cập nhật
+          onChange={(value) => {
+            // Kiểm tra ngay giá trị nhập vào và hiển thị thông báo nếu vượt quá stock
+            if (value > record.product.stock) {
+              message.error(`Quantity cannot exceed available stock (${record.product.stock})`);
+              handleQuantityChange(record._id, record.product.stock);
+              return; // Không tiếp tục thực hiện cập nhật nếu vượt quá stock
+            }
+
+            // Nếu giá trị hợp lệ, gọi hàm cập nhật quantity
+              handleQuantityChange(record._id, value); 
+
+          }}
           className='w-16'
+        
         />
       ),
     },
@@ -216,7 +245,9 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           cancelText='No'
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
-          <Button type='danger'><CloseOutlined /></Button>
+          <Button type='danger'>
+            <CloseOutlined />
+          </Button>
         </Popconfirm>
       ),
     },
@@ -230,12 +261,13 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   if (!showUI)
     return (
-
       <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
         <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
-          <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>Shopping Cart</h1>
-          <div className="mb-5 p-0">
-            <Link to="/">
+          <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>
+            Shopping Cart
+          </h1>
+          <div className='mb-5 p-0'>
+            <Link to='/'>
               <Button>Back</Button>
             </Link>
           </div>
@@ -263,7 +295,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                       type='primary'
                       className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
                     >
-                      <DeleteOutlined className="text-xl text-white m-4" />
+                      <DeleteOutlined className='text-xl text-white m-4' />
                     </button>
                   </Popconfirm>
                 </div>
@@ -298,7 +330,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <h2 className='text-xl font-bold'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-
 
               <Button
                 type='primary'
