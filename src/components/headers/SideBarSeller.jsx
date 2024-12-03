@@ -1,4 +1,4 @@
-import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, WechatOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, UserSwitchOutlined, WechatOutlined } from '@ant-design/icons';
 import { Button, Drawer, Menu } from 'antd';
 import Item from 'antd/es/list/Item';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
         { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: "/shop-HoangNam/discount" },
         { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: "/shop-HoangNam/chat" },
         { title: "Setting", icon: <SettingOutlined className='text-2xl' />, path: "/shop-HoangNam/setting" },
+        { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl'/> , path: "/" },
     ];
     useEffect(() => {
         const fetchShopDetail = async () => {

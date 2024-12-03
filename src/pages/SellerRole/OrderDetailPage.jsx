@@ -56,11 +56,22 @@ export default function OrderDetailPage() {
     { title: 'Shipped', icon: <TruckOutlined /> },
     { title: 'Delivered', icon: <GiftOutlined /> },
   ];
-  const [currentStep, setCurrentStep] = useState(0); // Bắt đầu từ trạng thái "Pending"
+  const [currentStep, setCurrentStep] = useState(); // Bắt đầu từ trạng thái "Pending"
   const [completedSteps, setCompletedSteps] = useState([]);
   const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 1024);
   const [isWideScreenMd, setIsWideScreenMd] = useState(window.innerWidth > 574);
   const [isWideScreenSm, setIsWideScreenSm] = useState(window.innerWidth < 640);
+  const handleResize = () => {
+    setIsWideScreen(window.innerWidth >= 1024);
+  };
+
+  const handleResizeSm = () => {
+    setIsWideScreenSm(window.innerWidth < 640);
+  };
+
+  const handleResizeMd = () => {
+    setIsWideScreenMd(window.innerWidth > 574);
+  };
 
   useEffect(() => {
     const handleResizeAll = () => {
@@ -77,24 +88,26 @@ export default function OrderDetailPage() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchOrderDetail = async () => {
-      try {
-        setLoading(true);
-        const response = await orderApi.getDetailOrder(orderId);
-        setOrderDetail(response.data);
-        // Cập nhật step hiện tại nếu dữ liệu đã tải thành công
-        const stepIndex = statuses.findIndex((status) => status.title === response.data.status);
-        setCurrentStep(stepIndex !== -1 ? stepIndex : 0);
-        setCompletedSteps(statuses.slice(0, stepIndex));
-      } catch (error) {
-        console.error('Error fetching order detail:', error);
-        message.error('Failed to fetch order details');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchOrderDetail = async (refresh = false) => {
+    try {
+      if (!refresh) setLoading(true);
+      const response = await orderApi.getDetailOrder(orderId);
+      const orderStatus = response.data.data.status; // Trạng thái từ API
+      
+      setCurrentStep(orderStatus); // Gán trạng thái từ API
+      setCompletedSteps(
+        statuses.slice(0, statuses.findIndex((item) => item.title === orderStatus)).map((item) => item.title)
+      ); // Cập nhật các bước đã hoàn thành
+      setOrderDetail(response.data);
+    } catch (error) {
+      console.error('Error fetching order detail:', error);
+      message.error('Failed to fetch order details');
+    } finally {
+      if (!refresh) setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchOrderDetail();
   }, [orderId]);
 
@@ -106,48 +119,39 @@ export default function OrderDetailPage() {
     return <div>Order detail not found.</div>;
   }
 
-  const {
-    customer,
-    shippingAddress,
-    shops,
-    paymentMethod,
-    totalOrderPrice,
-    status,
-    createdAt,
-    shippedDate,
-    deliveredDate,
-    shippingMethod,
-    totalShopPrice,
-  } = orderDetail.data;
+  const { customer, shops, paymentMethod, status, createdAt, shippedDate, deliveredDate } =
+    orderDetail.data;
 
   // Hàm chuyển trạng thái
-  const handleNextStatus = () => {
-    if (currentStep < statuses.length - 1) {
-      const nextStep = currentStep + 1;
-      setCurrentStep(nextStep);
+  const handleNextStatus = async () => {
+    if (currentStep === 'Delivered') {
+      message.info('You have reached the final status.');
+      return;
+    }
+
+    try {
+      // Gọi API để cập nhật trạng thái
+      const response = await orderApi.updateStatusOrder(orderId);
+      const updatedStatus = response.data.data.status; // Trạng thái mới từ backend
+
+      // Cập nhật trạng thái tiếp theo và UI
+      setCurrentStep(updatedStatus);
       setCompletedSteps((prev) => [...prev, currentStep]);
 
-      if (statuses[nextStep].title === 'Delivered') {
-        setOrderDetail([]); // Xóa danh sách order
-        message.warning('Order is cancelled. Products have been removed.');
+      // Xử lý logic nếu trạng thái là 'Delivered'
+      if (updatedStatus === 'Delivered') {
+        message.warning('Order is delivered. Order have been removed.');
+      } else {
+        message.success(`Status updated to ${updatedStatus} successfully`);
       }
-    } else {
-      message.info('You have reached the final status.');
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      message.error('Failed to update order status');
     }
+    fetchOrderDetail(true);
   };
 
   // Hàm cập nhật trạng thái dựa trên kích thước màn hình
-  const handleResize = () => {
-    setIsWideScreen(window.innerWidth >= 1024);
-  };
-
-  const handleResizeSm = () => {
-    setIsWideScreenSm(window.innerWidth < 640);
-  };
-
-  const handleResizeMd = () => {
-    setIsWideScreenMd(window.innerWidth > 574);
-  };
 
   // Gắn sự kiện resize vào window
 
@@ -226,16 +230,16 @@ export default function OrderDetailPage() {
             <div className='lg:my-5 flex justify-between items-center mb-2 lg:mb-0'>
               <h1 className='w-full lg:w-1/2 text-xl lg:text-2xl font-bold'>Order Status</h1>
               <div className='w-full text-end my-5 relative overflow-hidden group'>
-                {statuses[currentStep].title !== 'Delivered' && (
+                {currentStep !== 'Delivered' && (
                   <button
                     type='primary'
                     className='text-base bg-red-500 text-white px-4 py-2 rounded-full'
                     onClick={handleNextStatus}
                     disabled={currentStep === statuses.length - 1}
                   >
-                    {statuses[currentStep].title === 'Pending' && 'Confirm Order'}
-                    {statuses[currentStep].title === 'Confirmed' && 'Ship Order'}
-                    {statuses[currentStep].title === 'Shipped' && 'Deliver Order'}
+                    {status === 'Pending' && 'Confirm Order'}
+                    {status === 'Confirmed' && 'Ship Order'}
+                    {status === 'Shipped' && 'Deliver Order'}
                   </button>
                 )}
                 <div className='absolute top-0 left-[-120%] w-[200%] h-full bg-white opacity-50 transform skew-x-[-45deg] transition-all duration-200 group-hover:left-full'></div>
@@ -243,13 +247,21 @@ export default function OrderDetailPage() {
             </div>
             <div className={`steps-section ${isWideScreenMd ? 'w-full' : 'w-32 mx-auto'}`}>
               <Steps
-                current={currentStep}
+                current={statuses.findIndex((item) => item.title === currentStep)} // Xác định step hiện tại từ API
                 direction='horizontal'
                 items={statuses.map((status, index) => ({
                   title: status.title,
-                  icon: completedSteps.includes(index) ? <CheckCircleOutlined /> : status.icon,
+                  icon: completedSteps.includes(status.title) ? (
+                    <CheckCircleOutlined />
+                  ) : (
+                    status.icon
+                  ),
                   status:
-                    currentStep === index ? 'process' : currentStep > index ? 'finish' : 'wait',
+                    currentStep === status.title
+                      ? 'process'
+                      : completedSteps.includes(status.title)
+                      ? 'finish'
+                      : 'wait',
                 }))}
               />
             </div>
@@ -263,7 +275,8 @@ export default function OrderDetailPage() {
                   shops[0].orderItems &&
                   shops[0].orderItems.length > 0 && (
                     <div className='bg-red-500 text-center text-white py-2 px-4 rounded-3xl lg:w-1/4 relative overflow-hidden group'>
-                      <span className='text-sm underline'>Total Price: </span>${shops[0].totalShopPrice}
+                      <span className='text-sm underline'>Total Price: </span>{' '}
+                      {shops[0].totalShopPrice + ' $'}
                       <div className='absolute top-0 left-[-175%] w-[200%] h-full bg-white opacity-40 transform skew-x-[-45deg] transition-all duration-500 group-hover:left-full'></div>
                     </div>
                   )}
@@ -291,44 +304,30 @@ export default function OrderDetailPage() {
                   {shops && shops.length > 0 ? (
                     shops.map((shop) =>
                       shop.orderItems && shop.orderItems.length > 0 ? (
-                        shop.orderItems.map(
-                          (items) => (
-                            (
-                              <div
-                                key={items._id}
-                                className='flex flex-col p-2'
-                                style={contentStyle}
-                              >
-                                <div className='flex items-center sm:flex-col border border-solid border-gray-300 p-1 rounded-xl mx-0'>
-                                  <div className='overflow-hidden rounded-lg sm:mb-2 h-full w-1/2 sm:w-full lg:w-full'>
-                                    <img
-                                      src={items.images[0]} 
-                                      alt='Product'
-                                      className='w-full h-52 object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
-                                    />
-                                  </div>
-                                  <div className='ml-2 sm:ml-0 px-2 pb-2'>
-                                    <h4 className='text-base font-medium truncate'>
-                                      {items.title}
-                                    </h4>
-                                    <p className='text-gray-600 font-medium text-xs italic'>
-                                      {items.author}
-                                    </p>
-                                    <p className='text-red-500 text-base font-medium'>
-                                      ${items.price}
-                                    </p>
-                                    <p className='text-gray-600 font-medium text-xs'>
-                                      Quantity:{' '}
-                                      <span className='text-red-500 text-sm'>
-                                        {items.quantity}
-                                      </span>
-                                    </p>
-                                  </div>
-                                </div>
+                        shop.orderItems.map((items) => (
+                          <div key={items._id} className='flex flex-col p-2' style={contentStyle}>
+                            <div className='flex items-center sm:flex-col border border-solid border-gray-300 p-1 rounded-xl mx-0'>
+                              <div className='overflow-hidden rounded-lg sm:mb-2 h-full w-1/2 sm:w-full lg:w-full'>
+                                <img
+                                  src={items.images[0]}
+                                  alt='Product'
+                                  className='w-full h-52 object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
+                                />
                               </div>
-                            )
-                          ),
-                        )
+                              <div className='ml-2 sm:ml-0 px-2 pb-2'>
+                                <h4 className='text-base font-medium truncate'>{items.title}</h4>
+                                <p className='text-gray-600 font-medium text-xs italic'>
+                                  {items.author}
+                                </p>
+                                <p className='text-red-500 text-base font-medium'>${items.price}</p>
+                                <p className='text-gray-600 font-medium text-xs'>
+                                  Quantity:{' '}
+                                  <span className='text-red-500 text-sm'>{items.quantity}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
                       ) : (
                         <p className='text-red-600 font-semibold text-nowrap'>
                           No products ordered.

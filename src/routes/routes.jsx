@@ -98,7 +98,7 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shop/:name/orders/order-detail/:orderId',
+    path: '/shop/:name/:id/orders/order-detail/:orderId',
     element: <OrderDetailPage />,
     layout: 'seller',
     isPrivate: false,
