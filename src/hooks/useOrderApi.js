@@ -23,6 +23,11 @@ const orderApi = {
     const url = `${ORDER_API_ENDPOINT}/${orderId}`; 
     return axiosClient.get(url,{});
   },
+
+  updateStatusOrder: (orderId) => {
+    const url = `${ORDER_API_ENDPOINT}/${orderId}/status`; 
+    return axiosClient.patch(url,{});
+  },
  
 };
 
