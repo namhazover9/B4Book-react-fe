@@ -63,14 +63,14 @@ const AccountManager = () => {
     try {
       const response = await adminApi.searchAccount(keyword);
       const data = response.data;
-  
+
       // Kiểm tra nếu dữ liệu trả về có các thuộc tính users hoặc shops
       if (data.users && Array.isArray(data.users)) {
         setUserList(data.users);
       } else if (data.shops && Array.isArray(data.shops)) {
         setUserList(data.shops);
       } else {
-        console.error("Dữ liệu trả về không đúng định dạng:", data);
+        console.error('Dữ liệu trả về không đúng định dạng:', data);
       }
     } catch (error) {
       console.error('Error searching accounts:', error);
@@ -78,12 +78,11 @@ const AccountManager = () => {
       setLoading(false);
     }
   };
-  
 
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
-  
+
     if (keyword.trim() === '') {
       // Nếu từ khóa tìm kiếm rỗng, fetch tất cả người dùng
       fetchUsers();
@@ -92,8 +91,7 @@ const AccountManager = () => {
       searchAccounts(keyword);
     }
   };
-  
-  
+
   useEffect(() => {
     fetchUsers();
   }, [selectedRole, selectedStatus]);
@@ -111,7 +109,9 @@ const AccountManager = () => {
       key: 'avartar',
       render: (text, record) => {
         const imageSrc = record.images && record.images.length > 0 ? record.images[0] : text; // Hiển thị ảnh shop nếu có
-        return <img src={imageSrc} alt='Avatar' style={{ width: 50, height: 50, borderRadius: '50%' }} />;
+        return (
+          <img src={imageSrc} alt='Avatar' style={{ width: 50, height: 50, borderRadius: '50%' }} />
+        );
       },
     },
     {
@@ -120,24 +120,27 @@ const AccountManager = () => {
       key: 'email',
       render: (text, record) => (
         // Kiểm tra nếu có shopEmail thì hiển thị, nếu không thì hiển thị email của người dùng
-        <span>
-          {record.shopEmail ? record.shopEmail : text}
-        </span>
+        <span>{record.shopEmail ? record.shopEmail : text}</span>
       ),
     },
     {
       title: 'Name',
       // Kiểm tra nếu có shopName thì hiển thị, nếu không thì hiển thị userName
-      dataIndex: 'shopName', 
-      key: 'shopName', 
+      dataIndex: 'shopName',
+      key: 'shopName',
       render: (text, record) => text || record.userName, // hiển thị shopName nếu có, nếu không hiển thị userName
     },
     {
       title: 'Address',
-      // Kiểm tra nếu có shopAddress thì hiển thị, nếu không thì hiển thị address của user
-      dataIndex: 'shopAddress', 
+      dataIndex: 'shopAddress',
       key: 'shopAddress',
-      render: (text, record) => text || record.address.join(', '), // nếu có shopAddress thì hiển thị, nếu không hiển thị address của user
+      render: (text, record) => {
+        if (text) {
+          return text; // If shopAddress exists, return it.
+        }
+        // Check if record.address is an array and not undefined.
+        return Array.isArray(record.address) ? record.address.join(',') : 'No address available';
+      },
     },
     {
       title: 'Phone',
@@ -168,30 +171,23 @@ const AccountManager = () => {
           type={record.isLocked ? 'danger' : 'primary'}
           onClick={() => handleStatusChange(record._id, !record.isActive)}
         >
-          {record.isActive  ? <LockOutlined  /> : <UnlockOutlined />}
-          {record.isActive  ? ' Lock' : ' Unlock'}
+          {record.isActive ? <LockOutlined /> : <UnlockOutlined />}
+          {record.isActive ? ' Lock' : ' Unlock'}
         </Button>
       ),
     },
   ];
-  
-
- 
 
   return (
     <Content style={{ padding: '20px' }}>
       <div style={{ marginBottom: '20px' }}>
         <Input
-         placeholder="Search by keyword..."
-         value={searchKeyword}
-         onChange={handleSearchChange} // Gọi hàm handleSearchChange tại đây
-         style={{ width: '300px', marginRight: '10px' }}
+          placeholder='Search by keyword...'
+          value={searchKeyword}
+          onChange={handleSearchChange} // Gọi hàm handleSearchChange tại đây
+          style={{ width: '300px', marginRight: '10px' }}
         />
-        <Select
-          defaultValue=''
-          style={{ width: '200px' }}
-          onChange={handleRoleChange}
-        >
+        <Select defaultValue='' style={{ width: '200px' }} onChange={handleRoleChange}>
           <Option value=''>All Accounts</Option>
           <Option value='Shop-'>Shop</Option>
           <Option value='Shop-false'>Shop Locked</Option>
