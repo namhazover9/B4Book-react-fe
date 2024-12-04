@@ -13,7 +13,7 @@ const Checkout = () => {
     const [voucherCodes, setVoucherCodes] = useState({});
     const [selectedStore, setSelectedStore] = useState(null);
     const [isVoucherModalVisible, setIsVoucherModalVisible] = useState(false);
-    const [discount, setDiscount] = useState(0);    
+    const [discount, setDiscount] = useState(0);
     const [shippingCost, setShippingCost] = useState(30000);
     const [shipcost, setShipCost] = useState(30000);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -296,7 +296,7 @@ const Checkout = () => {
     };
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-200 sm:px-5 pb-12">
-            <div className="flex flex-col md:flex-grow-0 justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-white shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-6xl">
+            <div className="flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-white shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-7xl">
                 <Formik
                     initialValues={{
                         paymentMethod: 'card',
@@ -312,9 +312,9 @@ const Checkout = () => {
                                     <Button>Back</Button>
                                 </Link>
                             </div>
-                            <div className="flex flex-wrap w-full">
+                            <div className="flex flex-wrap gap-7  w-full">
                                 {/* Left Section */}
-                                <div className="w-full md:w-2/3 lg:pr-4">
+                                <div className="w-full md:w-[60%] bg-gray-100 p-6 rounded-xl lg:pr-4">
 
                                     <div className="border-b border-gray-100 pb-4 mb-4 sm:mb-6">
                                         <div className="flex justify-between items-center mb-4">
@@ -353,7 +353,7 @@ const Checkout = () => {
                                 <div className="w-full md:w-1/3">
 
                                     {/* Payment Section */}
-                                    <div className="flex flex-col space-y-4 h-auto lg:h-80 sm:pt-5">
+                                    <div className="flex bg-gray-100 p-6 rounded-xl mb-5 flex-col space-y-4  h-auto lg:h-80 sm:pt-5">
                                         <div className="text-base sm:text-lg font-bold underline">Payment Method</div>
                                         <Field name="paymentMethod">
                                             {({ field }) => (
@@ -404,7 +404,7 @@ const Checkout = () => {
                                         )}
                                     </div>
 
-                                    <div className="bg-gray-100 p-5 rounded-lg">
+                                    <div className="bg-gray-100 p-6 rounded-lg">
                                         <h2 className="text-xl font-semibold">Order Summary</h2>
                                         <p className="mt-3">Shipping Cost: {shipcost * stores.length}$</p>
                                         <p className="mt-3">Total Cost of Goods: {totalProducts().toLocaleString()}$</p>
