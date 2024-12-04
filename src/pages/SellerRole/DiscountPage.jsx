@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   Button,
+  DatePicker,
   Input,
   InputNumber,
   Layout,
@@ -27,7 +28,8 @@ import { createStyles } from 'antd-style';
 import TextArea from 'antd/es/input/TextArea';
 import { Field, Form, Formik } from 'formik';
 import vouchersApi from '../../hooks/useDiscountApi';
-
+import moment from 'moment';
+import { image, use } from 'framer-motion/client';
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
   return {
@@ -48,6 +50,7 @@ const useStyle = createStyles(({ css, token }) => {
 
 export default function SellerPage() {
   const id = useParams().id;
+  const shopName = useParams().name;
   const [loading, setLoading] = useState(true);
   const [voucherList, setVoucherList] = useState([]);
   const [voucher, setVoucher] = useState({}); // Dữ liệu sản phẩm mặc định
@@ -61,11 +64,11 @@ export default function SellerPage() {
 
       // Đảm bảo dữ liệu trả về tồn tại
       const data = response?.data || [];
-      console.log(data);
 
       // Định dạng lại dữ liệu để khớp với yêu cầu của bảng
       const formattedVouchers = data.map((voucher) => ({
         key: voucher._id, // Bắt buộc phải có key
+        image: voucher.image[0],
         name: voucher.name || 'N/A', // Giá trị mặc định nếu thiếu dữ liệu
         code: voucher.code || 'N/A',
         value: voucher.value || 0,
@@ -91,49 +94,33 @@ export default function SellerPage() {
 
   // Handle thay đổi trang khi người dùng chuyển trang
 
-  //   const handleExportFile = async () => {
-  //     try {
-  //       const response = await productsApi.exportFileProducts();
-
-  //       const blob = new Blob([response.data], {
-  //         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  //       });
-  //       const link = document.createElement('a');
-  //       link.href = window.URL.createObjectURL(blob);
-  //       link.download = 'products.xlsx';
-  //       link.click();
-  //     } catch (error) {
-  //       console.error('Error exporting file:', error);
-  //     }
-  //   };
-
-  //   const searchVouchers = async (keyword) => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await productsApi.searchProducts(keyword);
-  //       const data = await response.data;
-  //       setProductList(data);
-  //     } catch (error) {
-  //       console.error('Error searching books:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+    const searchVouchers = async (name, id) => {
+      setLoading(true);
+      try {
+        const response = await vouchersApi.searchVouchers(name, id);
+        const data = await response.data;
+        setVoucherList(data);
+      } catch (error) {
+        console.error('Error searching books:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
 
     if (keyword.trim() === '') {
       // If search keyword is empty, fetch all products
-      fetchProducts();
+      fetchVouchers();
     } else {
       // Fetch products based on the search keyword
-      searchProducts(keyword);
+      searchVouchers(keyword, id);
     }
   };
   const handleDeleteVoucher = async (voucherId) => {
     try {
-      await vouchersApi.deleteProduct(voucherId);
+      await vouchersApi.deleteVoucher(voucherId);
       message.success('Delete product successfully');
       fetchVouchers();
     } catch (error) {
@@ -154,6 +141,18 @@ export default function SellerPage() {
   };
 
   const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (text, record) => (
+        <img
+          src={record.image} // Sử dụng đường dẫn ảnh từ dữ liệu
+          alt={record.name || 'Voucher Image'} // Hiển thị tên voucher nếu có
+          style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: '5px' }} // Thiết lập style cho ảnh
+        />
+      ),
+    },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -193,12 +192,14 @@ export default function SellerPage() {
       render: (text, record) => (
         <div className='flex items-center justify-center'>
           <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'>
-            {/* <EditOutlined
+            {
+              <EditOutlined
                 onClick={() => {
-                  console.log('Product ID for Edit:', record.key); // Kiểm tra giá trị của _id
+                  console.log('Voucher ID for Edit:', record.key); // Kiểm tra giá trị của _id
                   handleEditClick(record.key);
                 }}
-              /> */}
+              />
+            }
           </button>
           <Popconfirm
             title='Delete the Product'
@@ -226,14 +227,14 @@ export default function SellerPage() {
     console.log('params', sorter);
   };
 
-  // Add Product
+  // Add Voucher
   const [visibleAdd, setVisibleAdd] = useState(false);
   const handleCancelAdd = () => {
     setVisibleAdd(false);
   };
 
   const { TextArea } = Input;
-  const normFileAddProduct = (e) => {
+  const normFileAddVoucher = (e) => {
     if (Array.isArray(e)) {
       return e;
     }
@@ -241,28 +242,15 @@ export default function SellerPage() {
   };
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    price: Yup.number()
+    name: Yup.string().required('Title is required'),
+    value: Yup.number()
       .typeError('Enter numbers only')
       .positive('Enter positive numbers only')
+      .min(0, 'Value must be at least 0') // Ràng buộc giá trị tối thiểu là 0
+      .max(100, 'Value must be at most 100') // Ràng buộc giá trị tối đa là 100
       .required('Price is required'),
-    description: Yup.string().required('Description is required'),
-    author: Yup.string().required('Author is required'),
-    publisher: Yup.string().required('Publisher is required'),
-    language: Yup.string().required('Language is required'),
-    ISBN: Yup.number()
-      .typeError('Enter numbers only')
-      .positive('Enter positive numbers only')
-      .integer('Enter integers only')
-      .required('ISBN is required'),
-    stock: Yup.number()
-      .typeError('Enter numbers only')
-      .positive('Enter positive numbers only')
-      .integer('Enter integers only')
-      .required('Stock is required'),
-    category: Yup.array()
-      .min(1, 'At least one category is required')
-      .required('Category is required'),
+    expired: Yup.date().required('Description is required'),
+    valid: Yup.date().required('Author is required'),
     uploadImage: Yup.array().min(1, 'At least one image is required').required('Image is required'),
   });
 
@@ -270,15 +258,13 @@ export default function SellerPage() {
   const [visibleEdit, setVisibleEdit] = useState(false);
 
   const handleEditClick = (voucherId) => {
-    // console.log('Product ID:', productId); // Kiểm tra giá trị của productId
-    // console.log('Product List:', productList); // Kiểm tra nội dung của productList
+    console.log(voucherList);
+    const selectedVoucher = voucherList.find((voucher) => voucher.key === voucherId);
+    console.log('Selected Voucher:', selectedVoucher); // Kiểm tra xem đã tìm thấy sản phẩm chưa
+    console.log('Selected Product Upload Image:', selectedVoucher?.image);
 
-    const selectedProduct = voucherList.find((voucher) => voucher._id === voucherId);
-    console.log('Selected Product:', selectedProduct); // Kiểm tra xem đã tìm thấy sản phẩm chưa
-    console.log('Selected Product Upload Image:', selectedProduct?.uploadImage);
-
-    if (selectedProduct) {
-      setProduct(selectedProduct); // Chỉ set giá trị khi tìm thấy sản phẩm
+    if (selectedVoucher) {
+      setVoucher(selectedVoucher); // Chỉ set giá trị khi tìm thấy sản phẩm
     } else {
       console.log('No product found with the given ID');
     }
@@ -303,15 +289,15 @@ export default function SellerPage() {
     <div className=''>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>All Shop</Breadcrumb.Item>
-          <Breadcrumb.Item>Name Shop</Breadcrumb.Item>
+          <Breadcrumb.Item>All Vouchers</Breadcrumb.Item>
+          <Breadcrumb.Item>{shopName}</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
             <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
             <div className='w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between'>
               <Input
-                // onChange={handleSearchChange}
+                onChange={handleSearchChange}
                 placeholder='Search Book ...'
                 className='w-full lg:w-2/3 py-3'
               />
@@ -369,164 +355,107 @@ export default function SellerPage() {
           initialValues={{
             name: '',
             value: 0,
-            validDate: '',
-            expired: '',
+            valid: null, // Thay đổi thành null hoặc một giá trị mặc định nếu cần
+            expired: null, // Thay đổi thành null hoặc một giá trị mặc định nếu cần
             uploadImage: [],
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, setFieldError }) => {
             try {
-              // Preparing form data to match the API expected format (if necessary)
+              // Thực hiện các thao tác khác khi gửi form
               const formData = new FormData();
-              formData.append('title', values.title);
-              formData.append('price', values.price);
-              formData.append('description', values.description);
-              formData.append('author', values.author);
-              formData.append('publisher', values.publisher);
-              formData.append('language', values.language);
-              formData.append('ISBN', values.ISBN);
-              formData.append('stock', values.stock);
-              formData.append('category', values.category); // If needed
-              values.uploadImage.forEach((file) => formData.append('images', file)); // Assuming 'images' is the field name
+              formData.append('name', values.name);
+              formData.append('value', values.value);
+              formData.append('expired', values.expired);
+              formData.append('valid', values.valid);
+              values.uploadImage.forEach((file) => formData.append('image', file));
 
-              // Make the API call to post the new product
-              console.log('Form Data:', Object.fromEntries(formData));
-              const response = await productsApi.postCreateProduct(formData);
+              // API call để tạo sản phẩm mới
+              const response = await vouchersApi.postCreateVoucher(formData);
               message.success('Product added successfully!');
-              handleCancelAdd(); // Assuming handleCancelAdd closes the modal
+              handleCancelAdd(); // Đóng modal
             } catch (error) {
-              // Handle network errors or other unexpected issues
               console.error('Error adding product:', error);
               message.error('An error occurred while adding the product.');
             } finally {
-              setSubmitting(false); // Stop the form submission spinner/loading
+              setSubmitting(false);
             }
           }}
         >
           {({ setFieldValue, errors, touched, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Title</label>
+                <label className='label-input-tnvd'>Name</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='title' as={Input} className='w-full py-2' />
+                  <Field name='name' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
-                    {touched.title && errors.title && (
-                      <div className='error text-red-500 ml-1'>{errors.title}</div>
+                    {touched.name && errors.name && (
+                      <div className='error text-red-500 ml-1'>{errors.name}</div>
                     )}
                   </div>
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Price</label>
+                <label className='label-input-tnvd'>Value</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field
-                    name='price'
+                    name='value'
                     as={Input}
                     className='w-full py-2'
                     type='number'
                     step='0.01'
                   />
                   <div className='h-8 py-1'>
-                    {touched.price && errors.price && (
-                      <div className='error text-red-500 ml-1'>{errors.price}</div>
+                    {touched.value && errors.value && (
+                      <div className='error text-red-500 ml-1'>{errors.value}</div>
                     )}
                   </div>
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Description</label>
+                <label className='label-input-tnvd'>Expiration Date</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='description' as={TextArea} rows={4} className='w-full py-1' />
+                  <Field name='expired'>
+                    {({ field, form }) => (
+                      <DatePicker
+                        {...field}
+                        format='YYYY-MM-DD'
+                        className='w-full py-2'
+                        onChange={(date, dateString) => setFieldValue('expired', dateString)}
+                        value={field.value ? moment(field.value) : null}
+                      />
+                    )}
+                  </Field>
                   <div className='h-8 py-1'>
-                    {touched.description && errors.description && (
-                      <div className='error text-red-500 ml-1'>{errors.description}</div>
+                    {touched.expired && errors.expired && (
+                      <div className='error text-red-500 ml-1'>{errors.expired}</div>
                     )}
                   </div>
                 </div>
               </div>
+
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Author</label>
+                <label className='label-input-tnvd'>Valid Date</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='author' as={Input} className='w-full py-2' />
+                  <Field name='valid'>
+                    {({ field, form }) => (
+                      <DatePicker
+                        {...field}
+                        format='YYYY-MM-DD'
+                        className='w-full py-2'
+                        onChange={(date, dateString) => setFieldValue('valid', dateString)}
+                        value={field.value ? moment(field.value) : null}
+                      />
+                    )}
+                  </Field>
                   <div className='h-8 py-1'>
-                    {touched.author && errors.author && (
-                      <div className='error text-red-500 ml-1'>{errors.author}</div>
+                    {touched.valid && errors.valid && (
+                      <div className='error text-red-500 ml-1'>{errors.valid}</div>
                     )}
                   </div>
                 </div>
               </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Publisher</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='publisher' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.publisher && errors.publisher && (
-                      <div className='error text-red-500 ml-1'>{errors.publisher}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Language</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='language' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.language && errors.language && (
-                      <div className='error text-red-500 ml-1'>{errors.language}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>ISBN</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='ISBN' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.ISBN && errors.ISBN && (
-                      <div className='error text-red-500 ml-1'>{errors.ISBN}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Stock</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='stock' as={Input} className='w-full py-2' type='number' />
-                  <div className='h-8 py-1'>
-                    {touched.stock && errors.stock && (
-                      <div className='error text-red-500 ml-1'>{errors.stock}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Category</label>
-                {/* <Field
-                                    name="category"
-                                    as={Input}
-                                    className="w-2/3 py-2"
-                                /> */}
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Select
-                    className='w-4/5'
-                    mode='multiple'
-                    placeholder='Select categories'
-                    style={{
-                      flex: 1,
-                    }}
-                    onChange={(value) => setFieldValue('category', value)}
-                  >
-                    <Select.Option value='Comedy'>Comedy</Select.Option>
-                    <Select.Option value='Drama'>Drama</Select.Option>
-                    <Select.Option value='Horror'>Horror</Select.Option>
-                  </Select>
-                  <div className='h-8 py-1'>
-                    {touched.category && errors.category && (
-                      <div className='error text-red-500 ml-1'>{errors.category}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
+
               <div className='flex items-flex-start justify-flex-start'>
                 <label className='label-input-tnvd truncate'>Upload Image</label>
                 <div className='w-2/3 flex flex-col items-start'>
@@ -557,10 +486,11 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
+
               <button
                 className='text-end text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
                 type='submit'
-                disabled={isSubmitting} // Disable button while submitting
+                disabled={isSubmitting}
               >
                 Add
               </button>
@@ -569,44 +499,49 @@ export default function SellerPage() {
         </Formik>
       </Modal>
 
-      {/* Edit Product */}
+      {/* Edit Voucher */}
       <Modal
         open={visibleEdit}
         className='text-center'
-        title='Edit Product'
+        title='Edit Voucher'
         onCancel={handleCancelEdit}
         footer={null}
       >
         <Formik
           enableReinitialize={true}
           initialValues={{
-            title: voucher?.name || '', // Sử dụng optional chaining và giá trị mặc định
+            name: voucher?.name || '',
             value: voucher?.value || 0,
-            description: voucher?.description || '',
-            author: voucher?.author || '',
-            publisher: voucher?.publisher || '',
-
-            // uploadImage: voucher?.images || [],
+            expired: voucher?.expired || null,
+            valid: voucher?.validDate || null,
+            isActive: voucher?.isActive,
+            uploadImage: voucher?.image
+              ? [
+                  {
+                    uid: '1',
+                    name: 'Image',
+                    status: 'done',
+                    url: voucher.image, // Chuyển đổi URL ảnh thành đối tượng
+                  },
+                ]
+              : [],
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, setFieldError }) => {
             try {
               const formData = new FormData();
-              formData.append('title', values.title);
-              formData.append('price', values.price);
-              formData.append('description', values.description);
-              formData.append('author', values.author);
-              formData.append('publisher', values.publisher);
-              formData.append('language', values.language);
-              formData.append('ISBN', values.ISBN);
-              formData.append('stock', values.stock);
-              formData.append('category', values.category);
-              values.uploadImage.forEach((file) => formData.append('images', file));
-
+              formData.append('name', values.name);
+              formData.append('value', values.value);
+              formData.append('expired', values.expired);
+              formData.append('valid', values.valid);
+              formData.append('isActive', values.isActive);
+              values.uploadImage.forEach((file) => formData.append('image', file));
               console.log('Form Data:', Object.fromEntries(formData));
-              const response = await productsApi.updateProduct(product._id, formData);
-              message.success('Product updated successfully!');
+              console.log(values.isActive);
+              const response = await vouchersApi.updateVoucher(voucher.key, formData);
+              message.success('Voucher updated successfully!');
               handleCancelEdit();
+              fetchVouchers();
             } catch (error) {
               console.error('Error updating product:', error);
               message.error('An error occurred while updating the product.');
@@ -618,158 +553,132 @@ export default function SellerPage() {
           {({ setFieldValue, errors, touched, values, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Title</label>
+                <label className='label-input-tnvd'>Name</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='title' as={Input} className='w-full py-2' />
+                  <Field name='name' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
-                    {touched.title && errors.title && (
-                      <div className='error text-red-500 ml-1'>{errors.title}</div>
+                    {touched.name && errors.name && (
+                      <div className='error text-red-500 ml-1'>{errors.name}</div>
                     )}
                   </div>
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Price</label>
+                <label className='label-input-tnvd'>Value</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='price' as={Input} className='w-full py-2' />
+                  <Field
+                    name='value'
+                    as={Input}
+                    className='w-full py-2'
+                    type='number'
+                    step='0.01'
+                  />
                   <div className='h-8 py-1'>
-                    {touched.price && errors.price && (
-                      <div className='error text-red-500 ml-1'>{errors.price}</div>
+                    {touched.value && errors.value && (
+                      <div className='error text-red-500 ml-1'>{errors.value}</div>
                     )}
                   </div>
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Description</label>
+                <label className='label-input-tnvd'>Expiration Date</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='description' as={TextArea} rows={4} className='w-full py-1' />
+                  <Field name='expired'>
+                    {({ field, form }) => (
+                      <DatePicker
+                        {...field}
+                        format='YYYY-MM-DD'
+                        className='w-full py-2'
+                        onChange={(date, dateString) => setFieldValue('expired', dateString)}
+                        value={field.value ? moment(field.value) : null}
+                      />
+                    )}
+                  </Field>
                   <div className='h-8 py-1'>
-                    {touched.description && errors.description && (
-                      <div className='error text-red-500 ml-1'>{errors.description}</div>
+                    {touched.expired && errors.expired && (
+                      <div className='error text-red-500 ml-1'>{errors.expired}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className='flex-input-tnvd'>
+                <label className='label-input-tnvd'>Valid Date</label>
+                <div className='w-2/3 flex flex-col items-start'>
+                  <Field name='valid'>
+                    {({ field, form }) => (
+                      <DatePicker
+                        {...field}
+                        format='YYYY-MM-DD'
+                        className='w-full py-2'
+                        onChange={(date, dateString) => setFieldValue('valid', dateString)}
+                        value={field.value ? moment(field.value) : null}
+                      />
+                    )}
+                  </Field>
+                  <div className='h-8 py-1'>
+                    {touched.valid && errors.valid && (
+                      <div className='error text-red-500 ml-1'>{errors.valid}</div>
                     )}
                   </div>
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Author</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='author' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.author && errors.author && (
-                      <div className='error text-red-500 ml-1'>{errors.author}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Publisher</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='publisher' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.publisher && errors.publisher && (
-                      <div className='error text-red-500 ml-1'>{errors.publisher}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Language</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='language' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.language && errors.language && (
-                      <div className='error text-red-500 ml-1'>{errors.language}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>ISBN</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='ISBN' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.ISBN && errors.ISBN && (
-                      <div className='error text-red-500 ml-1'>{errors.ISBN}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Stock</label>
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='stock' as={Input} className='w-full py-2' />
-                  <div className='h-8 py-1'>
-                    {touched.stock && errors.stock && (
-                      <div className='error text-red-500 ml-1'>{errors.stock}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Category</label>
-                {/* <Field
-                                    name="category"
-                                    as={Input}
-                                    className="w-2/3 py-2"
-                                /> */}
-                <div className='w-2/3 flex flex-col items-start'>
-                  <Select
-                    className='w-4/5'
-                    mode='multiple'
-                    placeholder='Select categories'
-                    style={{
-                      flex: 1,
+                <label className='label-input-tnvd'>Status</label>
+                <div className='w-2/3 flex items-center'>
+                  <button
+                    type='button'
+                    name='isActive'
+                    onClick={() => {
+                      setFieldValue('isActive', !values.isActive); // Đảo trạng thái isActive
                     }}
-                    value={values.category}
-                    onChange={(value) => setFieldValue('category', value)}
+                    className={`px-4 py-2 rounded-full ${
+                      values.isActive ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                    }`}
                   >
-                    <Select.Option value='Comedy'>Comedy</Select.Option>
-                    <Select.Option value='Drama'>Drama</Select.Option>
-                    <Select.Option value='Horror'>Horror</Select.Option>
-                  </Select>
-                  <div className='h-8 py-1'>
-                    {touched.category && errors.category && (
-                      <div className='error text-red-500 ml-1'>{errors.category}</div>
-                    )}
-                  </div>
+                    {values.isActive ? 'Deactivate' : 'Activate'}
+                  </button>
                 </div>
               </div>
+
               <div className='flex items-flex-start justify-flex-start'>
                 <label className='label-input-tnvd truncate'>Upload Image</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
                     listType='picture-card'
-                    fileList={values.uploadImage
-                      .filter((file) => file) // Loại bỏ các giá trị undefined hoặc null trong mảng
-                      .map((file, index) => {
-                        console.log('Processing file:', file); // Kiểm tra giá trị của từng phần tử
+                    fileList={(values.uploadImage || []).map((file, index) => {
+                      if (typeof file === 'string') {
+                        return {
+                          uid: `url-${index}`,
+                          name: `Image-${index + 1}`,
+                          status: 'done',
+                          url: file,
+                        };
+                      }
 
-                        // Kiểm tra xem file có phải là URL (String) hay không
-                        if (typeof file === 'string') {
-                          return {
-                            uid: index, // Tạo UID duy nhất cho mỗi ảnh
-                            name: 'Unknown', // Không có name cho URL
-                            status: 'done',
-                            url: file, // Nếu là URL thì sử dụng trực tiếp
-                          };
+                      if (file instanceof File) {
+                        return {
+                          uid: `file-${index}`,
+                          name: file.name,
+                          status: 'done',
+                          url: URL.createObjectURL(file),
+                        };
+                      }
+
+                      return file; // Nếu đã đúng định dạng thì trả về trực tiếp
+                    })}
+                    onChange={(info) => {
+                      const updatedFileList = info.fileList.map((file) => {
+                        // Nếu là file mới upload
+                        if (file.originFileObj) {
+                          return file.originFileObj;
                         }
 
-                        // Kiểm tra nếu là đối tượng File
-                        return {
-                          uid: index,
-                          name: file?.name || 'Unknown', // Đảm bảo file có name, nếu không gán 'Unknown'
-                          status: 'done',
-                          url: file instanceof File ? URL.createObjectURL(file) : file,
-                        };
-                      })}
-                    onChange={(info) => {
-                      // Kết hợp các file hiện tại và file mới
-                      const updatedFileList = [
-                        ...values.uploadImage.filter((file) => file instanceof File), // Giữ lại các file cũ là đối tượng File
-                        ...info.fileList.map((file) => file.originFileObj), // Thêm các file mới
-                      ];
+                        // Nếu là URL (ảnh cũ)
+                        return file;
+                      });
 
-                      setFieldValue('uploadImage', updatedFileList); // Cập nhật danh sách ảnh trong state
+                      setFieldValue('uploadImage', updatedFileList);
                     }}
                     beforeUpload={() => false} // Ngừng upload tự động, ta sẽ xử lý khi submit form
                   >

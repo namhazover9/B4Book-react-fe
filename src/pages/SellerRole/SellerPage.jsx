@@ -48,6 +48,7 @@ const useStyle = createStyles(({ css, token }) => {
 
 export default function SellerPage() {
   const id = useParams().id;
+  const shopName = useParams().name;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(10);
@@ -119,6 +120,7 @@ export default function SellerPage() {
       setLoading(false);
     }
   };
+
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
@@ -131,6 +133,7 @@ export default function SellerPage() {
       searchProducts(keyword);
     }
   };
+  
   const handleDeleteProduct = async (productId) => {
     console.log(productId);
     try {
@@ -334,8 +337,8 @@ export default function SellerPage() {
     <div className=''>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>All Shop</Breadcrumb.Item>
-          <Breadcrumb.Item>Name Shop</Breadcrumb.Item>
+          <Breadcrumb.Item>All Product</Breadcrumb.Item>
+          <Breadcrumb.Item>{shopName}</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
