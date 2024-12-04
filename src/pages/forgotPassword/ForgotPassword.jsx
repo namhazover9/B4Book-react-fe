@@ -40,7 +40,6 @@ function ForgotPassword() {
   useEffect(() => {
   }, [verifyToken]); // Mỗi khi verifyToken thay đổi, useEffect sẽ được gọi
 
-
   const initialValue = {
     email: '',
     newPassword: '',
