@@ -1,85 +1,85 @@
 import { EyeInvisibleOutlined, EyeTwoTone, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, message, Tooltip } from 'antd';
 import { FastField, Form, Formik } from 'formik';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom'; // Change Redirect to Navigate
 import * as Yup from 'yup';
 import InputField from '../../components/Field/InputField';
 import Delay from '../../components/Delay';
 import constants from '../../constants/constants';
+import accountApi from '../../hooks/useAccountApi';
 
 function ForgotPassword() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [verifyToken, setVerifyToken] = useState('');
   const emailRef = useRef('');
-
   const onSendCode = async () => {
+    const email = emailRef.current;
+    if (!email) {
+      message.error('Email is required');
+      return;
+    }
+  
     try {
-      const email = emailRef.current;
-      const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-      if (!regex.test(email)) {
-        message.error('Email không hợp lệ !');
-        return;
-      }
       setIsSending(true);
-
-      const result = await accountApi.postSendCodeForgotPW({ email });
+      const result = await accountApi.postSendCodeForgotPW(email); // Truyền email vào API
+      setVerifyToken(result.data.verify);
       if (result.status === 200) {
         message.success('Gửi thành công, kiểm tra email');
-        setIsSending(false);
-      }
-    } catch (error) {
-      setIsSending(false);
-      if (error.response) {
-        message.error(error.response.data.message);
       } else {
         message.error('Gửi thất bại, thử lại');
       }
+    } catch (error) {
+      message.error(error.response?.data?.message || 'Gửi thất bại, thử lại');
+    } finally {
+      setIsSending(false);
     }
   };
+  useEffect(() => {
+  }, [verifyToken]); // Mỗi khi verifyToken thay đổi, useEffect sẽ được gọi
 
-  const onChangePassword = async (account) => {
+  const initialValue = {
+    email: '',
+    newPassword: '',
+    verifyCode: '',
+  };
+
+  const onChangePassword = async (values) => {
+    const account = {
+      ...values,
+      verifyToken: verifyToken, 
+    };
+    console.log('Verify Token:', verifyToken);
     try {
       setIsSubmitting(true);
-      const result = await accountApi.postResetPassword({ account });
+      const result = await accountApi.postResetPassword(account);
       if (result.status === 200) {
         setIsSubmitting(false);
         setIsSuccess(true);
         message.success('Thay đổi mật khẩu thành công.');
+        Navigate(constants.ROUTES.LOGIN);
+      } else {
+        throw new Error(result.message || 'Không thành công');
       }
     } catch (error) {
       setIsSubmitting(false);
-      if (error.response) {
-        message.error(error.response.data.message);
-      } else {
-        message.error('Cập nhật thất bại. Thử lại');
-      }
+      message.error(error.response?.data?.message || 'Cập nhật thất bại. Thử lại');
     }
   };
-
-  const initialValue = {
-    email: '',
-    password: '',
-    verifyCode: '',
-  };
-
+  
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .trim()
       .required('* Email bạn là gì ?')
       .email('* Email không hợp lệ !'),
-    password: Yup.string()
+    newPassword: Yup.string()
       .trim()
       .required('* Mật khẩu của bạn là gì ?'),
     verifyCode: Yup.string()
       .trim()
       .required('* Nhập mã xác nhận')
-      .length(
-        constants.MAX_VERIFY_CODE,
-        `* Mã xác nhận có ${constants.MAX_VERIFY_CODE} ký tự`,
-      ),
   });
 
   return (
@@ -116,7 +116,7 @@ function ForgotPassword() {
                 />
                 {/* Mật khẩu */}
                 <FastField
-                  name="password"
+                  name="newPassword"
                   component={InputField}
                   className="w-full"
                   type="password"

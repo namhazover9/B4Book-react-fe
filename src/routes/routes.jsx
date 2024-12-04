@@ -22,7 +22,7 @@ const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
 const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
-
+const DicountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
@@ -100,6 +100,12 @@ export const routes_here = [
   {
     path: '/shop/:name/:id/orders/order-detail/:orderId',
     element: <OrderDetailPage />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop/:name/voucher/:id',
+    element: <DicountPage />,
     layout: 'seller',
     isPrivate: false,
   },

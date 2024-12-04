@@ -17,14 +17,15 @@ const accountApi = {
 
   // fn: gửi mã xác nhận lấy lại mật khẩu
   postSendCodeForgotPW: (email) => {
-    const url = ACCOUNT_API_ENDPOINT + '/verify/forgot';
-    return axiosClient.post(url, email);
+    const url = '/sendVerify';
+    return axiosClient.post(url, { email }); // Thêm `email` vào body của request
   },
+  
 
   // fn: reset password
   postResetPassword: (account) => {
-    const url = ACCOUNT_API_ENDPOINT + '/reset-pw';
-    return axiosClient.post(url, account);
+    const url = '/resetPassword';
+    return axiosClient.put(url, account);
   },
 };
 
