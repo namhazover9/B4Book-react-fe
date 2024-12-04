@@ -20,6 +20,13 @@ const productsApi = {
     return axiosClient.get(url);
   },
 
+    // Lấy chi tiết sản phẩm theo ID
+    getProductById: (id) => {
+      const url = `${ACCOUNT_API_ENDPOINT}/${id}`; // Sử dụng ID để lấy chi tiết sản phẩm
+      return axiosClient.get(url);
+    },
+  
+
   // Tìm kiếm sản phẩm theo keyword
   searchProducts: (keyword) => {
     const url = `${PRODUCT_API_ENDPOINT}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
@@ -50,6 +57,14 @@ const productsApi = {
     });
 
   },
+
+  removeImage: (id, imageUrl) => {
+    const url = `${ACCOUNT_API_ENDPOINT}/${id}/remove-image`;
+    return axiosClient.delete(url, {
+      data: { imageUrl }, // Gửi URL của hình ảnh cần xóa
+    });
+  },
+
 
     // Cập nhật sản phẩm
     updateProduct: (id, formData) => {

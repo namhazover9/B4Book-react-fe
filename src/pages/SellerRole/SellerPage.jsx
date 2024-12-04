@@ -55,6 +55,7 @@ export default function SellerPage() {
   const [productList, setProductList] = useState([]);
   const [product, setProduct] = useState({}); // Dữ liệu sản phẩm mặc định
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
+  const [imageList, setImageList] = useState(product?.images || []);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -105,6 +106,23 @@ export default function SellerPage() {
     } catch (error) {
       console.error('Error exporting file:', error);
     }
+  };
+
+  // Hàm xóa ảnh
+  const handleRemoveImage = (imageUrl) => {
+    // Gọi API để xóa ảnh trên Cloudinary và từ danh sách ảnh trong state
+    productsApi
+      .removeImage(product._id, imageUrl)
+      .then((response) => {
+        console.log('Image removed successfully:', response.data);
+        // Cập nhật lại danh sách ảnh sau khi xóa
+        setImageList((prevImages) => prevImages.filter((image) => image !== imageUrl));
+        message.success('Image removed successfully');
+      })
+      .catch((error) => {
+        console.error('Error removing image:', error.response?.data || error.message);
+        message.error('Error removing image');
+      });
   };
 
   const searchProducts = async (keyword) => {
@@ -781,6 +799,7 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
+            
               <div className='flex items-flex-start justify-flex-start'>
                 <label className='label-input-tnvd truncate'>Upload Image</label>
                 <div className='w-2/3 flex flex-col items-start'>
@@ -831,7 +850,7 @@ export default function SellerPage() {
                       <div>Upload</div>
                     </Button>
                   </Upload>
-
+                  
                   <div className='h-8 py-1'>
                     {touched.uploadImage && errors.uploadImage && (
                       <div className='error text-red-500 ml-1'>{errors.uploadImage}</div>
@@ -839,6 +858,7 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
+              
               <button
                 className='text-end text-base bg-blue-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-500'
                 type='submit'

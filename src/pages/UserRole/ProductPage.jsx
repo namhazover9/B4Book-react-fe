@@ -5,12 +5,12 @@ import {
   QrcodeOutlined,
   ReadOutlined,
   SearchOutlined,
-  ShoppingCartOutlined
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { Card, Checkbox, Menu, Pagination, Select, Slider, Spin, Switch, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/loading';
 import productsApi from '../../hooks/useProductsApi';
 import { addToCart } from '../../reducers/carts';
@@ -22,6 +22,9 @@ export default function ProductPage() {
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
+  const [quantity, setQuantity] = useState(1); // State để lưu số lượng sản phẩm
+  const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
+  let [stockList, setStockList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -57,6 +60,14 @@ export default function ProductPage() {
       });
       const data = response.data;
       setBookList(data.data);
+      //console.log(data.data);
+
+      stockList = data.data.map((book) => ({
+        productId: book._id,
+        stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
+      }));
+      setStockList(stockList);
+      //console.log('Stock List:', stockList); // Hiển thị stock của tất cả sản phẩm
       setFilterBooks(data.data);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -81,24 +92,43 @@ export default function ProductPage() {
     }
   };
 
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = (productId, quantity) => {
     if (!userId) {
       message.warning(
-        <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center">
-          <span className="mr-2 font-medium">Please</span>
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
           <button
             onClick={() => navigate('/login')}
-            className="text-blue-600 underline font-semibold hover:text-blue-800"
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
           >
             login
           </button>
-          <span className="ml-2">to add products to your cart.</span>
-        </div>
+          <span className='ml-2'>to add products to your cart.</span>
+        </div>,
       );
       return;
     }
-  
-    dispatch(addToCart(productId))
+
+    // Tìm thông tin tồn kho từ stockList
+    const stockItem = stockList.find((item) => item.productId === productId);
+    const stock = stockItem ? stockItem.stock : 0; // Lấy stock của sản phẩm từ stockList
+    //console.log('Stock:', stock);
+    // Kiểm tra số lượng sản phẩm trong giỏ hàng hiện tại
+    const cartItem = cartItems.find((item) => item.product === productId);
+    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+
+    // Kiểm tra tồn kho, nếu số lượng thêm vào giỏ vượt quá tồn kho, thì thông báo lỗi
+    if (currentCartQuantity + quantity > stock) {
+      message.error(`You already have ${stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`);
+      return;
+    }
+
+    const cartData = {
+      productId: productId,
+      quantity: quantity,
+    };
+
+    dispatch(addToCart(cartData))
       .then(() => {
         message.success('Product successfully added to cart!');
       })
@@ -107,7 +137,6 @@ export default function ProductPage() {
         message.error('Failed to add product to cart. Please try again.');
       });
   };
-  
 
   // Call fetchBooks when the component first loads
   useEffect(() => {
@@ -283,8 +312,9 @@ export default function ProductPage() {
                 onClick={() => handleViewModeChange('block')}
               />
               <BarsOutlined
-                className={`choice-icon-tnvd hidden md:block ${viewMode === 'line' ? 'text-blue-500' : ''
-                  }`}
+                className={`choice-icon-tnvd hidden md:block ${
+                  viewMode === 'line' ? 'text-blue-500' : ''
+                }`}
                 onClick={() => handleViewModeChange('line')}
               />
             </div>
@@ -365,7 +395,9 @@ export default function ProductPage() {
                                         <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
-                                        <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        <Link to={`/details/${book._id}`}>
+                                          <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        </Link>
                                       </button>
                                       <button
                                         className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
@@ -373,7 +405,7 @@ export default function ProductPage() {
                                             ? 'opacity-50 cursor-not-allowed'
                                             : 'hover:bg-red-500 hover:text-white'
                                         } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
-                                        onClick={() => handleAddToCart(book._id)}
+                                        onClick={() => handleAddToCart(book._id, quantity)}
                                         disabled={addingToCart} // Vô hiệu hóa khi đang thêm
                                       >
                                         {addingToCart ? (

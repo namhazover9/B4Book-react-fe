@@ -65,17 +65,22 @@ const fetchCart = () => async (dispatch) => {
 };
 
 // Thêm sản phẩm vào giỏ
-const addToCart = (productId) => async (dispatch) => {
+const addToCart = (cartData) => async (dispatch) => {
   dispatch(startLoading());
   try {
-    const response = await ShopingCartApi.addProductToCart(productId);
-    dispatch({ type: ADD_PRODUCT, payload: response.data.data.cartItems });
+    const response = await ShopingCartApi.addProductToCart(cartData); // Gửi cả productId và quantity
+    dispatch({
+      type: ADD_PRODUCT,
+      payload: response.data.data.cartItems,
+    });
   } catch (error) {
     dispatch({ type: FETCH_CART_FAILURE, payload: error.message });
+    throw error; // Ném lỗi để handle bên ngoài
   } finally {
     dispatch(stopLoading());
   }
 };
+
 
 // Xóa một sản phẩm khỏi giỏ
 const deleteCartItem = (itemId) => async (dispatch) => {

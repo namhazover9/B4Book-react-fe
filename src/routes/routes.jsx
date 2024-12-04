@@ -8,7 +8,7 @@ const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
-const Details = lazy(() => import('@pages/homepages/Details'));
+const Details = lazy(() => import('@pages/UserRole/Details'));
 
 // user Role
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
@@ -118,7 +118,7 @@ export const routes_here = [
 
 
   {
-    path: '/details',
+    path: '/details/:id',
     element: <Details />,
     layout: 'user',
     isPrivate: false,
