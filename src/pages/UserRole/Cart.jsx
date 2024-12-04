@@ -77,13 +77,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         return;
       }
 
-      // Kiểm tra nếu số lượng vượt quá số lượng có sẵn
-      // if (quantity > itemToUpdate.product.stock) {
-      //   console.log('Quantity exceeds stock'); // Debug log
-      //   message.error(`Quantity cannot exceed available stock (${itemToUpdate.product.stock})`);
-      //   return; // Dừng lại không gọi API nếu số lượng không hợp lệ
-      // }
-
       // Nếu số lượng hợp lệ, gọi API cập nhật
       const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
       if (response.status === 'success') {
@@ -169,10 +162,10 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   };
 
-  const handleUpdateItems = () => {
-    console.log('Updating items:', cartItems);
-    message.success('Cart updated successfully!');
-  };
+  // const handleUpdateItems = () => {
+  //   console.log('Updating items:', cartItems);
+  //   message.success('Cart updated successfully!');
+  // };
 
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');

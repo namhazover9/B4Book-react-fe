@@ -13,9 +13,9 @@ const ShopingCartApi = {
   },
 
   // Thêm sản phẩm vào giỏ hàng
-  addProductToCart: async (productId) => {
+  addProductToCart: async (cartData) => {
     const url = SPC_API_ENDPOINT + '/add';
-    return await axiosClient.post(url, { productId });
+    return await axiosClient.post(url, cartData);
   },
 
   // Xóa sản phẩm khỏi giỏ hàng

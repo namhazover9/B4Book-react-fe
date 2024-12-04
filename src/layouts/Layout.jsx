@@ -50,7 +50,6 @@ export default function Layout({ children }) {
   const location = useLocation();
 
 
-  console.log('Cart items:', cartItems); // Debug
   useEffect(() => {
     if (!userId) return; // Nếu không có userId, không cần gọi API
 
