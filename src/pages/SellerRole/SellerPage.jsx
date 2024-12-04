@@ -383,7 +383,10 @@ export default function SellerPage() {
                   : []
               }
               loading={loading}
-              // Thay vì gọi `handlePageChange(currentPage)` trực tiếp, bạn chỉ cần truyền hàm:
+              pagination={{
+                pageSize: 5, // Số lượng sản phẩm mỗi trang
+              
+              }}
 
               scroll={{
                 x: 'max-content',
