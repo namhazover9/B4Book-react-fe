@@ -209,9 +209,9 @@ export default function Layout({ children }) {
                 to={item.path}
                 className={`relative font-bold transition duration-300 ${
                   location.pathname === item.path
-                    ? 'text-red-500 text-lg after:w-full'
+                    ? 'text-[#4F6F52] text-lg after:w-full'
                     : 'text-gray-700 text-lg after:w-0'
-                } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
+                } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
@@ -231,7 +231,7 @@ export default function Layout({ children }) {
             {/* Shopping Cart */}
             <ShoppingCartOutlined
               onClick={toggleCartSidebar}
-              className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
+              className='text-2xl text-[#4F6F52] cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
             />
 
             {/* Login Button or Avatar */}

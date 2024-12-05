@@ -21,7 +21,7 @@ export default function ProductPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [bookList, setBookList] = useState([]);
-  const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
+  const [booksPerPage, setBooksPerPage] = useState(12); // Số sách mặc định mỗi trang
   const [quantity, setQuantity] = useState(1); // State để lưu số lượng sản phẩm
   const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
   let [stockList, setStockList] = useState([]);

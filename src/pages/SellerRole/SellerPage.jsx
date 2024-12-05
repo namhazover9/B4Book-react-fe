@@ -353,11 +353,11 @@ export default function SellerPage() {
 
   return (
     <div className=''>
-      <Content className='mx-2 lg:mx-5'>
-        <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>All Product</Breadcrumb.Item>
-          <Breadcrumb.Item>{shopName}</Breadcrumb.Item>
-        </Breadcrumb>
+      <Content className='mx-2 my-7 lg:mx-5'>
+        {/* <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
+          <Breadcrumb.Item>All Shop</Breadcrumb.Item>
+          <Breadcrumb.Item>Name Shop</Breadcrumb.Item>
+        </Breadcrumb> */}
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
             <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
@@ -376,7 +376,7 @@ export default function SellerPage() {
                   <span className='ml-2 text-lg text-bold'>Export</span>
                 </button>
                 <button
-                  className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                  className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
                   type='primary'
                   onClick={() => setVisibleAdd(true)}
                 >
