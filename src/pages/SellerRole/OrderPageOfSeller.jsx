@@ -8,7 +8,7 @@ import orderApi from '../../hooks/useOrderApi';
 export default function OrderPageOfSeller() {
   const [orders, setOrders] = useState([]); // Dữ liệu bảng
   const [loading, setLoading] = useState(false); // Trạng thái loading
-  const shopId = useParams().id;
+  const id = useParams().id;
   const shopName = useParams().name;
   const [selectedSort, setSelectedSort] = useState('All Orders');
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -16,7 +16,7 @@ export default function OrderPageOfSeller() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await orderApi.getAllOrderByShop(shopId, selectedSort);
+      const response = await orderApi.getAllOrderByShop(id, selectedSort);
       const orders = response.data?.orders || []; // Kiểm tra để đảm bảo `orders` là mảng
       setOrders(
         orders.map((order, index) => ({
@@ -38,7 +38,7 @@ export default function OrderPageOfSeller() {
 
   useEffect(() => {
     fetchOrders(); // Gọi API khi component được mount
-  }, [shopId, selectedSort]);
+  }, [id, selectedSort]);
 
   const searchOrders = async (keyword) => {
     setLoading(true);
@@ -135,7 +135,7 @@ export default function OrderPageOfSeller() {
       ...alignCenter,
       render: (text, record) => (
         <div className='flex items-center justify-center'>
-        <NavLink to={`/shop/${shopName}/orders/order-detail/${record.id}`}><button className='text-base bg-teal-400 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-teal-400'>
+        <NavLink to={`/shop/${shopName}/${id}/orders/order-detail/${record.id}`}><button className='text-base bg-teal-400 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-teal-400'>
             <SearchOutlined />
           </button></NavLink>
         </div>

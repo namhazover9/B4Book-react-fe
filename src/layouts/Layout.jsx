@@ -1,5 +1,6 @@
 import {
   CloseOutlined,
+  HeartOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   ShoppingCartOutlined,
@@ -50,7 +51,6 @@ export default function Layout({ children }) {
   const location = useLocation();
 
 
-  console.log('Cart items:', cartItems); // Debug
   useEffect(() => {
     if (!userId) return; // Nếu không có userId, không cần gọi API
 
@@ -72,6 +72,9 @@ export default function Layout({ children }) {
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
+  };
+  const toggleWishlistSidebar = () => {
+    navigate('/wishlist');
   };
   const handleNavigate = () => {
     navigate('/login'); // Điều hướng đến trang login
@@ -210,9 +213,9 @@ export default function Layout({ children }) {
                 to={item.path}
                 className={`relative font-bold transition duration-300 ${
                   location.pathname === item.path
-                    ? 'text-red-500 text-lg after:w-full'
+                    ? 'text-[#4F6F52] text-lg after:w-full'
                     : 'text-gray-700 text-lg after:w-0'
-                } hover:text-red-500 after:content-[''] after:block after:h-0.5 after:bg-red-500 after:transition-all after:duration-300`}
+                } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
@@ -229,10 +232,13 @@ export default function Layout({ children }) {
               options={languages}
             />
 
+            {/* Wishlist */}
+            <HeartOutlined 
+              onClick={toggleWishlistSidebar} className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full' />
             {/* Shopping Cart */}
             <ShoppingCartOutlined
               onClick={toggleCartSidebar}
-              className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
+              className='text-2xl text-[#4F6F52] cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
             />
 
             {/* Login Button or Avatar */}

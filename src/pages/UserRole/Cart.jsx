@@ -1,11 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { Table, Button, Divider, InputNumber, message, Pagination, Popconfirm } from 'antd';
+import {
+  Table,
+  Button,
+  Divider,
+  InputNumber,
+  message,
+  Pagination,
+  Popconfirm,
+  Checkbox,
+} from 'antd';
 import 'antd/dist/reset.css';
 import { Link } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
+import { s } from 'framer-motion/client';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -25,8 +35,15 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
           // Kiểm tra nếu API trả về dữ liệu
           if (response.data && response.data.data) {
-            setCartItems(response.data.data);
+            const updatedData = response.data.data.map((item) => ({
+              ...item,
+              shopId: item.product.shopId._id, // Lấy shopId từ product
+              shopName: item.product.shopId.shopName, // Thêm shopName từ API
+            }));
+            console.log('Updated Data with shopId:', updatedData);
+            setCartItems(updatedData);
 
+            console.log(response.data.data);
             //console.log('Stock:', response.data.data[0].product.stock);
             setTotalPages(response.data.totalPages);
           } else {
@@ -76,13 +93,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         message.error('Item not found');
         return;
       }
-
-      // Kiểm tra nếu số lượng vượt quá số lượng có sẵn
-      // if (quantity > itemToUpdate.product.stock) {
-      //   console.log('Quantity exceeds stock'); // Debug log
-      //   message.error(`Quantity cannot exceed available stock (${itemToUpdate.product.stock})`);
-      //   return; // Dừng lại không gọi API nếu số lượng không hợp lệ
-      // }
 
       // Nếu số lượng hợp lệ, gọi API cập nhật
       const response = await ShopingCartApi.updateCartItemQuantity(id, quantity);
@@ -169,18 +179,33 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   };
 
-  const handleUpdateItems = () => {
-    console.log('Updating items:', cartItems);
-    message.success('Cart updated successfully!');
-  };
+  // const handleUpdateItems = () => {
+  //   console.log('Updating items:', cartItems);
+  //   message.success('Cart updated successfully!');
+  // };
 
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
   };
 
+  const handleSelectChange = (id, isSelected) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => (item._id === id ? { ...item, select: isSelected } : item)),
+    );
+  };
+  const selectedItems = cartItems.filter((item) => item.select);
+  console.log('Selected items:', selectedItems);
+
   const columns = [
     {
       title: 'Select',
+      key: 'select',
+      render: (_, record) => (
+        <Checkbox
+          checked={record.select}
+          onChange={(e) => handleSelectChange(record._id, e.target.checked)}
+        />
+      ),
     },
     {
       title: 'Image',
@@ -216,14 +241,12 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               message.error(`Quantity cannot exceed available stock (${record.product.stock})`);
               handleQuantityChange(record._id, record.product.stock);
               return; // Không tiếp tục thực hiện cập nhật nếu vượt quá stock
-            }
+            } else handleQuantityChange(record._id, value);
 
             // Nếu giá trị hợp lệ, gọi hàm cập nhật quantity
-              handleQuantityChange(record._id, value); 
-
+            return;
           }}
           className='w-16'
-        
         />
       ),
     },
@@ -253,11 +276,32 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     },
   ];
 
-  const groupedItems = cartItems.reduce((groups, item) => {
-    if (!groups[item.shop]) groups[item.shop] = [];
-    groups[item.shop].push(item);
-    return groups;
-  }, {});
+  const groupedItems = Object.entries(
+    cartItems.reduce((groups, item) => {
+      if (!groups[item.shopId]) {
+        groups[item.shopId] = {
+          products: [],
+          shopSelect: false,
+          shopName: item.shopName, // Thêm shopName
+        };
+      }
+      groups[item.shopId].products.push(item);
+      return groups;
+    }, {}),
+  ).map(([shopId, data]) => ({
+    shopId,
+    shopName: data.shopName,
+    products: data.products,
+    shopSelect: data.products.every((product) => product.select), // Tính toán shopSelect
+  }));
+
+  const handleShopSelectChange = (shopId, isSelected) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => (item.shopId === shopId ? { ...item, select: isSelected } : item)),
+    );
+  };
+
+  //const filteredShops = Object.keys(groupedItems).filter((shopId) => isInTable(shopId));
 
   if (!showUI)
     return (
@@ -271,6 +315,20 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <Button>Back</Button>
             </Link>
           </div>
+          <Popconfirm
+            title='Are you sure you want to remove this item?'
+            onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+            okText='Yes'
+            cancelText='No'
+            getPopupContainer={(triggerNode) => triggerNode.parentNode}
+          >
+            <button
+              type='primary'
+              className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
+            >
+              <DeleteOutlined className='text-xl text-white m-4' />
+            </button>
+          </Popconfirm>
           {loading ? (
             <div className='flex justify-center items-center py-10'>
               <Spin size='large' tip='Đang tải dữ liệu...' />
@@ -280,39 +338,25 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <p className='text-lg text-gray-500'>Cart is empty</p>
             </div>
           ) : (
-            Object.keys(groupedItems).map((shop, index) => (
+            groupedItems.map((group, index) => (
               <div key={index}>
-                <div className='flex justify-between items-center mb-2'>
-                  <h2 className='text-lg font-bold'>{shop}</h2>
-                  <Popconfirm
-                    title='Are you sure you want to remove this item?'
-                    onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
-                    okText='Yes'
-                    cancelText='No'
-                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                <div className='flex items-center mb-2'>
+                  <Checkbox
+                    checked={group.shopSelect}
+                    onChange={(e) => handleShopSelectChange(group.shopId, e.target.checked)}
                   >
-                    <button
-                      type='primary'
-                      className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
-                    >
-                      <DeleteOutlined className='text-xl text-white m-4' />
-                    </button>
-                  </Popconfirm>
+                    {group.shopName} Shop
+                  </Checkbox>
                 </div>
-
                 <Table
-                  dataSource={groupedItems[shop]}
+                  dataSource={group.products}
                   columns={columns}
                   rowKey='_id'
-                  rowSelection={{
-                    type: 'checkbox',
-                    selectedRowKeys: shop.cartItems
-                  }}
                   pagination={false}
                   bordered
                   scroll={{ x: 'max-content' }}
                 />
-                {index < Object.keys(groupedItems).length - 1 && <Divider />}
+                {index < groupedItems.length - 1 && <Divider />}
               </div>
             ))
           )}

@@ -48,12 +48,16 @@ const useStyle = createStyles(({ css, token }) => {
 
 export default function SellerPage() {
   const id = useParams().id;
+  const shopName = useParams().name;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
   const [productList, setProductList] = useState([]);
+  const [product, setProduct] = useState({}); // Dữ liệu sản phẩm mặc định
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
+  const [imageList, setImageList] = useState(product?.images || []);
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -89,7 +93,6 @@ export default function SellerPage() {
 
   // Handle thay đổi trang khi người dùng chuyển trang
 
-
   const handleExportFile = async () => {
     try {
       const response = await productsApi.exportFileProducts();
@@ -106,6 +109,23 @@ export default function SellerPage() {
     }
   };
 
+  // Hàm xóa ảnh
+  const handleRemoveImage = (imageUrl) => {
+    // Gọi API để xóa ảnh trên Cloudinary và từ danh sách ảnh trong state
+    productsApi
+      .removeImage(product._id, imageUrl)
+      .then((response) => {
+        console.log('Image removed successfully:', response.data);
+        // Cập nhật lại danh sách ảnh sau khi xóa
+        setImageList((prevImages) => prevImages.filter((image) => image !== imageUrl));
+        message.success('Image removed successfully');
+      })
+      .catch((error) => {
+        console.error('Error removing image:', error.response?.data || error.message);
+        message.error('Error removing image');
+      });
+  };
+
   const searchProducts = async (keyword) => {
     setLoading(true);
     try {
@@ -118,6 +138,7 @@ export default function SellerPage() {
       setLoading(false);
     }
   };
+
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
@@ -130,6 +151,7 @@ export default function SellerPage() {
       searchProducts(keyword);
     }
   };
+  
   const handleDeleteProduct = async (productId) => {
     console.log(productId);
     try {
@@ -223,7 +245,12 @@ export default function SellerPage() {
       render: (text, record) => (
         <div className='flex items-center justify-center'>
           <button className='text-base bg-blue-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-600'>
-            <EditOutlined onClick={() => setVisibleEdit(true)} />
+            <EditOutlined
+              onClick={() => {
+                console.log('Product ID for Edit:', record.key); // Kiểm tra giá trị của _id
+                handleEditClick(record.key);
+              }}
+            />
           </button>
           <Popconfirm
             title='Delete the Product'
@@ -293,6 +320,23 @@ export default function SellerPage() {
 
   // Edit Product
   const [visibleEdit, setVisibleEdit] = useState(false);
+
+  const handleEditClick = (productId) => {
+    // console.log('Product ID:', productId); // Kiểm tra giá trị của productId
+    // console.log('Product List:', productList); // Kiểm tra nội dung của productList
+
+    const selectedProduct = productList.find((product) => product._id === productId);
+    console.log('Selected Product:', selectedProduct); // Kiểm tra xem đã tìm thấy sản phẩm chưa
+    console.log('Selected Product Upload Image:', selectedProduct?.uploadImage);
+
+    if (selectedProduct) {
+      setProduct(selectedProduct); // Chỉ set giá trị khi tìm thấy sản phẩm
+    } else {
+      console.log('No product found with the given ID');
+    }
+    setVisibleEdit(true);
+  };
+
   const handleCancelEdit = () => {
     setVisibleEdit(false);
   };
@@ -309,11 +353,11 @@ export default function SellerPage() {
 
   return (
     <div className=''>
-      <Content className='mx-2 lg:mx-5'>
-        <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
+      <Content className='mx-2 my-7 lg:mx-5'>
+        {/* <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
           <Breadcrumb.Item>All Shop</Breadcrumb.Item>
           <Breadcrumb.Item>Name Shop</Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb> */}
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
             <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
@@ -332,7 +376,7 @@ export default function SellerPage() {
                   <span className='ml-2 text-lg text-bold'>Export</span>
                 </button>
                 <button
-                  className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                  className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
                   type='primary'
                   onClick={() => setVisibleAdd(true)}
                 >
@@ -360,8 +404,11 @@ export default function SellerPage() {
                   : []
               }
               loading={loading}
-              // Thay vì gọi `handlePageChange(currentPage)` trực tiếp, bạn chỉ cần truyền hàm:
+              pagination={{
+                pageSize: 5, // Số lượng sản phẩm mỗi trang
               
+              }}
+
               scroll={{
                 x: 'max-content',
                 y: 420,
@@ -437,8 +484,13 @@ export default function SellerPage() {
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>Price</label>
                 <div className='w-2/3 flex flex-col items-start'>
-                  <Field name='price' as={Input} className='w-full py-2' type='number'
-            step="0.01" />
+                  <Field
+                    name='price'
+                    as={Input}
+                    className='w-full py-2'
+                    type='number'
+                    step='0.01'
+                  />
                   <div className='h-8 py-1'>
                     {touched.price && errors.price && (
                       <div className='error text-red-500 ml-1'>{errors.price}</div>
@@ -591,24 +643,47 @@ export default function SellerPage() {
         footer={null}
       >
         <Formik
+          enableReinitialize={true}
           initialValues={{
-            title: '',
-            price: '',
-            description: '',
-            author: '',
-            publisher: '',
-            language: '',
-            ISBN: '',
-            stock: '',
-            category: [],
-            uploadImage: [],
+            title: product?.title || '', // Sử dụng optional chaining và giá trị mặc định
+            price: product?.price || 0,
+            description: product?.description || '',
+            author: product?.author || '',
+            publisher: product?.publisher || '',
+            language: product?.language || '',
+            ISBN: product?.ISBN || '',
+            stock: product?.stock || 0,
+            category: product?.category || [],
+            uploadImage: product?.images || [],
           }}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log('Form Values:', values);
+          onSubmit={async (values, { setSubmitting, setFieldError }) => {
+            try {
+              const formData = new FormData();
+              formData.append('title', values.title);
+              formData.append('price', values.price);
+              formData.append('description', values.description);
+              formData.append('author', values.author);
+              formData.append('publisher', values.publisher);
+              formData.append('language', values.language);
+              formData.append('ISBN', values.ISBN);
+              formData.append('stock', values.stock);
+              formData.append('category', values.category);
+              values.uploadImage.forEach((file) => formData.append('images', file));
+
+              console.log('Form Data:', Object.fromEntries(formData));
+              const response = await productsApi.updateProduct(product._id, formData);
+              message.success('Product updated successfully!');
+              handleCancelEdit();
+            } catch (error) {
+              console.error('Error updating product:', error);
+              message.error('An error occurred while updating the product.');
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
-          {({ setFieldValue, errors, touched }) => (
+          {({ setFieldValue, errors, touched, values, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
                 <label className='label-input-tnvd'>Title</label>
@@ -713,6 +788,7 @@ export default function SellerPage() {
                     style={{
                       flex: 1,
                     }}
+                    value={values.category}
                     onChange={(value) => setFieldValue('category', value)}
                   >
                     <Select.Option value='Comedy'>Comedy</Select.Option>
@@ -726,18 +802,45 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
+            
               <div className='flex items-flex-start justify-flex-start'>
                 <label className='label-input-tnvd truncate'>Upload Image</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
-                    action='/upload.do'
                     listType='picture-card'
+                    fileList={values.uploadImage
+                      .filter((file) => file) // Loại bỏ các giá trị undefined hoặc null trong mảng
+                      .map((file, index) => {
+                        console.log('Processing file:', file); // Kiểm tra giá trị của từng phần tử
+
+                        // Kiểm tra xem file có phải là URL (String) hay không
+                        if (typeof file === 'string') {
+                          return {
+                            uid: index, // Tạo UID duy nhất cho mỗi ảnh
+                            name: 'Unknown', // Không có name cho URL
+                            status: 'done',
+                            url: file, // Nếu là URL thì sử dụng trực tiếp
+                          };
+                        }
+
+                        // Kiểm tra nếu là đối tượng File
+                        return {
+                          uid: index,
+                          name: file?.name || 'Unknown', // Đảm bảo file có name, nếu không gán 'Unknown'
+                          status: 'done',
+                          url: file instanceof File ? URL.createObjectURL(file) : file,
+                        };
+                      })}
                     onChange={(info) => {
-                      setFieldValue(
-                        'uploadImage',
-                        info.fileList.map((file) => file.originFileObj),
-                      );
+                      // Kết hợp các file hiện tại và file mới
+                      const updatedFileList = [
+                        ...values.uploadImage.filter((file) => file instanceof File), // Giữ lại các file cũ là đối tượng File
+                        ...info.fileList.map((file) => file.originFileObj), // Thêm các file mới
+                      ];
+
+                      setFieldValue('uploadImage', updatedFileList); // Cập nhật danh sách ảnh trong state
                     }}
+                    beforeUpload={() => false} // Ngừng upload tự động, ta sẽ xử lý khi submit form
                   >
                     <Button
                       type='button'
@@ -750,6 +853,7 @@ export default function SellerPage() {
                       <div>Upload</div>
                     </Button>
                   </Upload>
+                  
                   <div className='h-8 py-1'>
                     {touched.uploadImage && errors.uploadImage && (
                       <div className='error text-red-500 ml-1'>{errors.uploadImage}</div>
@@ -757,12 +861,15 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
+              
               <button
                 className='text-end text-base bg-blue-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-500'
-                type='primary'
+                type='submit'
+                disabled={isSubmitting} // Disable button while submitting
               >
                 Edit Product
               </button>
+              {/* Đoạn useEffect sẽ cập nhật các giá trị trong form nếu có selectedProduct */}
             </Form>
           )}
         </Formik>

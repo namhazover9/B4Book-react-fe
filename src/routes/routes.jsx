@@ -6,7 +6,7 @@ const Home = lazy(() => import('@pages/homepages/Home'));
 const Login = lazy(() => import('@pages/login/Login'));
 const ForgotPassword = lazy(() => import('@pages/forgotPassword/ForgotPassword'));
 const AboutUs = lazy(() => import('@pages/AboutUs/AboutUs'));
-const Details = lazy(() => import('@pages/homepages/Details'));
+const Details = lazy(() => import('@pages/UserRole/Details'));
 
 // user Role
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
@@ -20,7 +20,9 @@ const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
 const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
-
+const DiscountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
+const OrderDetailPageCustomer = lazy(() => import('@pages/UserRole/OrderDetailPageCustomer'));
+const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
@@ -86,6 +88,12 @@ export const routes_here = [
     isPrivate: true,
   },
   {
+    path: '/wishlist',
+    element: <Wishlist />,
+    layout: 'customer',
+    isPrivate: true,
+  },
+  {
     path: '/products',
     element: <ProductPage />,
     layout: 'user',
@@ -95,6 +103,12 @@ export const routes_here = [
     path: '/shops',
     element: <ShopPage />,
     layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/detailOrder/:orderId',
+    element: <OrderDetailPageCustomer />,
+    layout: 'customer',
     isPrivate: false,
   },
   {
@@ -110,8 +124,14 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/shop/:name/orders/order-detail/:orderId',
+    path: '/shop/:name/:id/orders/order-detail/:orderId',
     element: <OrderDetailPage />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop/:name/voucher/:id',
+    element: <DiscountPage />,
     layout: 'seller',
     isPrivate: false,
   },
@@ -129,8 +149,8 @@ export const routes_here = [
   },
 
   {
-    path: '/details',
-    element: <Details />,
+    path: '/details/:orderId',
+    element: <OrderDetailPageCustomer />,
     layout: 'user',
     isPrivate: false,
   },

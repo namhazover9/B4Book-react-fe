@@ -1,6 +1,6 @@
 import { axiosClient } from '../ApiConfig/apiConfig';
 
-const ACCOUNT_API_ENDPOINT = '/products';
+const PRODUCT_API_ENDPOINT = '/products';
 
 const productsApi = {
   // Lấy tất cả sản phẩm với các tham số tìm kiếm
@@ -16,13 +16,20 @@ const productsApi = {
       sort,
     }).toString();
 
-    const url = `${ACCOUNT_API_ENDPOINT}?${queryParams}`;
+    const url = `${PRODUCT_API_ENDPOINT}?${queryParams}`;
     return axiosClient.get(url);
   },
 
+    // Lấy chi tiết sản phẩm theo ID
+    getProductById: (id) => {
+      const url = `${PRODUCT_API_ENDPOINT}/${id}`; // Sử dụng ID để lấy chi tiết sản phẩm
+      return axiosClient.get(url);
+    },
+  
+
   // Tìm kiếm sản phẩm theo keyword
   searchProducts: (keyword) => {
-    const url = `${ACCOUNT_API_ENDPOINT}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
+    const url = `${PRODUCT_API_ENDPOINT}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
 
@@ -31,7 +38,7 @@ const productsApi = {
       page,
       limit,
     }).toString();
-    const url = `${ACCOUNT_API_ENDPOINT}/getProductByShop/${id}`; // Chỉnh lại URL đúng format
+    const url = `${PRODUCT_API_ENDPOINT}/getProductByShop/${id}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
 
@@ -42,7 +49,7 @@ const productsApi = {
 
 
   postCreateProduct: (formData) => {
-    const url = `${ACCOUNT_API_ENDPOINT}/create`;
+    const url = `${PRODUCT_API_ENDPOINT}/create`;
     return axiosClient.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
@@ -50,10 +57,29 @@ const productsApi = {
     });
 
   },
+
+  removeImage: (id, imageUrl) => {
+    const url = `${ACCOUNT_API_ENDPOINT}/${id}/remove-image`;
+    return axiosClient.delete(url, {
+      data: { imageUrl }, // Gửi URL của hình ảnh cần xóa
+    });
+  },
+
+
+    // Cập nhật sản phẩm
+    updateProduct: (id, formData) => {
+      const url = `${PRODUCT_API_ENDPOINT}/${id}`;
+      return axiosClient.put(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
+        },
+      });
+    },
+  
   
   deleteProduct: (id) => {
-    const url = `${ACCOUNT_API_ENDPOINT}/${id}`;
-    return axiosClient.delete(url,{});
+    const url = `${PRODUCT_API_ENDPOINT}/${id}`;
+    return axiosClient.delete(url);
   },
 };
 

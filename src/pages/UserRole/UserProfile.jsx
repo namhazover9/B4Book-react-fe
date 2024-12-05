@@ -143,7 +143,7 @@ export default function UserProfile() {
                 </Col>
                 <Col xs={24} sm={16}>
                   <Input
-                    value={userInfo.address}
+                    value={userInfo.address.street + ', ' + userInfo.address.city + ', ' + userInfo.address.country }
                     onChange={(e) => handleInputChange('address', e.target.value)}
                   />
                 </Col>

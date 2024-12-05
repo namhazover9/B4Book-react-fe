@@ -77,6 +77,7 @@ module.exports = {
         LightGray: '#959595',
         SilverGray: '#B3B3B3',
         Snow: '#ffffff',
+        ColorTabs: '#86A789',
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],
