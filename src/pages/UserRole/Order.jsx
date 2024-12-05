@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Field, Form as FormikForm } from 'formik';
 import { Table, notification, Radio, Button, Modal, Input, Space } from 'antd';
 import { Link } from 'react-router-dom';
-import vnp from '../../assets/images/vnpay.jpg';
-import stripe2 from '../../assets/images/vnpay.jpg';
+
 const Checkout = () => {
     const [addresses, setAddresses] = useState([
         { id: 1, name: "Nguyen Dang Hoai", phone: "+84 377 713 160", address: "125 The Lu, An Hai Bac Ward, Son Tra District, Da Nang", default: true },
@@ -385,13 +384,13 @@ const Checkout = () => {
                                                             <Space direction="vertical" className="mt-3">
                                                                 <Radio value="stripe">
                                                                     <div className="flex items-center">
-                                                                        <img src={stripe2} className="w-8 h-8 mr-2" alt="Stripe" />
+                                                                        <img src={'https://ps.w.org/woocommerce-gateway-stripe/assets/icon-256x256.png?rev=3177277'} className="w-8 h-8 mr-2" alt="Stripe" />
                                                                         Stripe
                                                                     </div>
                                                                 </Radio>
                                                                 <Radio value="vnpay">
                                                                     <div className="flex items-center">
-                                                                        <img src={vnp} className="w-8 h-8 mr-2" alt="VNPay" />
+                                                                        <img src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp1v7T287-ikP1m7dEUbs2n1SbbLEqkMd1ZA&s'} className="w-8 h-8 mr-2" alt="VNPay" />
                                                                         VNPay
                                                                     </div>
                                                                 </Radio>

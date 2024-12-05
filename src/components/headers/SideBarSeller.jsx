@@ -44,12 +44,12 @@ export default function SideBarSeller({ onToggle, isOpen }) {
     };
     return (
         <div className="">
-            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-slate-200 hidden lg:block rounded-l-lg`}>
+            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-[#679089] hidden lg:block rounded-l-lg`}>
                 <div className="w-64 h-20">
                     <div className="w-3/5 flex justify-between items-center mx-2">
                         <img src={ shopDetail?.images[0] || "https://via.placeholder.com/150"} // Hiển thị ảnh đầu tiên
                             alt="Shop" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
-                        <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate ${!isOpen && "scale-0"}`}>{shopDetail?.shopName}</p>
+                        <p className={`shop-name text-black text-base origin-left font-semibold italic duration-300 truncate ${!isOpen && "scale-0"}`}>{shopDetail?.shopName}</p>
                     </div>
                 </div>
                 <RightOutlined className={`${isOpen && "rotate-180"} absolute text-3xl cursor-pointer -right-4 top-16 w-8 border-2 bg-slate-50 text-slate-500 border-slate-50 rounded-full`} onClick={onToggle} />
@@ -58,7 +58,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
                         <NavLink
                             key={index}
                             to={menu.path}
-                            className={({ isActive }) => `flex items-center gap-x-4 py-4 h-16 px-7 text-base ${isActive ? 'bg-slate-100 text-indigo-600' : 'text-gray-600'} hover:bg-slate-100 duration-300`}
+                            className={({ isActive }) => `flex items-center gap-x-4 py-4 h-16 px-7 text-base ${isActive ? 'bg-[#e6dbcd] text-[#f18966]' : 'text-slate-200'} hover:bg-[#eee5da] duration-300 hover:text-black`}
                         >
                             {menu.icon}
                             <span className={`${!isOpen && "scale-0"} origin-left duration-300 text-base font-medium`}>{menu.title}</span>

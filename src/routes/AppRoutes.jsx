@@ -62,10 +62,10 @@ const AppRoutes = () => {
         <ScrollTop />
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
-            if (isPrivate && !isAuth) {
-              // If the user is not authenticated and the route is private, show the LoginPopup
-              return <Route key={key} path={path} element={<Navigate to='/login' />} />;
-            }
+            // if (isPrivate && !isAuth) {
+            //   // If the user is not authenticated and the route is private, show the LoginPopup
+            //   return <Route key={key} path={path} element={<Navigate to='/login' />} />;
+            // }
 
             if (!hasAccess(layout) && isPrivate) {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;

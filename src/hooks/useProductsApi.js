@@ -22,7 +22,7 @@ const productsApi = {
 
     // Lấy chi tiết sản phẩm theo ID
     getProductById: (id) => {
-      const url = `${ACCOUNT_API_ENDPOINT}/${id}`; // Sử dụng ID để lấy chi tiết sản phẩm
+      const url = `${PRODUCT_API_ENDPOINT}/${id}`; // Sử dụng ID để lấy chi tiết sản phẩm
       return axiosClient.get(url);
     },
   
