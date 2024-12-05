@@ -45,7 +45,7 @@ const CustomArrow = ({ className, style, onClick }) => {
   );
 };
 
-export default function OrderDetailPage() {
+export default function OrderDetailPageCustomer() {
   const { orderId } = useParams();
   const [loading, setLoading] = useState(true);
   const [orderDetail, setOrderDetail] = useState(null);
@@ -91,7 +91,7 @@ export default function OrderDetailPage() {
   const fetchOrderDetail = async (refresh = false) => {
     try {
       if (!refresh) setLoading(true);
-      const response = await orderApi.getDetailOrder(orderId);
+      const response = await orderApi.getDetailOrderCustomer(orderId);
       const orderStatus = response.data.data.status; // Trạng thái từ API
       
       setCurrentStep(orderStatus); // Gán trạng thái từ API
@@ -119,7 +119,7 @@ export default function OrderDetailPage() {
     return <div>Order detail not found.</div>;
   }
 
-  const { customer, shops, paymentMethod, status, createdAt, shippedDate, deliveredDate, shippingAddress } =
+  const { customer, shops, paymentMethod, status, createdAt, shippedDate, deliveredDate, orderItems } =
     orderDetail.data;
 
   // Hàm chuyển trạng thái
@@ -170,33 +170,7 @@ export default function OrderDetailPage() {
                   <h2 className='text-base font-medium'>Order ID: #{orderId}</h2>
                 </div>
                 <div className='p-5'>
-                  <div className='flex items-center mb-5'>
-                    <img
-                      className='w-1/3 sm:w-1/5 lg:w-1/6 rounded-full border-2 border-red-500'
-                      src={
-                        customer?.avartar ||
-                        'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'
-                      }
-                      alt='Customer Image'
-                    />
-                    <div className='ml-4'>
-                      <h3 className='text-lg font-bold'>{customer?.userName}</h3>
-                      <p className='text-gray-500 text-sm'>
-                        {customer?.phoneNumber || 'No phone number'}
-                      </p>
-                    </div>
-                  </div>
                   <div className='lg:mx-2'>
-                    <div className='flex flex-col lg:flex-row justify-between lg:items-center mb-4 lg:mb-5'>
-                      <div className='w-full lg:w-1/2 flex items-center mb-2 lg:mb-0'>
-                        <h4 className='h4-info-user'>Email:</h4>
-                        <p className='p-info-user'>{customer?.email}</p>
-                      </div>
-                      <div className='w-full lg:w-1/2 flex items-center'>
-                        <h4 className='h4-info-user'>Address:</h4>
-                        <p className='p-info-user'>{shippingAddress?.address + ', ' + shippingAddress?.city || 'No address'}</p>
-                      </div>
-                    </div>
                     <div className='flex flex-col lg:flex-row justify-between lg:items-center mb-4 lg:mb-5'>
                       <div className='w-full lg:w-1/2 flex items-center mb-2 lg:mb-0'>
                         <h4 className='h4-info-user'>Shipping Method:</h4>

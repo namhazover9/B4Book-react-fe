@@ -22,7 +22,9 @@ const ShopPage = lazy(() => import('@pages/UserRole/ShopPage'));
 const Order = lazy(() => import('@pages/UserRole/Order'));
 const DetailShop = lazy(() => import('@pages/UserRole/DetailShop'));
 const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
-const DicountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
+const DiscountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
+const OrderDetailPageCustomer = lazy(() => import('@pages/UserRole/OrderDetailPageCustomer'));
+const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
@@ -74,6 +76,12 @@ export const routes_here = [
     isPrivate: true,
   },
   {
+    path: '/wishlist',
+    element: <Wishlist />,
+    layout: 'customer',
+    isPrivate: true,
+  },
+  {
     path: '/products',
     element: <ProductPage />,
     layout: 'user',
@@ -83,6 +91,12 @@ export const routes_here = [
     path: '/shops',
     element: <ShopPage />,
     layout: 'user',
+    isPrivate: false,
+  },
+  {
+    path: '/detailOrder/:orderId',
+    element: <OrderDetailPageCustomer />,
+    layout: 'customer',
     isPrivate: false,
   },
   {
@@ -105,7 +119,7 @@ export const routes_here = [
   },
   {
     path: '/shop/:name/voucher/:id',
-    element: <DicountPage />,
+    element: <DiscountPage />,
     layout: 'seller',
     isPrivate: false,
   },
@@ -115,8 +129,6 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
-
-
   {
     path: '/details/:id',
     element: <Details />,

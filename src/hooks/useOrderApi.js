@@ -24,6 +24,10 @@ const orderApi = {
     return axiosClient.get(url,{});
   },
 
+  getDetailOrderCustomer: (orderId) => {
+    const url = `${ORDER_API_ENDPOINT}/getDetailOrder/${orderId}`; 
+    return axiosClient.get(url,{});
+  },
   updateStatusOrder: (orderId) => {
     const url = `${ORDER_API_ENDPOINT}/${orderId}/status`; 
     return axiosClient.patch(url,{});

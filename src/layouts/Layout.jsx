@@ -1,5 +1,6 @@
 import {
   CloseOutlined,
+  HeartOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   ShoppingCartOutlined,
@@ -71,6 +72,9 @@ export default function Layout({ children }) {
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
+  };
+  const toggleWishlistSidebar = () => {
+    navigate('/wishlist');
   };
   const handleNavigate = () => {
     navigate('/login'); // Điều hướng đến trang login
@@ -228,6 +232,9 @@ export default function Layout({ children }) {
               options={languages}
             />
 
+            {/* Wishlist */}
+            <HeartOutlined 
+              onClick={toggleWishlistSidebar} className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full' />
             {/* Shopping Cart */}
             <ShoppingCartOutlined
               onClick={toggleCartSidebar}
