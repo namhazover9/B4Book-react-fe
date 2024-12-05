@@ -1,6 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-import { User } from 'lucide-react';
-import { path, tr } from 'framer-motion/client';
 import { lazy } from 'react';
 
 //home Page
@@ -26,7 +24,9 @@ const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
-const Dashboard = lazy(() => import('@pages/AdminRole/DashBoard'));
+const Dashboard = lazy(() => import('@pages/Dashboard/ECommerce'));
+const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
+const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
@@ -56,14 +56,26 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/admin',
+    path: '/admin/user',
     element: <AccountManager />,
     layout: 'admin',
     isPrivate: false,
   },
   {
-    path: '/admin/dashboard',
+    path: '/admin',
     element: <Dashboard />,
+    layout: 'admin',
+    isPrivate: false,
+  },
+  {
+    path: '/admin/profile',
+    element: <ProfileAdmin />,
+    layout: 'admin',
+    isPrivate: false,
+  },
+  {
+    path: '/admin/settings',
+    element: <AdminSetting />,
     layout: 'admin',
     isPrivate: false,
   },
@@ -109,7 +121,12 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
-
+  {
+    path: '/admin-profile',
+    element: <UserProfile />,
+    layout: 'admin',
+    isPrivate: false,
+  },
 
   {
     path: '/details',

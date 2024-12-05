@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer utilities {
+  .z-1 {
+    z-index: 1;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
+  }
+}
+
 @layer components {
   /* ****************************
     Common Buttons
@@ -13,10 +26,10 @@
     @apply border-[#EF2F88] text-[#EF2F88] text-[14px] font-semibold rounded-[4px] hover:shadow-none bg-transparent;
   }
   .seconday-btn {
-    @apply border-[#727272] text-[#727272] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+    @apply border-[#727272] text-[#727272] text-[14px] rounded-[4px] hover:shadow-none bg-transparent;
   }
   .ternary-btn {
-    @apply border-[#4E31AA] text-[#4E31AA] text-[14px]  rounded-[4px] hover:shadow-none bg-transparent;
+    @apply border-[#4E31AA] text-[#4E31AA] text-[14px] rounded-[4px] hover:shadow-none bg-transparent;
   }
 
   /* ****************************
@@ -27,87 +40,136 @@
     font-family: "cairo-regular";
     src: url(../assets/fonts/Cairo-Regular.ttf) format("truetype");
   }
+
+  /* Flatpickr Styles */
+  .flatpickr-wrapper {
+    @apply w-full;
+  }
+  .flatpickr-months .flatpickr-prev-month:hover svg,
+  .flatpickr-months .flatpickr-next-month:hover svg {
+    @apply !fill-primary;
+  }
+  .flatpickr-calendar.arrowTop:before {
+    @apply dark:!border-b-boxdark;
+  }
+  .flatpickr-calendar.arrowTop:after {
+    @apply dark:!border-b-boxdark;
+  }
+  .flatpickr-calendar {
+    @apply !p-6 dark:!bg-boxdark dark:!text-bodydark dark:!shadow-8 2xsm:!w-auto;
+  }
+  .flatpickr-day {
+    @apply dark:!text-bodydark dark:hover:!border-meta-4 dark:hover:!bg-meta-4;
+  }
+  .flatpickr-day.selected,
+  .flatpickr-day.startRange,
+  .flatpickr-day.endRange {
+    @apply dark:!text-white;
+  }
+
+  .map-btn .jvm-zoom-btn {
+    @apply flex items-center justify-center w-7.5 h-7.5 rounded border border-stroke dark:border-strokedark hover:border-primary dark:hover:border-primary bg-white hover:bg-primary text-body hover:text-white dark:text-bodydark dark:hover:text-white text-2xl leading-none px-0 pt-0 pb-0.5;
+  }
+
+  .taskCheckbox:checked ~ .box span {
+    @apply opacity-100;
+  }
+  .taskCheckbox:checked ~ p {
+    @apply line-through;
+  }
+  .taskCheckbox:checked ~ .box {
+    @apply bg-primary border-primary dark:border-primary;
+  }
 }
 
+@layer utilities {
+  /* Hide scrollbars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .chat-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  .inbox-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  
+  /* Banner Slider */
+  .rep-banner-xl-tnvd {
+    @apply xl:h-5/6 xl:px-20 xl:py-60;
+  }
+
+  .rep-bg-support-lg-tnvd {
+    @apply lg:ml-10;
+  }
+
+  .rep-bg-support-xl-tnvd {
+    @apply xl:h-auto xl:ml-20;
+  }
+
+  .rep-title-xl-tnvd {
+    @apply xl:text-5xl xl:mb-5;
+  }
+
+  .rep-minibg-md-tnvd {
+    @apply md:w-4/5;
+  }
+
+  .rep-imgbook-lg-tnvd {
+    @apply lg:w-3/4;
+  }
+
+  /* Shop Page */
+  .choice-icon-tnvd {
+    @apply hover:bg-slate-200 hover:shadow-inner transition-all duration-200 ease-in p-2 rounded-full;
+  }
+
+  /* Form Input */
+  .flex-input-tnvd {
+    @apply flex items-baseline justify-start;
+  }
+
+  .label-input-tnvd {
+    @apply w-3/12 sm:w-28 font-medium text-start text-base mr-1;
+  }
+
+  /* Style Text Info User Ordered */
+  .h4-info-user {
+    @apply text-base font-semibold text-gray-800 underline mr-2;
+  }
+
+  .p-info-user {
+    @apply m-0 text-gray-500 text-base truncate;
+  }
+
+  /* Custom Date Input */
+  .custom-input-date::-webkit-calendar-picker-indicator {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+  }
+
+  .custom-input-date-1::-webkit-calendar-picker-indicator {
+    background-image: url(./images/icon/icon-calendar.svg);
+  }
+
+  .custom-input-date-2::-webkit-calendar-picker-indicator {
+    background-image: url(./images/icon/icon-arrow-down.svg);
+  }
+}
+
+/* Global Styles */
 body {
   background-color: white;
 }
 
-/* Banner Slider */
-.rep-banner-xl-tnvd {
-  @apply xl:h-5/6 xl:px-20 xl:py-60
-}
-
-.rep-bg-support-lg-tnvd {
-  @apply lg:ml-10
-}
-
-.rep-bg-support-xl-tnvd {
-  @apply xl:h-auto xl:ml-20
-}
-
-.rep-bg-support-2xl-tnvd {
-  @apply 2xl:w-4/5 2xl:ml-36
-}
-
-.rep-title-xl-tnvd {
-  @apply xl:text-5xl xl:mb-5  
-}
-
-.rep-minibg-md-tnvd {
-  @apply md:w-4/5
-}
-
-.rep-minibg-lg-tnvd {
-  @apply lg:w-8/12 lg:ml-24
-}
-
-.rep-minibg-xl-tnvd {
-  @apply xl:w-3/4
-}
-
-.rep-minibg-2xl-tnvd {
-  @apply 2xl:w-2/3 2xl:h-96
-}
-
-.rep-imgbook-sm-tnvd {
-  @apply sm:mt-0 sm:ml-10
-}
-
-.rep-imgbook-lg-tnvd {
-  @apply lg:w-3/4 
-}
-
-.rep-imgbook-xl-tnvd {
-  @apply xl:w-11/12 xl:h-auto xl:ml-8 
-}
-
-.rep-imgbook-2xl-tnvd {
-  @apply 2xl:w-3/4 2xl:ml-10
-}
-
-/* Favourite Books */
-
-
-/* Shop Page */
-.choice-icon-tnvd {
-  @apply hover:bg-slate-200 hover:shadow-inner transition-all duration-200 ease-in p-2 rounded-full
-}
-
-/* Form Input */
-.flex-input-tnvd {
-  @apply flex items-baseline justify-start
-}
-
-.label-input-tnvd {
-  @apply w-3/12 sm:w-28 font-medium text-start text-base mr-1
-}
-
-/* Style Text Info User Ordered */
-.h4-info-user {
-  @apply text-base font-semibold text-gray-800 underline mr-2
-}
-
-.p-info-user {
-  @apply m-0 text-gray-500 text-base truncate
+/* Cloak Directives */
+[x-cloak] {
+  display: none !important;
 }
