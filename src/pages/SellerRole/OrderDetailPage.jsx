@@ -47,6 +47,7 @@ const CustomArrow = ({ className, style, onClick }) => {
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
+  const {id} = useParams();
   const [loading, setLoading] = useState(true);
   const [orderDetail, setOrderDetail] = useState(null);
 
@@ -92,7 +93,8 @@ export default function OrderDetailPage() {
     try {
       if (!refresh) setLoading(true);
       const response = await orderApi.getDetailOrder(orderId);
-      const orderStatus = response.data.data.status; // Trạng thái từ API
+      const shop = response.data.data.shops?.[0];
+      const orderStatus = shop.status; // Trạng thái từ API
       
       setCurrentStep(orderStatus); // Gán trạng thái từ API
       setCompletedSteps(
@@ -119,7 +121,7 @@ export default function OrderDetailPage() {
     return <div>Order detail not found.</div>;
   }
 
-  const { customer, shops, paymentMethod, status, createdAt, shippedDate, deliveredDate, shippingAddress } =
+  const { customer, shops, paymentMethod, createdAt, shippingAddress } =
     orderDetail.data;
 
   // Hàm chuyển trạng thái
@@ -131,8 +133,11 @@ export default function OrderDetailPage() {
 
     try {
       // Gọi API để cập nhật trạng thái
-      const response = await orderApi.updateStatusOrder(orderId);
-      const updatedStatus = response.data.data.status; // Trạng thái mới từ backend
+      const response = await orderApi.updateStatusOrder(orderId,id);
+      const updatedShop = response.data.data.shops.find(
+        (shop) => shop.shopId === id
+      );
+      const updatedStatus = updatedShop.status; // Trạng thái mới từ backend
 
       // Cập nhật trạng thái tiếp theo và UI
       setCurrentStep(updatedStatus);
@@ -214,11 +219,11 @@ export default function OrderDetailPage() {
                       </div>
                       <div className='w-full lg:w-1/2 flex items-center'>
                         <h4 className='h4-info-user'>Shipping Date:</h4>
-                        <p className='p-info-user'>{shippedDate || 'No shipping date'}</p>
+                        <p className='p-info-user'>{shops?.[0].shippedDate || 'No shipping date'}</p>
                       </div>
                       <div className='w-full lg:w-1/2 flex items-center'>
                         <h4 className='h4-info-user'>Delivered Date:</h4>
-                        <p className='p-info-user'>{deliveredDate || 'No delivered date'}</p>
+                        <p className='p-info-user'>{shops?.[0].deliveredDate || 'No delivered date'}</p>
                       </div>
                     </div>
                   </div>
@@ -237,9 +242,9 @@ export default function OrderDetailPage() {
                     onClick={handleNextStatus}
                     disabled={currentStep === statuses.length - 1}
                   >
-                    {status === 'Pending' && 'Confirm Order'}
-                    {status === 'Confirmed' && 'Ship Order'}
-                    {status === 'Shipped' && 'Deliver Order'}
+                    {currentStep === 'Pending' && 'Confirm Order'}
+                    {currentStep === 'Confirmed' && 'Ship Order'}
+                    {currentStep === 'Shipped' && 'Deliver Order'}
                   </button>
                 )}
                 <div className='absolute top-0 left-[-120%] w-[200%] h-full bg-white opacity-50 transform skew-x-[-45deg] transition-all duration-200 group-hover:left-full'></div>
