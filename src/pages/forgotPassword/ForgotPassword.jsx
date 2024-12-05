@@ -65,6 +65,7 @@ function ForgotPassword() {
       }
     } catch (error) {
       setIsSubmitting(false);
+      console.log(error);
       message.error(error.response?.data?.message || 'Cập nhật thất bại. Thử lại');
     }
   };

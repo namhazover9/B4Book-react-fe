@@ -48,6 +48,7 @@ const useStyle = createStyles(({ css, token }) => {
 
 export default function SellerPage() {
   const id = useParams().id;
+  const shopName = useParams().name;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productsPerPage, setProductsPerPage] = useState(10);
@@ -137,6 +138,7 @@ export default function SellerPage() {
       setLoading(false);
     }
   };
+
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
@@ -149,6 +151,7 @@ export default function SellerPage() {
       searchProducts(keyword);
     }
   };
+  
   const handleDeleteProduct = async (productId) => {
     console.log(productId);
     try {

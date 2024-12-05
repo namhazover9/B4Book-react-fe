@@ -11,21 +11,13 @@ const vouchersApi = {
     return axiosClient.get(url,{});
   },
   // Tìm kiếm sản phẩm theo keyword
-  searchProducts: (keyword) => {
-    const url = `${VOUCHER_API_ENDPOINT}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
+  searchVouchers: (name,id) => {
+    const url = `${VOUCHER_API_ENDPOINT}/searchVoucher?shop=${id}&name=${name}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
 
-
-
-  exportFileProducts: () => {
-    const url =`${VOUCHER_API_ENDPOINT}/exportFile`; // Chỉnh lại URL đúng format
-    return axiosClient.get(url,{ responseType: 'blob' });
-  },
-
-
-  postCreateProduct: (formData) => {
-    const url = `${VOUCHER_API_ENDPOINT}/create`;
+  postCreateVoucher: (formData) => {
+    const url = `${VOUCHER_API_ENDPOINT}/createVoucher`;
     return axiosClient.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
@@ -35,8 +27,8 @@ const vouchersApi = {
   },
 
     // Cập nhật sản phẩm
-    updateProduct: (id, formData) => {
-      const url = `${ACCOUNT_API_ENDPOINT}/${id}`;
+    updateVoucher: (id, formData) => {
+      const url = `${VOUCHER_API_ENDPOINT}/updateVoucher/${id}`;
       return axiosClient.put(url, formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
@@ -45,7 +37,7 @@ const vouchersApi = {
     },
   
   
-  deleteProduct: (id) => {
+  deleteVoucher: (id) => {
     const url = `${VOUCHER_API_ENDPOINT}/deleteVoucher/${id}`;
     return axiosClient.put(url,{});
   },
