@@ -130,8 +130,8 @@ export const routes_here = [
     isPrivate: false,
   },
   {
-    path: '/details/:id',
-    element: <Details />,
+    path: '/details/:orderId',
+    element: <OrderDetailPageCustomer />,
     layout: 'user',
     isPrivate: false,
   },
