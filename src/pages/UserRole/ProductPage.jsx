@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/loading';
 import productsApi from '../../hooks/useProductsApi';
 import { addToCart } from '../../reducers/carts';
+import WishlistApi from '../../hooks/useWishlistApi';
 
 export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
@@ -91,6 +92,30 @@ export default function ProductPage() {
       setLoading(false);
     }
   };
+  const handleAddToWishlist  = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your wishlist.</span>
+        </div>,
+      );
+      return;
+    }
+  const respone = await WishlistApi.addProductToWishList(productId);
+  if (respone.status === 200) {
+    message.success('Add product to wishlist successfully');
+  }else{
+    message.error('Product already added to wishlist');
+  }
+
+  }
 
   const handleAddToCart = (productId, quantity) => {
     if (!userId) {
@@ -108,6 +133,8 @@ export default function ProductPage() {
       );
       return;
     }
+
+   
 
     // Tìm thông tin tồn kho từ stockList
     const stockItem = stockList.find((item) => item.productId === productId);
@@ -392,7 +419,7 @@ export default function ProductPage() {
                                   <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                                     <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
                                       <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
-                                        <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        <HeartOutlined onClick={() => handleAddToWishlist(book._id)} className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
                                         <Link to={`/details/${book._id}`}>
