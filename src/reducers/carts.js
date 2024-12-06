@@ -1,22 +1,24 @@
 //======= imports =======//
-import constants from "../constants/constants";
-import ShopingCartApi from "../hooks/useShopingCart";
+import constants from '../constants/constants';
+import ShopingCartApi from '../hooks/useShopingCart';
 
 //======= constant action types =======//
-const ADD_PRODUCT = "ADD_PRODUCT";
-const RESET_CART = "RESET_CART";
-const DELETE_CART_ITEM = "DELETE_CART_ITEM";
-const UPDATE_CART_ITEM = "UPDATE_CART_ITEM";
-const FETCH_CART_SUCCESS = "FETCH_CART_SUCCESS";
-const FETCH_CART_FAILURE = "FETCH_CART_FAILURE";
-const START_LOADING = "START_LOADING";
-const STOP_LOADING = "STOP_LOADING";
+const ADD_PRODUCT = 'ADD_PRODUCT';
+const RESET_CART = 'RESET_CART';
+const DELETE_CART_ITEM = 'DELETE_CART_ITEM';
+const UPDATE_CART_ITEM = 'UPDATE_CART_ITEM';
+const FETCH_CART_SUCCESS = 'FETCH_CART_SUCCESS';
+const FETCH_CART_FAILURE = 'FETCH_CART_FAILURE';
+const START_LOADING = 'START_LOADING';
+const STOP_LOADING = 'STOP_LOADING';
+const SET_SELECTED_ITEMS = 'SET_SELECTED_ITEMS';
 
 //======= initial state =======//
 const initialState = {
   items: [], // Danh sách sản phẩm trong giỏ
   loading: false, // Trạng thái đang tải
   error: null, // Lỗi nếu có
+  selectedItems: [], // Sản phẩm được chọn
 };
 
 //======= reducer =======//
@@ -38,12 +40,22 @@ const cartReducer = (state = initialState, action) => {
       return { ...state, items: action.payload, loading: false };
     case UPDATE_CART_ITEM:
       return { ...state, items: action.payload, loading: false };
+    case SET_SELECTED_ITEMS:
+      return {
+        ...state,
+        selectedItems: action.payload,
+      };
     default:
       return state;
   }
 };
 
 //======= action creators =======//
+
+const setSelectedItems = (selectedItems) => ({
+  type: SET_SELECTED_ITEMS,
+  payload: selectedItems,
+});
 
 // Bắt đầu tải
 const startLoading = () => ({ type: START_LOADING });
@@ -80,7 +92,6 @@ const addToCart = (cartData) => async (dispatch) => {
     dispatch(stopLoading());
   }
 };
-
 
 // Xóa một sản phẩm khỏi giỏ
 const deleteCartItem = (itemId) => async (dispatch) => {
@@ -128,11 +139,13 @@ export {
   deleteCartItem,
   resetCart,
   updateCartItem,
+  setSelectedItems,
   ADD_PRODUCT,
   RESET_CART,
   DELETE_CART_ITEM,
   UPDATE_CART_ITEM,
   FETCH_CART_SUCCESS,
+  SET_SELECTED_ITEMS,
 };
 
 export default cartReducer;

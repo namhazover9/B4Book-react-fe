@@ -247,6 +247,9 @@ const Details = () => {
               <p className='text-gray-500'>
                 Author: <span className='font-medium'>{product.author || 'Unknown'}</span>
               </p>
+              <p className='text-gray-500'>
+                Publisher: <span className='font-medium'>{product.publisher || 'Unknown'}</span>
+              </p>
             </div>
 
             {/* Price */}
