@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { s } from 'framer-motion/client';
+import { useDispatch } from 'react-redux';
+import { setSelectedItems } from '../../reducers/carts';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -25,6 +27,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true); // Thêm trạng thái loading
   const userId = useSelector((state) => state.user._id);
+  const dispatch = useDispatch(); 
 
   // Fetch cart data with pagination when component mounts or page changes
   useEffect(() => {
@@ -65,11 +68,16 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   }, [userId, currentPage]);
 
+  const calculateTotalPrice = () => {
+    const selectedItems = cartItems.filter((item) => item.select);
+    if (selectedItems.length > 0) {
+      return selectedItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    }
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
   useEffect(() => {
-    const calculatedTotal = cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0,
-    );
+    const calculatedTotal = calculateTotalPrice();
     setTotalPriceBeforeDiscount(calculatedTotal);
 
     if (onTotalPriceChange) {
@@ -111,45 +119,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       message.error('Error updating quantity');
     }
   };
-  const handleShopChange = (storeIndex) => {
-    // setStores((prevStores) =>
-    //   prevStores.map((store, index) => {
-    //     if (index === storeIndex) {
-    //       const newChecked = !store.checked;
-    //       return {
-    //         ...store,
-    //         checked: newChecked,
-    //         products: store.products.map((product) => ({
-    //           ...product,
-    //           checked: newChecked,
-    //         })),
-    //       };
-    //     }
-    //     return store;
-    //   })
-    // );
-  };
-  const handleItemChange = (storeIndex, productIndex) => {
-    // setStores((prevStores) =>
-    //   prevStores.map((store, index) => {
-    //     if (index === storeIndex) {
-    //       return {
-    //         ...store,
-    //         products: store.products.map((product, pIndex) => {
-    //           if (pIndex === productIndex) {
-    //             return {
-    //               ...product,
-    //               checked: !product.checked,
-    //             };
-    //           }
-    //           return product;
-    //         }),
-    //       };
-    //     }
-    //     return store;
-    //   })
-    // );
-  };
 
   const clearUserCart = async () => {
     try {
@@ -179,11 +148,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   };
 
-  // const handleUpdateItems = () => {
-  //   console.log('Updating items:', cartItems);
-  //   message.success('Cart updated successfully!');
-  // };
-
   const handleCheckout = () => {
     console.log('Proceeding to checkout...');
   };
@@ -193,9 +157,12 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       prevItems.map((item) => (item._id === id ? { ...item, select: isSelected } : item)),
     );
   };
-  const selectedItems = cartItems.filter((item) => item.select);
-  console.log('Selected items:', selectedItems);
 
+  const selectedItems = cartItems.filter((item) => item.select);
+  //console.log('Selected items:', selectedItems);
+  const handleSelectItems = (selectedItems) => {
+    dispatch(setSelectedItems(selectedItems));
+  };
   const columns = [
     {
       title: 'Select',
@@ -207,6 +174,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
         />
       ),
     },
+
     {
       title: 'Image',
       dataIndex: 'images',
@@ -374,13 +342,14 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <h2 className='text-xl font-bold'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-
               <Button
                 type='primary'
                 className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
-                onClick={handleCheckout}
+                // onClick={handleCheckout}
               >
-                <Link to='/order'>Checkout</Link>
+                <Link to='/order' onClick={() => handleSelectItems(selectedItems)}>
+                  Order
+                </Link>
               </Button>
             </div>
           )}

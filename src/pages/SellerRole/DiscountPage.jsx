@@ -48,7 +48,7 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 
-export default function SellerPage() {
+export default function DiscountPage() {
   const id = useParams().id;
   const shopName = useParams().name;
   const [loading, setLoading] = useState(true);
