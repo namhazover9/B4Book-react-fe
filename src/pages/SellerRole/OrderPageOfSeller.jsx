@@ -25,7 +25,7 @@ export default function OrderPageOfSeller() {
           name: order.customer?.userName || 'Unknown',
           email: order.customer?.email || 'N/A',
           phoneNumber: order.customer?.phoneNumber || 'N/A',
-          status: order.status || 'Unknown',
+          status: order.shops?.status || 'Unknown',
           totalPrice: `$${order.totalOrderPrice || 0}`,
         })),
       );
@@ -135,7 +135,7 @@ export default function OrderPageOfSeller() {
       ...alignCenter,
       render: (text, record) => (
         <div className='flex items-center justify-center'>
-        <NavLink to={`/shop/${shopName}/${id}/orders/order-detail/${record.id}`}><button className='text-base bg-teal-400 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-teal-400'>
+        <NavLink to={`/shop/${shopName}/${id}/orders/order-detail/${record.id}`}><button className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'>
             <SearchOutlined />
           </button></NavLink>
         </div>
@@ -151,12 +151,12 @@ export default function OrderPageOfSeller() {
     <div className=''>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>Shop Page</Breadcrumb.Item>
-          <Breadcrumb.Item>Order Product</Breadcrumb.Item>
+          <Breadcrumb.Item>Your Orders</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} 👋🏻</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block'>Orders List</h1>
+            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block text-[#679089]'>Order List</h1>
             <div className='w-full lg:w-4/5 flex flex-col items-start lg:flex-row lg:items-center justify-between'>
               <Input placeholder='Search Order ...' className='w-full lg:w-2/3 py-3' onChange={handleSearchChange}/>
               <div className='mt-4 lg:mt-0 option-show lg:ml-5'>
