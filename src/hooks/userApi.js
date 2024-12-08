@@ -26,6 +26,13 @@ const userApi = {
     return axiosClient.put('/updateProfile', data); // Gửi yêu cầu PUT đến endpoint update
 },
 
+  postRegisterShop: (data) => {
+    return axiosClient.post('/registerShop', data,{
+      headers: {
+        "Content-Type": "multipart/form-data", // Quan trọng cho dữ liệu FormData
+      },
+    }); // Gửi yêu cầu POST đến endpoint registerShop
+  },
 };
 
 export default userApi;

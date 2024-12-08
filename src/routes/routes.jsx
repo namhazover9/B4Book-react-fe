@@ -23,8 +23,11 @@ const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
 const DiscountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
 const OrderDetailPageCustomer = lazy(() => import('@pages/UserRole/OrderDetailPageCustomer'));
 const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
+const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
+const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
+const ApprovedProduct = lazy(() => import('@pages/AdminRole/ApproveProduct'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/Dashboard/ECommerce'));
 const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
@@ -61,25 +64,37 @@ export const routes_here = [
     path: '/admin/user',
     element: <AccountManager />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin',
     element: <Dashboard />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin/profile',
     element: <ProfileAdmin />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin/settings',
     element: <AdminSetting />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
+  },
+  {
+    path: '/admin/registerShopForm',
+    element: <ApprovedShop />,
+    layout: 'admin',
+    isPrivate: true,
+  },
+  {
+    path: '/admin/registerProductForm',
+    element: <ApprovedProduct />,
+    layout: 'admin',
+    isPrivate: true,
   },
   {
     path: '/cart',
@@ -108,6 +123,12 @@ export const routes_here = [
   {
     path: '/detailOrder/:orderId',
     element: <OrderDetailPageCustomer />,
+    layout: 'customer',
+    isPrivate: false,
+  },
+  {
+    path: '/registerShop',
+    element: <RegisterShop />,
     layout: 'customer',
     isPrivate: false,
   },
