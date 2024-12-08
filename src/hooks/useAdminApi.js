@@ -22,6 +22,26 @@ const adminApi = {
     const url = `${ADMIN_API_URL}/search?keyword=${keyword}`; // Chỉnh lại URL đúng format
     return axiosClient.get(url);
   },
+
+  getAllRegisterShop: () => {
+    const url = `${ADMIN_API_URL}/showAllRegisterForm`;
+    return axiosClient.get(url,{});
+  },
+
+  postApproveShop: (id) => {
+    const url = `${ADMIN_API_URL}/approveShop/${id}`;
+    return axiosClient.put(url);
+  },
+
+  getAllRegisterProducts: () => {
+    const url = `${ADMIN_API_URL}/showAllProductRegister`;
+    return axiosClient.get(url,{});
+  },
+
+  postApproveProduct: (id) => {
+    const url = `${ADMIN_API_URL}/approvedProduct/${id}`;
+    return axiosClient.put(url);
+  },
 };
 
 export default adminApi;
