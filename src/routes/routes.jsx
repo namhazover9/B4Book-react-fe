@@ -54,7 +54,7 @@ export const routes_here = [
   {
     path: '/aboutus',
     element: <AboutUs />,
-    layout: null,
+    layout: 'user',
     isPrivate: false,
   },
   {

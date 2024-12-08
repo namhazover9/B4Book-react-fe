@@ -7,7 +7,7 @@ import {
   UserOutlined,
   UserSwitchOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Menu, Select } from 'antd';
+import { Button, Dropdown, Menu, Select, Badge } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -50,7 +50,6 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-
   useEffect(() => {
     if (!userId) return; // Nếu không có userId, không cần gọi API
 
@@ -80,6 +79,11 @@ export default function Layout({ children }) {
     navigate('/login'); // Điều hướng đến trang login
   };
 
+
+  useEffect(() => {
+    console.log('Sidebar status:', isSidebarOpen);
+  }, [isSidebarOpen]);
+  
   useEffect(() => {
     if (userId) {
       const fetchUserProfile = async () => {
@@ -93,7 +97,6 @@ export default function Layout({ children }) {
       fetchUserProfile();
     }
   }, [userId]); // Chạy lại khi userId thay đổi
-  
 
   useEffect(() => {
     const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
@@ -145,9 +148,9 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     setTotalPriceBeforeDiscount(
-      Array.isArray(cartItems) 
-      ? cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-      : 0
+      Array.isArray(cartItems)
+        ? cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+        : 0,
     );
   }, [cartItems]);
 
@@ -155,8 +158,6 @@ export default function Layout({ children }) {
     { name: 'Home', path: '/' },
     { name: 'Shops', path: '/shops' },
     { name: 'Books', path: '/products' },
-    { name: 'Pages', path: '/pages' },
-    { name: 'Blog', path: '/blog' },
     { name: 'About Us', path: '/aboutus' },
   ];
 
@@ -172,19 +173,23 @@ export default function Layout({ children }) {
   };
   useEffect(() => {
     setTotalPriceBeforeDiscount(
-      Array.isArray(cartItems) ? cartItems.reduce((sum, item) => {
-        return sum + item.price * item.quantity;
-      }, 0) : 0,
+      Array.isArray(cartItems)
+        ? cartItems.reduce((sum, item) => {
+            return sum + item.price * item.quantity;
+          }, 0)
+        : 0,
     );
   }, [cartItems]);
 
-  const subtotal = Array.isArray(cartItems) ? cartItems.reduce((sum, item) => {
-    return sum + item.price * item.quantity;
-  }, 0) : 0;
+  const subtotal = Array.isArray(cartItems)
+    ? cartItems.reduce((sum, item) => {
+        return sum + item.price * item.quantity;
+      }, 0)
+    : 0;
 
   return (
     <div className='font-cairoRegular'>
-      <header className='bg-white shadow-md w-full'>
+      <header className='bg-white shadow-md w-full sticky top-0 z-50'>
         {/* Main Container */}
         <div className='container mx-auto flex justify-between items-center px-4 py-2'>
           {/* Logo */}
@@ -198,7 +203,7 @@ export default function Layout({ children }) {
           </div>
 
           {/* Mobile View - Sidebar and Shopping Cart */}
-          <div className='block sm:hidden flex items-center space-x-4'>
+          <div className='block lg:hidden flex items-center space-x-4'>
             <Link to='/cart' className='hover:text-red-500'>
               <ShoppingCartOutlined className='text-2xl text-red-400 ' />
             </Link>
@@ -206,7 +211,7 @@ export default function Layout({ children }) {
           </div>
 
           {/* Navbar - Hidden on smaller screens */}
-          <nav className='hidden sm:flex space-x-12'>
+          <nav className='hidden lg:flex space-x-12'>
             {menuItems.map((item) => (
               <Link
                 key={item.path}
@@ -223,7 +228,7 @@ export default function Layout({ children }) {
           </nav>
 
           {/* Right side - Search bar, icons, and language switch */}
-          <div className='hidden sm:flex items-center space-x-4'>
+          <div className='hidden lg:flex items-center space-x-4'>
             {/* Language Switcher */}
             <Select
               className='w-28'
@@ -233,13 +238,24 @@ export default function Layout({ children }) {
             />
 
             {/* Wishlist */}
-            <HeartOutlined 
-              onClick={toggleWishlistSidebar} className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full' />
-            {/* Shopping Cart */}
-            <ShoppingCartOutlined
-              onClick={toggleCartSidebar}
-              className='text-2xl text-[#4F6F52] cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
+            <HeartOutlined
+              onClick={toggleWishlistSidebar}
+              className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
             />
+            {/* Shopping Cart */}
+            <Badge
+              count={
+                Array.isArray(cartItems) && cartItems.length > 0
+                  ? cartItems.reduce((total, item) => total + item.quantity, 0)
+                  : 0
+              }
+              offset={[10, 0]}
+            >
+              <ShoppingCartOutlined
+                onClick={toggleCartSidebar}
+                className='text-2xl text-[#4F6F52] cursor-pointer hover:text-[#FF5733] hover:scale-110 transition-transform duration-200 ease-in-out rounded-full'
+              />
+            </Badge>
 
             {/* Login Button or Avatar */}
             {isLoggedIn ? (
@@ -271,7 +287,7 @@ export default function Layout({ children }) {
       <div
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
-        } sm:hidden`}
+        } lg:hidden`}
         onClick={toggleSidebar} // Close sidebar when clicking outside
       ></div>
 
@@ -279,12 +295,34 @@ export default function Layout({ children }) {
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 sm:hidden`}
+        } transition-transform duration-300 lg:hidden`}
       >
         <div className='flex justify-between'>
-          <div className='text-xl font-bold'>Menu</div>
+          {/* Login Button */}
+          {isLoggedIn ? (
+              <Dropdown overlay={userMenu} trigger={['click']}>
+                <div className='flex items-center space-x-2 cursor-pointer'>
+                  <img
+                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
+                    alt='Avatar'
+                    className='w-10 h-10 rounded-full'
+                  />
+                  <span className='text-gray-700 font-medium'>
+                    Hi, {userInfo?.userName || 'Guest'}
+                  </span>
+                </div>
+              </Dropdown>
+            ) : (
+              <button
+                onClick={handleNavigate}
+                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+              >
+                Login
+              </button>
+            )}
           <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
         </div>
+        
         <nav className='mt-4'>
           {menuItems.map((item) => (
             <Link
@@ -304,16 +342,7 @@ export default function Layout({ children }) {
             options={languages}
           />
 
-          {/* Login Button */}
-          <button
-            className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400 mt-4'
-            onClick={() => {
-              toggleLoginPopup();
-              toggleSidebar();
-            }}
-          >
-            Login
-          </button>
+          
         </nav>
       </div>
 
@@ -349,7 +378,8 @@ export default function Layout({ children }) {
           {isLoading ? (
             <p>Loading...</p> // Hiển thị khi đang tải
           ) : (
-            Array.isArray(cartItems) && cartItems.map((item, index) => (
+            Array.isArray(cartItems) &&
+            cartItems.map((item, index) => (
               <div key={item.id} className='flex items-center justify-between'>
                 <img
                   src={

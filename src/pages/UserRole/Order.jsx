@@ -31,7 +31,7 @@ const Checkout = () => {
 
 
   useEffect(() => {
-    console.log('Selected Items:', selectedItems);
+    //console.log('Selected Items:', selectedItems);
   }, [selectedItems]);
 
   // Cập nhật giá trị shippingCost ngẫu nhiên
@@ -259,7 +259,7 @@ const Checkout = () => {
       // paidAt: null, // Chưa thanh toán thì để null
     };
 
-    console.log('Complete Order Data:', orderData);
+    //console.log('Complete Order Data:', orderData);
 
     try {
       if (paymentMethod === 'card' && cardOption === 'vnpay') {
