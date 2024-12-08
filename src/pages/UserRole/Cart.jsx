@@ -10,12 +10,12 @@ import {
   Checkbox,
 } from 'antd';
 import 'antd/dist/reset.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useSelector } from 'react-redux';
 import { Spin } from 'antd';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
-import { s } from 'framer-motion/client';
+import { nav, s } from 'framer-motion/client';
 import { useDispatch } from 'react-redux';
 import { setSelectedItems } from '../../reducers/carts';
 
@@ -27,7 +27,9 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true); // Thêm trạng thái loading
   const userId = useSelector((state) => state.user._id);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // Fetch cart data with pagination when component mounts or page changes
   useEffect(() => {
@@ -161,7 +163,14 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const selectedItems = cartItems.filter((item) => item.select);
   //console.log('Selected items:', selectedItems);
   const handleSelectItems = (selectedItems) => {
-    dispatch(setSelectedItems(selectedItems));
+    if (selectedItems.length === 0) {
+      message.warning('Please select at least one item to checkout');
+      return;
+    }else{
+      dispatch(setSelectedItems(selectedItems));
+      navigate('/order');
+    }
+    
   };
   const columns = [
     {
@@ -346,10 +355,9 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                 type='primary'
                 className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
                 // onClick={handleCheckout}
+                onClick={() => handleSelectItems(selectedItems)}
               >
-                <Link to='/order' onClick={() => handleSelectItems(selectedItems)}>
                   Order
-                </Link>
               </Button>
             </div>
           )}
