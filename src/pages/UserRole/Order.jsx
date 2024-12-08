@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form as FormikForm } from 'formik';
 import { Table, notification, Radio, Button, Modal, Input, Space } from 'antd';
-import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { s } from 'framer-motion/client';
+import { nav, s, u } from 'framer-motion/client';
+import orderApi from '../../hooks/useOrderApi'; // Import API
+import { Link, useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const addresses = useSelector((state) => state.user.address || []);
@@ -25,9 +26,12 @@ const Checkout = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [cardOption, setCardOption] = useState('');
+  const userId = useSelector((state) => state.user._id);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    //console.log('Selected Items:', selectedItems);
+    console.log('Selected Items:', selectedItems);
   }, [selectedItems]);
 
   // Cập nhật giá trị shippingCost ngẫu nhiên
@@ -129,6 +133,7 @@ const Checkout = () => {
       const storeTotal = store.products.reduce((sum, product) => {
         return sum + product.price * product.quantity;
       }, 0);
+
       const voucherCode = voucherCodes[storeIndex];
       const selectedVoucher = store.vouchers.find((voucher) => voucher.code === voucherCode);
       const storeDiscount = selectedVoucher ? storeTotal * selectedVoucher.discountRate : 0;
@@ -137,10 +142,12 @@ const Checkout = () => {
       totalDiscount += storeDiscount;
     });
 
-    // Tính tổng shippingCost cho tất cả các cửa hàng
-    const totalShippingCost = stores.reduce((total, store) => total + store.shippingCost, 0);
+    // Tính tổng shippingCost cho tất cả các cửa hàng và làm tròn giá trị
+    const totalShippingCost = Math.round(
+      stores.reduce((total, store) => total + store.shippingCost, 0),
+    );
 
-    // Trả về tổng số tiền (tổng giá trị sản phẩm - tổng giảm giá + tổng chi phí vận chuyển)
+    // Trả về tổng số tiền (tổng giá trị sản phẩm - tổng giảm giá + tổng chi phí vận chuyển đã làm tròn)
     return totalPrice - totalDiscount + totalShippingCost;
   };
 
@@ -174,7 +181,7 @@ const Checkout = () => {
     {
       title: 'Price',
       dataIndex: 'price',
-      render: (price) => `${price.toLocaleString()}$`,
+      render: (price) => `${parseInt(price)}$`,
     },
     {
       title: 'Quantity',
@@ -183,8 +190,8 @@ const Checkout = () => {
     {
       title: 'Total',
       render: (_, record) => {
-        const productTotal = record.price * record.quantity;
-        return `${productTotal.toLocaleString()}$`;
+        const productTotal = Math.round(record.price * record.quantity); // Làm tròn về số nguyên
+        return `${productTotal}$`;
       },
     },
     {
@@ -202,7 +209,7 @@ const Checkout = () => {
     },
   ];
 
-  const handlePlaceOrder = (values) => {
+  const handlePlaceOrder = async (values) => {
     const { paymentMethod, cardOption } = values;
 
     if (!selectedAddressId) {
@@ -220,39 +227,81 @@ const Checkout = () => {
       return;
     }
 
+    // Lấy thông tin địa chỉ từ Redux hoặc local state
+    const selectedAddress = addresses.find((addr) => addr._id === selectedAddressId);
+
+    // Tạo orderData theo cấu trúc backend
     const orderData = {
-      address: addresses.find((addr) => addr.id === selectedAddressId),
-      products: stores.flatMap((store) =>
-        store.products.map((product) => ({
-          ...product,
-          storeName: store.name,
+      customer: userId, // Bạn cần thay thế "userId" bằng ID người dùng thực tế từ Redux hoặc session
+      shops: stores.map((store) => ({
+        shopId: store.shopId, // Dùng shopId thực tế của cửa hàng
+        orderItems: store.products.map((product) => ({
+          product: product.product._id, // ID của sản phẩm trong database
+          title: product.title,
+          quantity: product.quantity,
+          price: product.price,
+          images: product.images, // Hình ảnh của sản phẩm
         })),
-      ),
-      vouchers: stores
-        .map((store, storeIndex) => {
-          const voucherCode = voucherCodes[storeIndex];
-          const selectedVoucher = store.vouchers.find((voucher) => voucher.code === voucherCode);
-          return selectedVoucher
-            ? {
-                code: selectedVoucher.code,
-                name: selectedVoucher.description,
-                storeName: store.name,
-              }
-            : null;
-        })
-        .filter((voucher) => voucher !== null),
-      cardOption,
-      paymentMethod,
-      totalAmount: calculateTotalAmount(),
-      shippingCost: shippingCost * stores.length,
+        shippingCost: store.shippingCost,
+        voucherDiscount: null, // Bạn có thể thay đổi phần này nếu muốn thêm mã giảm giá
+        totalShopPrice:
+          store.products.reduce((total, product) => total + product.price * product.quantity, 0) +
+          store.shippingCost,
+      })),
+      shippingAddress: {
+        address: selectedAddress.street,
+        city: selectedAddress.city,
+        country: selectedAddress.country,
+      },
+      paymentMethod: paymentMethod === 'card' ? 'Credit Card' : 'COD',
+      totalOrderPrice: calculateTotalAmount(), // Tính toán tổng giá trị đơn hàng
+      // isPaid: false, // Bạn có thể thay đổi giá trị này khi thanh toán
+      // paidAt: null, // Chưa thanh toán thì để null
     };
 
     console.log('Complete Order Data:', orderData);
 
-    notification.success({
-      message: 'Order placed successfully',
-      description: `Your order has been processed successfully.`,
-    });
+    try {
+      if (paymentMethod === 'card' && cardOption === 'vnpay') {
+        const response = await orderApi.createVNPayOrder(orderData);
+        //console.log('VNPay Response:', response);
+        if (response?.data?.vnpUrl) {
+          window.location.href = response.data.vnpUrl; // Redirect to VNPay payment gateway
+        } else {
+          notification.success({
+            message: 'Order placed successfully',
+            description: `Your VNPay order has been created. Please follow the redirect.`,
+          });
+        }
+      } else if (paymentMethod === 'card' && cardOption === 'stripe') {
+        const response = await orderApi.createSTPOrder(orderData);
+        if (response?.data?.url) {
+          window.location.href = response.data.url; // Redirect to Stripe payment gateway
+        } else {
+          notification.success({
+            message: 'Order placed successfully',
+            description: `Your Stripe order has been created. Please follow the redirect.`,
+          });
+        }
+      } else if (paymentMethod === 'cash') {
+        const response = await orderApi.createPlaceOrder(orderData);
+        console.log('Place Order Response:', response);
+        if (response?.data) {
+          navigate(`/orderconfirm`);
+          
+        }
+      } else {
+        notification.success({
+          message: 'Order placed successfully',
+          description: `Your order has been processed successfully.`,
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Order Failed',
+        description: error?.response?.data?.message || 'An error occurred while placing the order.',
+      });
+    }
   };
 
   const handleSelectAddress = (addressId) => {
@@ -316,7 +365,7 @@ const Checkout = () => {
                         rowKey='id'
                         pagination={false}
                       />
-                      <p className='mt-3'>Shipping Cost: {store.shippingCost.toFixed(2)}$</p>{' '}
+                      <p className='mt-3'>Shipping Cost: {Math.round(store.shippingCost)}$</p>
                       {/* Hiển thị shippingCost cho mỗi cửa hàng */}
                     </div>
                   ))}
@@ -389,10 +438,10 @@ const Checkout = () => {
                   <div className='bg-gray-100 p-6 rounded-lg'>
                     <h2 className='text-xl font-semibold'>Order Summary</h2>
                     <p className='mt-3'>
-                      Total Shipping Cost: {calculateTotalShippingCost().toFixed(2)}$
+                      Total Shipping Cost: {Math.round(calculateTotalShippingCost())}$
                     </p>
-                    <p className='mt-3'>Total Cost of Goods: {totalProducts().toLocaleString()}$</p>
-                    <p className='mt-3'>Total Amount: {calculateTotalAmount().toLocaleString()}$</p>
+                    <p className='mt-3'>Total Cost of Goods: {Math.round(totalProducts())}$</p>
+                    <p className='mt-3'>Total Amount: {Math.round(calculateTotalAmount())}$</p>
                     <div className='mt-3'>
                       <button
                         type='submit'

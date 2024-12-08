@@ -32,6 +32,22 @@ const orderApi = {
     const url = `${ORDER_API_ENDPOINT}/${orderId}/shops/${shopId}/status`; 
     return axiosClient.patch(url,{});
   },
+
+  // Tạo đơn hàng với VNPay
+  createVNPayOrder: (orderData) => {
+    const url = `${ORDER_API_ENDPOINT}/place-order-vn`; // Endpoint của BE
+    return axiosClient.post(url, orderData); // Gửi dữ liệu đơn hàng
+  },
+
+  createSTPOrder: (orderData) => {
+    const url = `${ORDER_API_ENDPOINT}/place-order-stp`; // Endpoint của BE
+    return axiosClient.post(url, orderData); // Gửi dữ liệu đơn hàng
+  },
+
+  createPlaceOrder: (orderData) => {
+    const url = `${ORDER_API_ENDPOINT}/place-order`; // Endpoint của BE
+    return axiosClient.post(url, orderData); // Gửi dữ liệu đơn hàng
+  },
  
 };
 
