@@ -164,14 +164,14 @@ export default function OrderDetailPage() {
     <div>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-5 text-base lg:my-3 lg:mx-4'>
-          <Breadcrumb.Item>Orders of User</Breadcrumb.Item>
-          <Breadcrumb.Item>Tracking</Breadcrumb.Item>
+          <Breadcrumb.Item>Order Details</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>Tracking</Breadcrumb.Item>
         </Breadcrumb>
         <div className='lg:mx-1 w-full p-3 min-h-96 bg-white rounded-lg flex flex-col items-center'>
           <div className='profile-user-order w-full mb-5'>
             <div className='info-user'>
               <div className='w-full lg:w-5/6 bg-white rounded-lg shadow-lg mx-auto'>
-                <div className='bg-red-400 text-white text-center py-2 rounded-t-lg'>
+                <div className='bg-[#679089] text-white text-center py-2 rounded-t-lg'>
                   <h2 className='text-base font-medium'>Order ID: #{orderId}</h2>
                 </div>
                 <div className='p-5'>
@@ -233,12 +233,12 @@ export default function OrderDetailPage() {
           </div>
           <div className='status-order w-full lg:w-5/6'>
             <div className='lg:my-5 flex justify-between items-center mb-2 lg:mb-0'>
-              <h1 className='w-full lg:w-1/2 text-xl lg:text-2xl font-bold'>Order Status</h1>
+              <h1 className='w-full lg:w-1/2 text-xl lg:text-2xl font-bold text-[#679089]'>Order Status</h1>
               <div className='w-full text-end my-5 relative overflow-hidden group'>
                 {currentStep !== 'Delivered' && (
                   <button
                     type='primary'
-                    className='text-base bg-red-500 text-white px-4 py-2 rounded-full'
+                    className='text-base bg-[#679089] text-white px-6 py-2 rounded-full'
                     onClick={handleNextStatus}
                     disabled={currentStep === statuses.length - 1}
                   >
@@ -247,7 +247,7 @@ export default function OrderDetailPage() {
                     {currentStep === 'Shipped' && 'Deliver Order'}
                   </button>
                 )}
-                <div className='absolute top-0 left-[-120%] w-[200%] h-full bg-white opacity-50 transform skew-x-[-45deg] transition-all duration-200 group-hover:left-full'></div>
+                <div className='absolute top-0 left-[-200%] w-[200%] h-full bg-white opacity-50 transform skew-x-[-45deg] transition-all duration-200 group-hover:left-full'></div>
               </div>
             </div>
             <div className={`steps-section ${isWideScreenMd ? 'w-full' : 'w-32 mx-auto'}`}>
@@ -274,15 +274,15 @@ export default function OrderDetailPage() {
           <div className='w-full lg:w-5/6'>
             <div className='mt-5 lg:mt-10 mx-auto'>
               <div className='flex justify-between items-center my-2'>
-                <h2 className='text-xl lg:text-2xl text-center font-semibold'>Products Ordered</h2>
+                <h2 className='text-xl lg:text-2xl text-center font-semibold text-[#679089]'>Ordered Books</h2>
                 {shops &&
                   shops.length > 0 &&
                   shops[0].orderItems &&
                   shops[0].orderItems.length > 0 && (
-                    <div className='bg-red-500 text-center text-white py-2 px-4 rounded-3xl lg:w-1/4 relative overflow-hidden group'>
+                    <div className='bg-[#679089] text-center text-white py-2 px-4 rounded-3xl lg:w-1/4 relative overflow-hidden group'>
                       <span className='text-sm underline'>Total Price: </span>{' '}
                       {shops[0].totalShopPrice + ' $'}
-                      <div className='absolute top-0 left-[-175%] w-[200%] h-full bg-white opacity-40 transform skew-x-[-45deg] transition-all duration-500 group-hover:left-full'></div>
+                      <div className='absolute top-0 left-[-220%] w-[200%] h-full bg-white opacity-40 transform skew-x-[-45deg] transition-all duration-500 group-hover:left-full'></div>
                     </div>
                   )}
               </div>
@@ -324,23 +324,23 @@ export default function OrderDetailPage() {
                                 <p className='text-gray-600 font-medium text-xs italic'>
                                   {items.author}
                                 </p>
-                                <p className='text-red-500 text-base font-medium'>${items.price}</p>
+                                <p className='text-[#f18966] text-base font-medium'>${items.price}</p>
                                 <p className='text-gray-600 font-medium text-xs'>
                                   Quantity:{' '}
-                                  <span className='text-red-500 text-sm'>{items.quantity}</span>
+                                  <span className='text-[#f18966] text-sm'>{items.quantity}</span>
                                 </p>
                               </div>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <p className='text-red-600 font-semibold text-nowrap'>
-                          No products ordered.
+                        <p className='text-[#679089] font-semibold text-nowrap'>
+                          No ordered books.
                         </p>
                       ),
                     )
                   ) : (
-                    <p className='text-red-600 font-semibold text-nowrap'>No shops found.</p>
+                    <p className='text-[#679089] font-semibold text-nowrap'>No shops found.</p>
                   )}
                 </Carousel>
               </div>

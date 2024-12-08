@@ -289,16 +289,16 @@ export default function DiscountPage() {
     <div className=''>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>All Vouchers</Breadcrumb.Item>
-          <Breadcrumb.Item>{shopName}</Breadcrumb.Item>
+          <Breadcrumb.Item>Your Vouchers</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} 👋🏻</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
+            <h1 className='text-3xl font-semibold hidden lg:block text-[#679089]'>Voucher List</h1>
             <div className='w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between'>
               <Input
                 onChange={handleSearchChange}
-                placeholder='Search Book ...'
+                placeholder='Search voucher ...'
                 className='w-full lg:w-2/3 py-3'
               />
               <div className='w-full lg:ml-4 lg:w-1/3 mt-5 lg:mt-0 flex items-center justify-between lg:justify-between'>
@@ -317,11 +317,11 @@ export default function DiscountPage() {
                 />
 
                 <button
-                  className='text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                  className='text-base bg-[#679089] text-white px-4 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'
                   type='primary'
                   onClick={() => setVisibleAdd(true)}
                 >
-                  Add Product
+                  New
                 </button>
               </div>
             </div>
@@ -347,7 +347,11 @@ export default function DiscountPage() {
       <Modal
         open={visibleAdd}
         className='text-center'
-        title='Add New Voucher'
+        title={
+          <h2 className="text-2xl font-bold text-[#f18966]  animate-slideIn">
+            Add New Voucher
+          </h2>
+        }
         onCancel={handleCancelAdd}
         footer={null}
       >
@@ -385,7 +389,7 @@ export default function DiscountPage() {
           {({ setFieldValue, errors, touched, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Name</label>
+                <label className='label-input-tnvd'>Name:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='name' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -396,7 +400,7 @@ export default function DiscountPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Value</label>
+                <label className='label-input-tnvd'>Value:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field
                     name='value'
@@ -413,7 +417,7 @@ export default function DiscountPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Expiration Date</label>
+                <label className='label-input-tnvd'>Expired Date:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='expired'>
                     {({ field, form }) => (
@@ -435,7 +439,7 @@ export default function DiscountPage() {
               </div>
 
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Valid Date</label>
+                <label className='label-input-tnvd'>Valid Date:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='valid'>
                     {({ field, form }) => (
@@ -456,8 +460,8 @@ export default function DiscountPage() {
                 </div>
               </div>
 
-              <div className='flex items-flex-start justify-flex-start'>
-                <label className='label-input-tnvd truncate'>Upload Image</label>
+              <div className='flex items-start justify-center'>
+                <label className='label-input-tnvd truncate'>Image:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
                     listType='picture-card'
@@ -488,11 +492,11 @@ export default function DiscountPage() {
               </div>
 
               <button
-                className='text-end text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                className='text-end text-base bg-[#679089] text-white px-6 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'
                 type='submit'
                 disabled={isSubmitting}
               >
-                Add
+                Save Details
               </button>
             </Form>
           )}
@@ -503,7 +507,11 @@ export default function DiscountPage() {
       <Modal
         open={visibleEdit}
         className='text-center'
-        title='Edit Voucher'
+        title={
+          <h2 className="text-2xl font-bold text-[#f18966]  animate-slideIn">
+            Edit Voucher
+          </h2>
+        }
         onCancel={handleCancelEdit}
         footer={null}
       >
@@ -553,7 +561,7 @@ export default function DiscountPage() {
           {({ setFieldValue, errors, touched, values, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Name</label>
+                <label className='label-input-tnvd'>Name:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='name' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -564,7 +572,7 @@ export default function DiscountPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Value</label>
+                <label className='label-input-tnvd'>Value:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field
                     name='value'
@@ -581,7 +589,7 @@ export default function DiscountPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Expiration Date</label>
+                <label className='label-input-tnvd'>Expired Date:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='expired'>
                     {({ field, form }) => (
@@ -603,7 +611,7 @@ export default function DiscountPage() {
               </div>
 
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Valid Date</label>
+                <label className='label-input-tnvd'>Valid Date:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='valid'>
                     {({ field, form }) => (
@@ -624,8 +632,19 @@ export default function DiscountPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Status</label>
-                <div className='w-2/3 flex items-center'>
+                <label className='label-input-tnvd'>Name:</label>
+                <div className='w-2/3 flex flex-col items-start'>
+                  <Field name='name' as={Input} className='w-full py-2' />
+                  <div className='h-8 py-1'>
+                    {touched.name && errors.name && (
+                      <div className='error text-red-500 ml-1'>{errors.name}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className='flex-input-tnvd -mt-5'>
+                <label className='label-input-tnvd'>Status:</label>
+                <div className='w-2/3 flex  items-start'>
                   <button
                     type='button'
                     name='isActive'
@@ -633,7 +652,7 @@ export default function DiscountPage() {
                       setFieldValue('isActive', !values.isActive); // Đảo trạng thái isActive
                     }}
                     className={`px-4 py-2 rounded-full ${
-                      values.isActive ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                      values.isActive ? ' text-red-600 font-bold' : ' text-green-600 font-bold' 
                     }`}
                   >
                     {values.isActive ? 'Deactivate' : 'Activate'}
@@ -641,8 +660,8 @@ export default function DiscountPage() {
                 </div>
               </div>
 
-              <div className='flex items-flex-start justify-flex-start'>
-                <label className='label-input-tnvd truncate'>Upload Image</label>
+              <div className='flex items-start justify-center mt-5'>
+                <label className='label-input-tnvd truncate'>Image:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
                     listType='picture-card'
@@ -702,11 +721,11 @@ export default function DiscountPage() {
                 </div>
               </div>
               <button
-                className='text-end text-base bg-blue-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-500'
+                className='text-end text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'
                 type='submit'
                 disabled={isSubmitting} // Disable button while submitting
               >
-                Edit Product
+                Update Details
               </button>
               {/* Đoạn useEffect sẽ cập nhật các giá trị trong form nếu có selectedProduct */}
             </Form>
