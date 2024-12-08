@@ -313,29 +313,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              Customers
+                              Accounts Management
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/admin/sales"
+                              to="/admin/registerShopForm"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Sales
+                              Register Forms
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/admin/admin"
+                              to="/admin/registerProductForm"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Admins
+                              Register Products
                             </NavLink>
                           </li>
                         </ul>
