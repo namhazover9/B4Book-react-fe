@@ -203,10 +203,20 @@ export default function Layout({ children }) {
           </div>
 
           {/* Mobile View - Sidebar and Shopping Cart */}
-          <div className='block lg:hidden flex items-center space-x-4'>
-            <Link to='/cart' className='hover:text-red-500'>
-              <ShoppingCartOutlined className='text-2xl text-red-400 ' />
-            </Link>
+          <div className='block lg:hidden flex items-center space-x-8'>
+          <Badge
+              count={
+                Array.isArray(cartItems) && cartItems.length > 0
+                  ? cartItems.reduce((total, item) => total + item.quantity, 0)
+                  : 0
+              }
+              offset={[10, 0]}
+            >
+              <ShoppingCartOutlined
+                onClick={toggleCartSidebar}
+                className='text-2xl text-[#4F6F52] cursor-pointer hover:text-[#FF5733] hover:scale-110 transition-transform duration-200 ease-in-out rounded-full'
+              />
+            </Badge>
             <MenuUnfoldOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
           </div>
 
@@ -228,19 +238,19 @@ export default function Layout({ children }) {
           </nav>
 
           {/* Right side - Search bar, icons, and language switch */}
-          <div className='hidden lg:flex items-center space-x-4'>
+          <div className='hidden lg:flex items-center space-x-8'>
             {/* Language Switcher */}
-            <Select
+            {/* <Select
               className='w-28'
               defaultValue={localStorage.getItem('locale') ?? 'en'}
               onChange={handleChange}
               options={languages}
-            />
+            /> */}
 
             {/* Wishlist */}
             <HeartOutlined
               onClick={toggleWishlistSidebar}
-              className='text-2xl text-red-400 cursor-pointer hover:bg-red-500 hover:text-white p-2 rounded-full'
+              className='text-2xl text-red-400 cursor-pointer hover:text-[#FF5733] hover:scale-110 transition-transform duration-200 ease-in-out rounded-full'
             />
             {/* Shopping Cart */}
             <Badge
@@ -335,12 +345,12 @@ export default function Layout({ children }) {
             </Link>
           ))}
           {/* Language Switcher */}
-          <Select
+          {/* <Select
             className='w-full mt-4'
             defaultValue={localStorage.getItem('locale') ?? 'en'}
             onChange={handleChange}
             options={languages}
-          />
+          /> */}
 
           
         </nav>
