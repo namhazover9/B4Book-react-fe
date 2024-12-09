@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from 'react';
+import ChatLayout from '../layouts/ChatLayout';
 
 //home Page
 const Home = lazy(() => import('@pages/homepages/Home'));
@@ -34,6 +35,9 @@ const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
 const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
+
+//Chat Page
+const ChatPage = lazy(() => import('@pages/SellerRole/ChatPage'));
 
 export const routes_here = [
   {
@@ -199,7 +203,7 @@ export const routes_here = [
     element: <OrderConfirm />,
     layout: 'user',
     isPrivate: false,
-  }
+  },
   // {
   //   path: '/shops',
   //   element: <SellerPage />,
@@ -212,4 +216,10 @@ export const routes_here = [
   //   layout: "sale",
   //   isPrivate: true,
   // },
+  {
+    path: '/shop-HoangNam/chat',
+    element: <ChatLayout />,
+    layout: 'sale',
+    isPrivate: false,
+  },
 ];
