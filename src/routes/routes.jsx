@@ -35,6 +35,9 @@ const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
 
+//Chat Page
+const ChatPage = lazy(() => import('@pages/SellerRole/ChatPage'));
+
 export const routes_here = [
   {
     path: '/',
@@ -199,7 +202,7 @@ export const routes_here = [
     element: <OrderConfirm />,
     layout: 'user',
     isPrivate: false,
-  }
+  },
   // {
   //   path: '/shops',
   //   element: <SellerPage />,
@@ -212,4 +215,10 @@ export const routes_here = [
   //   layout: "sale",
   //   isPrivate: true,
   // },
+  {
+    path: '/shop-HoangNam/chat',
+    element: <ChatPage />,
+    layout: 'sale',
+    isPrivate: false,
+  },
 ];
