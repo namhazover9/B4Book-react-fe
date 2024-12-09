@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from 'react';
+import ChatLayout from '../layouts/ChatLayout';
 
 //home Page
 const Home = lazy(() => import('@pages/homepages/Home'));
@@ -217,7 +218,7 @@ export const routes_here = [
   // },
   {
     path: '/shop-HoangNam/chat',
-    element: <ChatPage />,
+    element: <ChatLayout />,
     layout: 'sale',
     isPrivate: false,
   },

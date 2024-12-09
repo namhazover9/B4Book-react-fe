@@ -7,7 +7,6 @@ const SideBarChat = () => {
         { name: "Martin", message: "That pizza place was amazing! 🍕", avatar: "https://placehold.co/200x/ad922e/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" },
         // Add more contacts here...
     ];
-    console.log(contacts); // Đảm bảo danh sách contacts tồn tại và không rỗng
 
 
     const menu = (
