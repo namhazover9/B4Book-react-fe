@@ -14,15 +14,15 @@ const Footer = () => {
       {/* Main Container */}
       <div className='container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 '>
         {/* Logo and Contact Info */}
-        <div className='space-y-4 lg:justify-start mr-15'>
+        <div className='space-y-4 lg:justify-start'>
           <div className='space-x-4 sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
             <img src={logo} alt='Logo' className='w-16 h-16' />
             <span className='text-2xl sm:text-3xl font-bold text-gray-100'>Big Four</span>
           </div>
-          <p className='text-gray-300 sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
+          <p className='text-gray-300 hidden sm:flex sm:justify-center sm:items-center sm:text-center justify-center items-center text-center'>
             Got Questions? Call us 24/7!
           </p>
-          <p className='text-lg sm:text-xl font-semibold text-red-500 sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
+          <p className='text-lg sm:text-xl hidden font-semibold text-red-500 sm:flex sm:justify-center sm:items-center sm:text-center  justify-center items-center text-center'>
             +84 - 1800 - 4635
           </p>
           <div className='flex space-x-3 sm:flex sm:justify-center sm:items-center sm:text-center justify-center items-center text-center'>
@@ -81,17 +81,17 @@ const Footer = () => {
       </div>
 
       {/* Footer Bottom Section */}
-      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 mt-20 gap-10">
-        <div className="flex items-center justify-center">
-          <p className="text-gray-200 text-sm text-center sm:text-left mr-15">
+      <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 mt-20 ">
+        <div className="flex items-center justify-center order-2 lg:order-1">
+          <p className="text-gray-200 text-sm text-center sm:text-left">
             Copyright © 2024 <span className="text-red-500">Big Four</span>. All rights reserved.
           </p>
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center order-1 lg:order-2">
           <img
             src={footer}
             alt="Payment Methods"
-            className="h-10"
+            className="h-10 mb-5"
           />
         </div>
       </div>

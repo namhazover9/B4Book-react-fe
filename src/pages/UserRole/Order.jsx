@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Field, Form as FormikForm } from 'formik';
-import { Table, notification, Radio, Button, Modal, Input, Space } from 'antd';
+import { Table, notification, Radio, Button, Modal, Input, Space, Divider } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { nav, s, u } from 'framer-motion/client';
 import orderApi from '../../hooks/useOrderApi'; // Import API
@@ -8,16 +8,16 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const addresses = useSelector((state) => state.user.address || []);
-  console.log(addresses);
+  // console.log(addresses);
   const defaultAddress = addresses.length > 0 ? addresses[0] : null;
   const [selectedAddressId, setSelectedAddressId] = useState(
     defaultAddress ? defaultAddress._id : null,
   );
-  console.log('Selected Address Id ', selectedAddressId);
+  // console.log('Selected Address Id ', selectedAddressId);
   const selectedAddress = addresses.find((addr) => addr._id === selectedAddressId);
 
   const selectedItems = useSelector((state) => state.carts.selectedItems);
-  console.log('Selected Items', selectedItems);
+  // console.log('Selected Items', selectedItems);
 
   const [voucherCodes, setVoucherCodes] = useState({});
   const [selectedStore, setSelectedStore] = useState(null);
@@ -168,15 +168,26 @@ const Checkout = () => {
     //   title: 'Shop Name',
     //   dataIndex: 'shopName',
     //   render: (shopName) => <p>{shopName}</p>,
-    // },
+    // },    
     {
       title: 'Image',
       dataIndex: 'images',
-      render: (images) => <img src={images[0]} alt='Product' className='w-12 h-12 object-cover' />,
+      key: 'image',
+      className: 'w-[8em]',
+      render: (images) => (
+        <img
+          src={images[0]}
+          alt='Product'
+          className='w-12 h-12 lg:block hidden'
+        />
+      ),
     },
+
     {
       title: 'Product Name',
       dataIndex: 'title',
+      key: 'title',
+      className: 'min-w-[120px] lg:w-[15em] object-cover',
     },
     {
       title: 'Price',
@@ -288,7 +299,7 @@ const Checkout = () => {
         console.log('Place Order Response:', response);
         if (response?.data) {
           navigate(`/orderconfirm`);
-          
+
         }
       } else {
         notification.success({
@@ -308,14 +319,14 @@ const Checkout = () => {
     setSelectedAddressId(addressId); // Cập nhật địa chỉ mặc định được chọn
   };
 
-  const handleUpdateDefault = () => {};
+  const handleUpdateDefault = () => { };
 
   const handlePaymentChange = (e) => {
     setFieldValue('paymentMethod', e.target.value);
   };
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-200 sm:px-5 pb-12'>
-      <div className='flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-white shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-7xl'>
+    <div className='flex items-center justify-center min-h-screen bg-[#EEE5DA] sm:px-5 pb-12 text-gray-800'>
+      <div className='flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-[#F8F8F6] shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-7xl'>
         <Formik
           initialValues={{
             paymentMethod: 'card',
@@ -325,24 +336,20 @@ const Checkout = () => {
         >
           {({ setFieldValue, values }) => (
             <FormikForm>
-              <h1 className='flex items-center justify-center text-2xl underline text-red-700 mt-5'>
-                Order
+              <h1 className='text-2xl text-[#F18966] font-bold mb-4 flex items-center justify-center mt-7 lg:mt-0'>
+                Your Order
               </h1>
-              <div className='mb-5 p-0'>
-                <Link to='/cart'>
-                  <Button>Back</Button>
-                </Link>
-              </div>
-              <div className='flex flex-wrap gap-7  w-full'>
+
+              <div className='flex flex-wrap gap-7 mt-10 w-full'>
                 {/* Left Section */}
-                <div className='w-full md:w-[60%] bg-gray-100 p-6 rounded-xl lg:pr-4'>
-                  <div className='border-b border-gray-100 pb-4 mb-4 sm:mb-6'>
+                <div className='w-full md:w-[60%]  rounded-xl lg:pr-4'>
+                  <div className='border-b border-gray-100 pb-4 sm:mb-6 bg-[#EEE5DA] p-5 mb-7  rounded-xl'>
                     <div className='flex justify-between items-center mb-4'>
-                      <h2 className='text-base sm:text-lg font-semibold underline'>Address</h2>
+                      <p className='text-base sm:text-lg text-black text-md font-bold '>Address</p>
                       <Button
                         type='link'
                         onClick={() => setIsModalVisible(true)}
-                        className='text-gray-800 hover:text-blue-700 underline'
+                        className='!text-black hover:!text-black hover:opacity-90 font-semibold'
                       >
                         Select / Add Address
                       </Button>
@@ -353,28 +360,44 @@ const Checkout = () => {
                       </p>
                     )}
                   </div>
-
                   {stores.map((store, storeIndex) => (
                     <div key={storeIndex} className='mb-5'>
-                      <h2 className='text-base sm:text-lg font-semibold underline'>
-                        {store.name} Shop
-                      </h2>
+                      <div className='flex items-center justify-between pl-4 bg-[#EEE5DA] rounded-t-xl pt-2'>
+                        <h2 className='text-base m-0 sm:text-lg font-semibold '>
+                          {store.name} Shop
+                        </h2>
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setSelectedStore(storeIndex);
+                            setIsVoucherModalVisible(true);
+                          }}
+                          className='m-2 bg-[#679089] p-[0.4em] text-white hover:opacity-90  opacity-100 rounded-md'
+                        >
+                          Voucher
+                        </button>
+                      </div>
                       <Table
                         dataSource={store.products}
-                        columns={columns(store.name || 'Unnamed Store', storeIndex)} // Cột sẽ được thay đổi theo tên cửa hàng
+                        columns={columns(store.name || 'Unnamed Store', storeIndex)}
                         rowKey='id'
+                        showHeader={false}
                         pagination={false}
+                        rowClassName={'bg-[#F8F8F6]'}
                       />
-                      <p className='mt-3'>Shipping Cost: {Math.round(store.shippingCost)}$</p>
+                      <div className='flex justify-end mr-5'>
+                        <p className='mt-3 font-semibold'>Shipping Cost: {Math.round(store.shippingCost)}$</p>
+                      </div>
                       {/* Hiển thị shippingCost cho mỗi cửa hàng */}
+                      {storeIndex < stores.length - 1 && <Divider />}
                     </div>
                   ))}
                 </div>
                 {/* Right Section */}
                 <div className='w-full md:w-1/3'>
                   {/* Payment Section */}
-                  <div className='flex bg-gray-100 p-6 rounded-xl mb-5 flex-col space-y-4  h-auto lg:h-80 sm:pt-5'>
-                    <div className='text-base sm:text-lg font-bold underline'>Payment Method</div>
+                  <div className='flex bg-[#E6DBCD] p-6 rounded-xl mb-5 flex-col space-y-4  h-auto lg:h-80 sm:pt-5'>
+                    <div className='text-base sm:text-lg font-bold '>Payment Method</div>
                     <Field name='paymentMethod'>
                       {({ field }) => (
                         <Radio.Group
@@ -392,7 +415,7 @@ const Checkout = () => {
 
                     {values.paymentMethod === 'card' && (
                       <div>
-                        <div className='text-base sm:text-lg font-bold underline'>
+                        <div className='text-base sm:text-lg font-bold '>
                           Select Payment Gateway
                         </div>
                         <Field name='cardOption'>
@@ -435,8 +458,8 @@ const Checkout = () => {
                     )}
                   </div>
 
-                  <div className='bg-gray-100 p-6 rounded-lg'>
-                    <h2 className='text-xl font-semibold'>Order Summary</h2>
+                  <div className='bg-[#E6DBCD] p-6 rounded-lg '>
+                    <h2 className='text-xl font-semibold '>Order Summary</h2>
                     <p className='mt-3'>
                       Total Shipping Cost: {Math.round(calculateTotalShippingCost())}$
                     </p>
@@ -445,7 +468,7 @@ const Checkout = () => {
                     <div className='mt-3'>
                       <button
                         type='submit'
-                        className='text-sm bg-red-500 hover:bg-red-400 text-white px-3 py-2 sm:px-4 sm:py-2 rounded'
+                        className=' bg-[#679089] hover:opacity-90 text-white px-3 py-2 sm:px-4 sm:py-2 opacity-100 font-semibold rounded-lg'
                       >
                         Place Order
                       </button>
@@ -467,17 +490,17 @@ const Checkout = () => {
         footer={
           stores[selectedStore]?.vouchers.length > 0
             ? [
-                <Button key='cancel' onClick={() => setIsVoucherModalVisible(false)}>
-                  Cancel
-                </Button>,
-                <Button key='apply' type='primary' onClick={handleApplyVoucher}>
-                  Apply Voucher
-                </Button>,
-              ]
+              <Button key='cancel' onClick={() => setIsVoucherModalVisible(false)}>
+                Cancel
+              </Button>,
+              <Button key='apply' type='primary' onClick={handleApplyVoucher}>
+                Apply Voucher
+              </Button>,
+            ]
             : null
         }
       >
-        <p className='underline text-[1.19em]'>Apply Voucher</p>
+        <p className=' text-[1.19em]'>Apply Voucher</p>
         <div className='flex flex-col gap-4'>
           {stores[selectedStore]?.vouchers.length > 0 ? (
             <Radio.Group>
@@ -510,7 +533,7 @@ const Checkout = () => {
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null} // Ẩn các nút Cancel và Confirm
-        width={600}
+        width={500}
       >
         <Radio.Group
           onChange={(e) => handleSelectAddress(e.target.value)} // Ensure state updates correctly
@@ -520,16 +543,16 @@ const Checkout = () => {
           {addresses.map((addr) => (
             <div
               key={addr._id} // Ensure unique key using address ID
-              className='flex items-start justify-between p-3 border border-gray-200 rounded-md m-3'
+              className='flex items-start justify-between p-3 border bg-[#E6DBCD] border-gray-200 rounded-xl  m-3'
             >
               <Radio value={addr._id}>
                 {' '}
                 {/* Use addr._id as the value */}
                 <div>
-                  <p>
-                    {addr.street}, {addr.city}
+                  <p className='m-0'>
+                    {addr.street}, {addr.city} ,{addr.country}
                   </p>
-                  <p className='font-semibold'>{addr.country}</p>
+
                 </div>
               </Radio>
             </div>

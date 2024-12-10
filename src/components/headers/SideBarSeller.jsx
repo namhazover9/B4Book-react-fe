@@ -1,4 +1,4 @@
-import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, ProfileOutlined, RightOutlined, SettingOutlined, TagsOutlined, UserSwitchOutlined, WechatOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, WalletOutlined, ProfileOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, UserSwitchOutlined, WechatOutlined } from '@ant-design/icons';
 import { Button, Drawer, Menu } from 'antd';
 import Item from 'antd/es/list/Item';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,8 @@ export default function SideBarSeller({ onToggle, isOpen }) {
         { title: "Profile", icon: <ProfileOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/profile/${shopDetail?._id}` },
         { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/orders/${shopDetail?._id}` },
-        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/saleData/${shopDetail?._id}` },
+        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: "/shop-HoangNam/sale-data" },
+        { title: "Withdrawal", icon: <WalletOutlined className='text-2xl' />, path:  `/shop/${shopDetail?.shopName}/withdrawals/${shopDetail?._id}`},   
         { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}`},
         { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
         { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl' />, path: "/" },
