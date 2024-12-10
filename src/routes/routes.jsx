@@ -12,7 +12,6 @@ const Details = lazy(() => import('@pages/UserRole/Details'));
 // user Role
 const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
-const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
 const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
 const ProfileOfSeller = lazy(() => import('@pages/SellerRole/ProfileOfSeller'));
 const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
