@@ -25,6 +25,7 @@ const DiscountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
 const OrderDetailPageCustomer = lazy(() => import('@pages/UserRole/OrderDetailPageCustomer'));
 const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
 const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
+const SaleData = lazy(() => import('@pages/SellerRole/SellData'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
@@ -161,6 +162,12 @@ export const routes_here = [
     isPrivate: false,
   },
   {
+    path: '/shop/:name/saleData/:id',
+    element: <SaleData />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
     path: '/userprofile',
     element: <UserProfile />,
     layout: 'user',
@@ -217,9 +224,9 @@ export const routes_here = [
   //   isPrivate: true,
   // },
   {
-    path: '/shop-HoangNam/chat',
+    path: '/shop/:name/chat/:id/:chatId?',
     element: <ChatLayout />,
-    layout: 'sale',
-    isPrivate: false,
+    layout: 'shop',
+    isPrivate: true,
   },
 ];
