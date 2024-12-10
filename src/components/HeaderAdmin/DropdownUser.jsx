@@ -1,9 +1,47 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
+import { useDispatch, useSelector } from 'react-redux';
+import constants from '../../constants/constants';
+import useLogin from '../../hooks/useLogin';
+import { setIsAuth } from '../../reducers/auth';
 
 const DropdownUser = () => {
+  const userId = useSelector((state) => state.user._id);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!userId);
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+  console.log('userId', user);
+  
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
+
+      // If there's a token, send it to the backend for logout
+      if (token) {
+        await useLogin.postLogout(token); // Send token in the body to the backend
+      }
+
+      // Clear the localStorage (client-side)
+      localStorage.removeItem(constants.ACCESS_TOKEN_KEY);
+      localStorage.removeItem(constants.REFRESH_TOKEN_KEY);
+
+      // Update the login state to reflect that the user is logged out
+      setIsLoggedIn(false);
+      dispatch(setIsAuth(false));
+      // Optionally, reset any Redux state or global state related to user authentication
+
+      // Navigate to the login page or wherever you'd like to redirect after logout
+      //navigate('/');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -14,13 +52,13 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+          {user?.userName}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">Admin</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={'https://res.cloudinary.com/dmyfiyug9/image/upload/v1733216067/user_olhgzp.png'} alt="User" className="w-32 h-auto"/>
+          <img src={user?.avartar ?? 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1733216067/user_olhgzp.png'} alt="User" className="w-32 h-auto rounded-full"/>
         </span>
 
         <svg
@@ -118,7 +156,7 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          <button onClick={() => handleLogout()} className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
             <svg
               className="fill-current"
               width="22"
