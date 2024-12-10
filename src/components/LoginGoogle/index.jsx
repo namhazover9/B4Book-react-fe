@@ -34,12 +34,12 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
   useEffect(() => {
     if (isAuth && userRole) {
       if (userRole === 'Admin') {
-        navigate('/admin');
+        window.location.href = '/admin';
       } else if (userRole === 'Customer') {
-        navigate('/');
+        window.location.href = '/';
       }
     }
-  }, [isAuth, userRole, navigate]);
+  }, [isAuth, userRole]);
 
   const handleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {

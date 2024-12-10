@@ -13,6 +13,7 @@ import { getIsAuth } from '../reducers/auth';
 import { getUserRequest } from '../reducers/user';
 import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
 import { s } from 'framer-motion/client';
+import { fetchCart } from '../reducers/carts';
 
 
 const layoutMap = {
@@ -29,7 +30,7 @@ const AppRoutes = () => {
   const isAuth = useSelector((state) => state.authenticate.isAuth);
   const userRole = useSelector((state) => state.user.role[0]?.name);
   const userId = useSelector((state) => state.user._id);
-
+  const cartItems = useSelector((state) => state.carts.items); // Lấy danh sách giỏ hàng từ Redux store
 
   // Kiểm tra xác thực
   useEffect(() => {
@@ -39,7 +40,10 @@ const AppRoutes = () => {
   // Lấy thông tin người dùng khi xác thực thành công
   useEffect(() => {
     if (isAuth) {
+      console.log('User ID:', isAuth);
+      
       dispatch(getUserRequest());
+      dispatch(fetchCart());
     }
   }, [isAuth, dispatch]);
 
