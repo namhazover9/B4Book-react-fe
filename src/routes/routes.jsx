@@ -13,6 +13,7 @@ const ProductPage = lazy(() => import('@pages/UserRole/ProductPage'));
 const Cart = lazy(() => import('@pages/UserRole/Cart'));
 const PopupCart = lazy(() => import('@pages/UserRole/PopupCart'));
 const SellerPage = lazy(() => import('@pages/SellerRole/SellerPage'));
+const ProfileOfSeller = lazy(() => import('@pages/SellerRole/ProfileOfSeller'));
 const OrderPageOfSeller = lazy(() => import('@pages/SellerRole/OrderPageOfSeller'));
 const OrderDetailPage = lazy(() => import('@pages/SellerRole/OrderDetailPage'));
 const UserProfile = lazy(() => import('@pages/UserRole/UserProfile'));
@@ -132,6 +133,12 @@ export const routes_here = [
   {
     path: '/shop/:name/voucher/:id',
     element: <DiscountPage />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop/:name/profile/:id',
+    element: <ProfileOfSeller />,
     layout: 'seller',
     isPrivate: false,
   },

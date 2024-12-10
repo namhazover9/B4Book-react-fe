@@ -136,7 +136,7 @@ export default function Layout({ children }) {
       const shop = response.data.data; // Truy cập data
       const shopName = shop.shopName; // Lấy shopName
       if (response.data.message === 'success') {
-        navigate(`/shop/${shopName}/home/${shop._id}`); // Điều hướng
+        navigate(`/shop/${shopName}/profile/${shop._id}`); // Điều hướng
       }
     } catch (error) {
       console.error('Error fetching shop detail:', error);
