@@ -65,9 +65,9 @@ const stopLoading = () => ({ type: STOP_LOADING });
 
 // Lấy giỏ hàng từ API
 const fetchCart = () => async (dispatch) => {
-  dispatch(startLoading());
   try {
     const response = await ShopingCartApi.getCart();
+    console.log('Fetching cart...', response);
     dispatch({ type: FETCH_CART_SUCCESS, payload: response.data.data });
   } catch (error) {
     dispatch({ type: FETCH_CART_FAILURE, payload: error.message });

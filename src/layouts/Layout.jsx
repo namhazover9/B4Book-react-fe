@@ -32,6 +32,11 @@ export default function Layout({ children }) {
   const [userInfo, setUserInfo] = useState(null);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.carts.items); // Lấy danh sách giỏ hàng từ Redux store
+  // console.log(cartItems, 'cartItems');
+  const userName = useSelector((state) => state.user.userName);
+  //console.log(userName);
+  const avatar = useSelector((state) => state.user.avartar);
+  //console.log(avatar);
 
   const userMenu = (
     <Menu>
@@ -50,12 +55,12 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!userId) return; // Nếu không có userId, không cần gọi API
+  // useEffect(() => {
+  //   // if (!userId) return; // Nếu không có userId, không cần gọi API
 
-    // Gọi action fetchCartItems từ Redux
-    dispatch(fetchCart());
-  }, [userId, dispatch]);
+  //   // Gọi action fetchCartItems từ Redux
+  //   dispatch(fetchCart());
+  // }, [userId, dispatch]);
 
   const toggleLoginPopup = () => {
     setIsLoginPopupOpen(!isLoginPopupOpen);
@@ -79,24 +84,25 @@ export default function Layout({ children }) {
     navigate('/login'); // Điều hướng đến trang login
   };
 
+  // useEffect(() => {
+  //   console.log('Sidebar status:', isSidebarOpen);
+  // }, [isSidebarOpen]);
 
-  useEffect(() => {
-    console.log('Sidebar status:', isSidebarOpen);
-  }, [isSidebarOpen]);
-  
-  useEffect(() => {
-    if (userId) {
-      const fetchUserProfile = async () => {
-        try {
-          const response = await userApi.getUserProfile(userId);
-          setUserInfo(response.data); // Lưu thông tin người dùng
-        } catch (error) {
-          console.error('Failed to fetch user profile:', error);
-        }
-      };
-      fetchUserProfile();
-    }
-  }, [userId]); // Chạy lại khi userId thay đổi
+  // useEffect(() => {
+  //   if (userId) {
+  //     const fetchUserProfile = async () => {
+  //       try {
+  //         const response = await userApi.getUserProfile(userId);
+  //         setUserInfo(response.data); // Lưu thông tin người dùng
+  //       } catch (error) {
+  //         console.error('Failed to fetch user profile:', error);
+  //       }
+  //     };
+  //     fetchUserProfile();
+  //   } else {
+  //     setUserInfo(null); // Đảm bảo trạng thái chính xác khi userId không tồn tại
+  //   }
+  // }, [userId]);
 
   useEffect(() => {
     const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
@@ -126,7 +132,8 @@ export default function Layout({ children }) {
       // Optionally, reset any Redux state or global state related to user authentication
 
       // Navigate to the login page or wherever you'd like to redirect after logout
-      navigate('/');
+      //navigate('/');
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -204,7 +211,7 @@ export default function Layout({ children }) {
 
           {/* Mobile View - Sidebar and Shopping Cart */}
           <div className='block lg:hidden flex items-center space-x-8'>
-          <Badge
+            <Badge
               count={
                 Array.isArray(cartItems) && cartItems.length > 0
                   ? cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -272,13 +279,11 @@ export default function Layout({ children }) {
               <Dropdown overlay={userMenu} trigger={['click']}>
                 <div className='flex items-center space-x-2 cursor-pointer'>
                   <img
-                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
+                    src={avatar || 'https://via.placeholder.com/150'}
                     alt='Avatar'
                     className='w-10 h-10 rounded-full'
                   />
-                  <span className='text-gray-700 font-medium'>
-                    Hi, {userInfo?.userName || 'Guest'}
-                  </span>
+                  <span className='text-gray-700 font-medium'>Hi, {userName || 'User'}</span>
                 </div>
               </Dropdown>
             ) : (
@@ -308,32 +313,28 @@ export default function Layout({ children }) {
         } transition-transform duration-300 lg:hidden`}
       >
         <div className='flex justify-between'>
-          {/* Login Button */}
+          {/* Login/Logout Button */}
           {isLoggedIn ? (
-              <Dropdown overlay={userMenu} trigger={['click']}>
-                <div className='flex items-center space-x-2 cursor-pointer'>
-                  <img
-                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
-                    alt='Avatar'
-                    className='w-10 h-10 rounded-full'
-                  />
-                  <span className='text-gray-700 font-medium'>
-                    Hi, {userInfo?.userName || 'Guest'}
-                  </span>
-                </div>
-              </Dropdown>
-            ) : (
-              <button
-                onClick={handleNavigate}
-                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
-              >
-                Login
-              </button>
-            )}
+            <div className='flex items-center space-x-2 cursor-pointer'>
+              <img
+                src={avatar || 'https://via.placeholder.com/150'}
+                alt='Avatar'
+                className='w-10 h-10 rounded-full'
+              />
+              <span className='text-gray-700 font-medium'>Hi, {userName || 'User'}</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleNavigate}
+              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+            >
+              Login
+            </button>
+          )}
           <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
         </div>
-        
-        <nav className='mt-4'>
+
+        <nav className='mt-4 flex-grow'>
           {menuItems.map((item) => (
             <Link
               key={item.path}
@@ -344,16 +345,36 @@ export default function Layout({ children }) {
               <Translate text={item.name} />
             </Link>
           ))}
-          {/* Language Switcher */}
-          {/* <Select
-            className='w-full mt-4'
-            defaultValue={localStorage.getItem('locale') ?? 'en'}
-            onChange={handleChange}
-            options={languages}
-          /> */}
+          {isLoggedIn && (
+            <Link
+              to='/userprofile'
+              className='block space-x-2 cursor-pointer py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <UserOutlined className='text-gray-700' />
+              <span className='text-gray-700'>Profile</span>
+            </Link>
+          )}
 
-          
+          {isLoggedIn && (
+            <div
+              onClick={handleSwitchShop}
+              className='block space-x-2 cursor-pointer py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <UserSwitchOutlined className='text-gray-700' />
+              <span className='text-gray-700'>Switch Shop</span>
+            </div>
+          )}
+
+          {/* Show Log out button only if user is logged in */}
         </nav>
+        {isLoggedIn && (
+          <button
+            className='mt-auto text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+            onClick={handleLogout}
+          >
+            Log out
+          </button>
+        )}
       </div>
 
       {/* Login Popup */}
