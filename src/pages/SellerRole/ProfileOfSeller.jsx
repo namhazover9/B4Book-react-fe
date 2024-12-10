@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import shopApi from '../../hooks/useShopApi';
+import { message } from 'antd';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
@@ -276,6 +277,7 @@ export default function ProfileOfSeller() {
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const response = await shopApi.createWithdrawRequest(values.amount);
+              
               message.success(
                 `Withdraw request for ${values.amount}$ has been submitted successfully!`,
               );

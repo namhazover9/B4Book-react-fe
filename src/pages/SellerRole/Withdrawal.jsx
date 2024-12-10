@@ -132,7 +132,7 @@ export default function withdrawal() {
       key: 'status',
       width: 100,
       ...alignCenter,
-    }
+    },
   ];
 
   const onChange = (sorter) => {

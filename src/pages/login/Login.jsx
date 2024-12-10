@@ -39,22 +39,25 @@ function Login() {
       // if (process.env.NODE_ENV === 'production')
       //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
-      
+      window.location.reload();
+
     } catch (error) {
       message.error('Lỗi đăng nhập.');
     }
   };
 
   // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
-  // useEffect(() => {
-  //   if (isAuth && userRole) {
-  //     if (userRole === 'Admin') {
-  //       window.location.href = '/admin';
-  //     } else if (userRole === 'Customer') {
-  //       window.location.href = '/';
-  //     }
-  //   }
-  // }, [isAuth, userRole, navigate]);
+  useEffect(() => {
+    if (isAuth && userRole) {
+      // Điều hướng sau khi trạng thái xác thực và userRole đã được cập nhật
+      if (userRole === 'Admin') {
+        window.location.href = '/admin';
+      } else if (userRole === 'Customer') {
+        window.location.href = '/';
+      }
+    }
+  }, [isAuth, userRole]); // Thêm userRole và isAuth vào dependency array
+  
 
   const onLogin = async (account) => {
     try {
