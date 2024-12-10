@@ -1,10 +1,8 @@
 import {
   BarsOutlined,
   EyeOutlined,
-  HeartOutlined,
   QrcodeOutlined,
   SearchOutlined,
-  ShoppingCartOutlined
 } from '@ant-design/icons';
 import { Pagination, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -32,7 +30,6 @@ export default function ShopPage() {
         page: currentPage,
         limit: shopsPerPage,
       });
-      console.log("success")
       const data = response.data;
       setShopList(data.data);
       setFilterShop(data.data);
@@ -205,14 +202,8 @@ export default function ShopPage() {
                                   />
                                   <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                                     <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
-                                      <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
-                                        <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
-                                      </button>
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
                                      <NavLink to={`/shops/detailShop/${shop._id}`}><EyeOutlined  className='w-6 h-6 flex justify-center items-center text-black-500'  /></NavLink>
-                                      </button>
-                                      <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
-                                        <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                                       </button>
                                     </div>
                                   </div>

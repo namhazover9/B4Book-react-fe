@@ -168,8 +168,8 @@ export default function OrderDetailPage() {
     <div>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-5 text-base lg:my-3 lg:mx-4'>
-          <Breadcrumb.Item>Orders of User</Breadcrumb.Item>
-          <Breadcrumb.Item>Tracking</Breadcrumb.Item>
+          <Breadcrumb.Item>Order Details</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>Tracking</Breadcrumb.Item>
         </Breadcrumb>
         <div className='lg:mx-1 w-full lg:p-3 min-h-96 bg-white rounded-lg flex flex-col items-center'>
           <div className='profile-user-order w-full lg:w-11/12 lg:my-4 mt-4 flex flex-col lg:flex-row justify-center lg:items-start lg:space-x-8'>
@@ -346,7 +346,7 @@ export default function OrderDetailPage() {
                                 <p className='text-gray-600 font-medium text-xs italic'>
                                   {items.author}
                                 </p>
-                                <p className='text-red-500 text-base font-medium'>${items.price}</p>
+                                <p className='text-[#f18966] text-base font-medium'>${items.price}</p>
                                 <p className='text-gray-600 font-medium text-xs'>
                                   Quantity:{' '}
                                   <span className='text-red-500 text-sm'>{items.quantity}</span>
@@ -361,13 +361,13 @@ export default function OrderDetailPage() {
                           </div>
                         ))
                       ) : (
-                        <p className='text-red-600 font-semibold text-nowrap'>
-                          No products ordered.
+                        <p className='text-[#679089] font-semibold text-nowrap'>
+                          No ordered books.
                         </p>
                       ),
                     )
                   ) : (
-                    <p className='text-red-600 font-semibold text-nowrap'>No shops found.</p>
+                    <p className='text-[#679089] font-semibold text-nowrap'>No shops found.</p>
                   )}
                 </Carousel>
               </div>

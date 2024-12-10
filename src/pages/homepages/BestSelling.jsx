@@ -126,7 +126,7 @@ const BookShowcase = () => {
                 {
                   breakpoint: 768,
                   settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 2,
                   },
                 },
               ]}

@@ -14,9 +14,9 @@ export default function SideBarSeller({ onToggle, isOpen }) {
         { title: "Profile", icon: <ProfileOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/profile/${shopDetail?._id}` },
         { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/orders/${shopDetail?._id}` },
-        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: "/shop-HoangNam/chat" },
-        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: "/shop-HoangNam/sale-data" },
-        { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}` },
+        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/saleData/${shopDetail?._id}` },
+        { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}`},
+        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
         { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl' />, path: "/" },
     ];
 
@@ -67,8 +67,8 @@ export default function SideBarSeller({ onToggle, isOpen }) {
                 </ul>
             </div>
             {/* Tablet - Mobile - Ipad */}
-            <div className="m-2 lg:hidden">
-                <Button type="primary" onClick={showDrawer} className='text-base bg-teal-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-bg-teal-500'>
+            <div className="m-2 lg:hidden ">
+                <Button type="primary" onClick={showDrawer} className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-bg-teal-500'>
                     <AlignLeftOutlined />
                 </Button>
                 <Drawer title="Menu" onClose={onCloseDrawer} open={openDrawer} placement="left" width={275}>

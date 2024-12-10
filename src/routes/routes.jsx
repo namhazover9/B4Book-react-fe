@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy } from 'react';
+import ChatLayout from '../layouts/ChatLayout';
 
 //home Page
 const Home = lazy(() => import('@pages/homepages/Home'));
@@ -24,14 +25,21 @@ const OrderConfirm = lazy(() => import('@pages/UserRole/OrderConfirm'));
 const DiscountPage = lazy(() => import('@pages/SellerRole/DiscountPage'));
 const OrderDetailPageCustomer = lazy(() => import('@pages/UserRole/OrderDetailPageCustomer'));
 const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
+const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
+const SaleData = lazy(() => import('@pages/SellerRole/SellData'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
+const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
+const ApprovedProduct = lazy(() => import('@pages/AdminRole/ApproveProduct'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/Dashboard/ECommerce'));
 const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
 const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
+
+//Chat Page
+const ChatPage = lazy(() => import('@pages/SellerRole/ChatPage'));
 
 export const routes_here = [
   {
@@ -55,32 +63,44 @@ export const routes_here = [
   {
     path: '/aboutus',
     element: <AboutUs />,
-    layout: null,
+    layout: 'user',
     isPrivate: false,
   },
   {
     path: '/admin/user',
     element: <AccountManager />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin',
     element: <Dashboard />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin/profile',
     element: <ProfileAdmin />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: '/admin/settings',
     element: <AdminSetting />,
     layout: 'admin',
-    isPrivate: false,
+    isPrivate: true,
+  },
+  {
+    path: '/admin/registerShopForm',
+    element: <ApprovedShop />,
+    layout: 'admin',
+    isPrivate: true,
+  },
+  {
+    path: '/admin/registerProductForm',
+    element: <ApprovedProduct />,
+    layout: 'admin',
+    isPrivate: true,
   },
   {
     path: '/cart',
@@ -109,6 +129,12 @@ export const routes_here = [
   {
     path: '/detailOrder/:orderId',
     element: <OrderDetailPageCustomer />,
+    layout: 'customer',
+    isPrivate: false,
+  },
+  {
+    path: '/registerShop',
+    element: <RegisterShop />,
     layout: 'customer',
     isPrivate: false,
   },
@@ -143,6 +169,12 @@ export const routes_here = [
     isPrivate: false,
   },
   {
+    path: '/shop/:name/saleData/:id',
+    element: <SaleData />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
     path: '/userprofile',
     element: <UserProfile />,
     layout: 'user',
@@ -156,8 +188,15 @@ export const routes_here = [
   },
 
   {
-    path: '/details/:orderId',
+    path: '/orderdetails/:orderId',
     element: <OrderDetailPageCustomer />,
+    layout: 'user',
+    isPrivate: false,
+  },
+
+  {
+    path: '/details/:id',
+    element: <Details />,
     layout: 'user',
     isPrivate: false,
   },
@@ -178,7 +217,7 @@ export const routes_here = [
     element: <OrderConfirm />,
     layout: 'user',
     isPrivate: false,
-  }
+  },
   // {
   //   path: '/shops',
   //   element: <SellerPage />,
@@ -191,4 +230,10 @@ export const routes_here = [
   //   layout: "sale",
   //   isPrivate: true,
   // },
+  {
+    path: '/shop/:name/chat/:id/:chatId?',
+    element: <ChatLayout />,
+    layout: 'shop',
+    isPrivate: true,
+  },
 ];
