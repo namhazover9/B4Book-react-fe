@@ -31,14 +31,15 @@ export default function ProductPage() {
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
-    'Classic',
-    'Psychological',
-    'Mystery',
-    'Sci-Fi',
-    'Biography',
-    'Fantasy',
-    'Romance',
-    'History',
+    'ChristianLiving',
+    'ChurchHistory',
+    'Educational Curriculum',
+    'Fiction & Fantasy',
+    'Religion & Spirituality',
+    'Romance Books',
+    'Literature & Fiction',
+    'Biographies & Memoirs',
+    'Children Book'
   ];
   const [addingToCart, setAddingToCart] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -133,8 +134,6 @@ export default function ProductPage() {
       );
       return;
     }
-
-
 
     // Tìm thông tin tồn kho từ stockList
     const stockItem = stockList.find((item) => item.productId === productId);
@@ -252,12 +251,21 @@ export default function ProductPage() {
   }, []);
 
   const [expandedItems, setExpandedItems] = useState({});
+  const [isTruncated, setIsTruncated] = useState({});
 
   const toggleDescription = (index) => {
     setExpandedItems((prev) => ({
       ...prev,
-      [index]: !prev[index], // Đảo trạng thái của sản phẩm theo index
+      [index]: !prev[index],
     }));
+  };
+
+  const toggleTitle = (index) => {
+    setIsTruncated((prev) => ({
+      ...prev,
+      [index]: !(prev[index] ?? true),
+    }));
+    console.log(index);
   };
 
   return (
@@ -302,11 +310,7 @@ export default function ProductPage() {
               />
             </div>
           </div>
-
-          <div className='hidden lg:block'>
-            <br />
-          </div>
-
+          <div className='hidden lg:block'><br /></div>
           <div className='price'>
             <div className='price-ipad hidden lg:block'>
               <Card
@@ -344,11 +348,11 @@ export default function ProductPage() {
                 className='w-full md:w-5/6 mx-auto'
                 disabled={disabled}
               />
-              <div className='flex justify-between md:w-5/6 mt-2'>
+              <div className='flex justify-between md:w-5/6 mt-2 mx-auto'>
                 <span>${priceRange[0]}</span>
                 <span>${priceRange[1]}</span>
               </div>
-              <div className='my-1'>
+              <div className='md:w-5/6 my-1 mx-auto'>
                 Disabled:{' '}
                 <Switch
                   size='small'
@@ -416,7 +420,7 @@ export default function ProductPage() {
             ) : (
               <div className=''>
                 {viewMode === 'block' ? (
-                  <div className='list-by-block sm:w-11/12 xl:w-full'>
+                  <div className='list-by-block sm:w-11/12 xl:w-full mx-auto'>
                     {bookList.length === 0 ? (
                       <div className='not-found'>
                         <h2 className='text-center my-20'>
@@ -428,14 +432,8 @@ export default function ProductPage() {
                         {bookList.map((book, index) => {
                           const imageUrl = book.images[0] ? book.images[0] : '';
                           return (
-                            <div
-                              className='flex flex-col sm:flex-row justify-between items-start'
-                              key={index}
-                            >
-                              <div
-                                id={index}
-                                className='bg-white w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
-                              >
+                            <div className='flex flex-col sm:flex-row justify-between items-start' key={index}>
+                              <div id={index} className='bg-white w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'>
                                 <div className='relative group overflow-hidden rounded-lg mb-4'>
                                   <img
                                     src={imageUrl}
@@ -469,22 +467,25 @@ export default function ProductPage() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className='text-xl font-bold mb-1 text-wrap'>{book.title}</p>
-                                <div className='flex flex-col justify-between mb-2 items-start mr-5 space-y-1'>
-                                  <p className='text-lg text-gray-600 truncate'>{book.author}</p>
-                                  <p className='text-md text-gray-600 italic truncate'>
-                                    {book.category}
-                                  </p>
+
+                                <p className={`text-xl font-bold mb-1 text-[#F18966] ${isTruncated[index] ?? true ? 'truncate' : ''}`} onClick={() => toggleTitle(index)}>{book.title}</p>
+
+                                <div className='flex flex-col justify-between items-start mr-5 space-y-1'>
+                                  <p className='text-base text-gray-600 truncate'>{book.author}</p>
                                 </div>
-                                <div className="w-5/6 flex flex-col items-start justify-between mb-2 space-y-1">
+                                <div className="flex my-1">
+                                  <div className='text-yellow-500 mr-2'>★★★★★</div>
+                                  <span className='text-[#F18966]'>{book.ratingResult}</span>
+                                </div>
+                                <div className="flex items-center justify-between mb-2">
                                   <div className='flex items-center'>
-                                    <div className='text-yellow-500 mr-2'>★★★★★</div>
-                                    <span className='text-gray-600 truncate'>{book.stock}</span>
+                                    <p className='text-xs text-gray-600'>Stock: <span className='text-[#F18966]'>{book.stock}</span></p>
                                   </div>
                                   <div className="hidden sm:block">
                                     <div className='flex items-center'>
-                                      <div className='text-yellow-500 mr-2'>Sales number: </div>
-                                      <span className='text-gray-600 truncate'>{book.salesNumber}</span>
+                                      <p className='text-xs text-yellow-500 mr-2'>Sales number:
+                                        <span className='text-[#F18966] truncate'> {book.salesNumber}</span>
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
@@ -552,15 +553,18 @@ export default function ProductPage() {
                                     <p className="w-11/12 text-gray-600 text-sm mb-2 mr-2 text-balance hidden sm:block">
                                       {book.description}
                                     </p>
+                                    <div className='flex items-center mb-2'>
+                                      <div className='text-yellow-500 mr-2'>★★★★★</div>
+                                      <span className='text-gray-600 truncate'>{book.stock}</span>
+                                    </div>
                                     <div className="w-5/6 flex items-center justify-between">
-                                      <div className='flex items-center mb-2'>
-                                        <div className='text-yellow-500 mr-2'>★★★★★</div>
-                                        <span className='text-gray-600 truncate'>{book.stock}</span>
+                                      <div className='flex items-center'>
+                                        <p className='text-sm text-gray-600'>Stock: <span className='text-base text-[#F18966]'>{book.stock}</span></p>
                                       </div>
                                       <div className="hidden sm:block">
                                         <div className='flex items-center mb-2'>
-                                          <div className='text-yellow-500 mr-2'>Sales number: </div>
-                                          <span className='text-gray-600 truncate'>{book.salesNumber}</span>
+                                          <div className='text-sm text-yellow-500 mr-2'>Sales number: </div>
+                                          <span className='text-base text-gray-600 truncate'>{book.salesNumber}</span>
                                         </div>
                                       </div>
                                     </div>
