@@ -204,13 +204,12 @@ export default function Layout({ children }) {
         {/* Main Container */}
         <div className='container mx-auto flex justify-between items-center px-4 py-2'>
           {/* Logo */}
-          <div className='flex items-center cursor-pointer' onClick={() => navigate('/')}>
+          <div className='flex items-center cursor-pointer pl-8' onClick={() => navigate('/')}>
             <img
-              className='w-20 h-20'
-              src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png'
+              className='w-18 h-18'
+              src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1733819443/lgbf_qyw8ac.png'
               alt='Logo'
             />
-            <h2 className='text-2xl font-bold m-0'>BigFour</h2>
           </div>
 
           {/* Mobile View - Sidebar and Shopping Cart */}

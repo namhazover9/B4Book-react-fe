@@ -40,7 +40,13 @@ const shopApi = {
   getMonthlyRevenue: () => {
     const url = `/shop/monthlyRevenue`; 
     return axiosClient.get(url);
-  }
+  },
+
+  // Tạo yêu cầu rút tiền
+  createWithdrawRequest: (amount) => {
+    const url = `/shop/withdraws`;
+    return axiosClient.post(url, { amount });
+  },
 };
 
 
