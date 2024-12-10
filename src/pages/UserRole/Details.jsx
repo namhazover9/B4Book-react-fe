@@ -23,8 +23,32 @@ const Details = () => {
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
   const userId = useSelector((state) => state.user._id);
   const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
+  const [feedbacks, setFeedbacks] = useState([]); // Lưu trữ danh sách feedback
+  const [feedbackLoading, setFeedbackLoading] = useState(true); // Trạng thái tải feedback
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        setFeedbackLoading(true);
+        const response = await productsApi.showAllFeedbacks(id);
+        console.log(response.data);
+        setFeedbacks(response.data.feedbacks);
+      } catch (error) {
+        console.error('Error fetching feedbacks:', error);
+        setFeedbacks([]); // Gán giá trị mặc định trong trường hợp lỗi
+      } finally {
+        setFeedbackLoading(false);
+      }
+    };
+
+    fetchFeedbacks();
+  }, [id]);
+
+  useEffect(() => {
+    console.log('Feedbacks:', feedbacks);
+  }, [feedbacks]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -63,7 +87,9 @@ const Details = () => {
 
     // Kiểm tra tồn kho
     if (currentCartQuantity + quantity > product.stock) {
-      message.error(`You already have ${product.stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`);
+      message.error(
+        `You already have ${product.stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`,
+      );
       return;
     }
 
@@ -131,51 +157,26 @@ const Details = () => {
         return (
           <div className='space-y-4'>
             <h3 className='text-lg font-semibold'>Customer Reviews</h3>
-            <div className='space-y-4'>
-              {[
-                {
-                  name: 'John Middleton',
-                  date: 'February 15, 2023',
-                  rating: 5,
-                  comment:
-                    "I can't believe how perfect this book is. The twists and turns are just amazing!",
-                },
-                {
-                  name: 'Kenneth G. Myers',
-                  date: 'February 15, 2023',
-                  rating: 4,
-                  comment:
-                    'Fantastic read for anyone interested in sci-fi. Could use a bit more character development, but still great!',
-                },
-                {
-                  name: 'Hilda Addington',
-                  date: 'February 15, 2023',
-                  rating: 4.5,
-                  comment: 'Great quality and engaging story! Highly recommend it.',
-                },
-                {
-                  name: 'Ervin Arrington',
-                  date: 'February 15, 2023',
-                  rating: 5,
-                  comment: 'This book kept me up all night. Truly a page-turner.',
-                },
-                {
-                  name: 'Patricia M. Newman',
-                  date: 'February 15, 2023',
-                  rating: 4.5,
-                  comment: 'Wonderful design and engaging story. Loved it!',
-                },
-              ].map((review, index) => (
+            {feedbackLoading ? (
+              <p className='text-center text-gray-500'>Loading reviews...</p>
+            ) : feedbacks.length === 0 ? (
+              <p className='text-center text-gray-500'>No reviews available for this product.</p>
+            ) : (
+              feedbacks.map((feedback, index) => (
                 <div key={index} className='p-4 bg-gray-50 rounded-md shadow-sm'>
                   <div className='flex justify-between'>
-                    <p className='text-sm font-semibold'>{review.name}</p>
-                    <p className='text-sm text-gray-500'>{review.date}</p>
+                    <p className='text-sm font-semibold'>{feedback.userId}</p>
+                    <p className='text-sm text-gray-500'>
+                      {new Date(feedback.date).toLocaleDateString()}
+                    </p>
                   </div>
-                  <Rate disabled defaultValue={review.rating} className='text-sm' />
-                  <p className='text-sm mt-2 text-gray-700'>{review.comment}</p>
+                  <Rate disabled defaultValue={feedback.rating} className='text-sm' />
+                  <p className='text-sm mt-2 text-gray-700'>{feedback.comment}</p>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
+
+            {/* Form thêm review (có thể thêm nếu cần) */}
             <form className='mt-6 space-y-4'>
               <h4 className='font-semibold text-gray-700'>Write a review:</h4>
               <Rate allowHalf className='text-sm' />
@@ -214,15 +215,9 @@ const Details = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           {/* Left Section: Product Image */}
           <div className='relative max-w-screen-lg'>
-            <Carousel
-              autoplay
-              arrows
-              dots={false}
-              swipeToSlide
-              autoplaySpeed={3000}
-            >
+            <Carousel autoplay arrows dots={false} swipeToSlide autoplaySpeed={3000}>
               {product.images.slice(0, 2).map((image, index) => (
-                <div className="">
+                <div className=''>
                   <img
                     key={index}
                     src={image || 'https://via.placeholder.com/300'}
@@ -268,7 +263,6 @@ const Details = () => {
               </span>
             </div>
 
-
             {/* Quantity and Buttons */}
             <div className='flex items-center space-x-4'>
               <InputNumber
@@ -282,7 +276,8 @@ const Details = () => {
               <Button type='primary' className='bg-blue-500 text-sm' onClick={handleAddToCart}>
                 Add to Cart
               </Button>
-              <button><HeartOutlined className=' hover:text-red-600' />
+              <button>
+                <HeartOutlined className=' hover:text-red-600' />
               </button>
             </div>
             {/* Categories and Tags */}
@@ -316,19 +311,21 @@ const Details = () => {
           <div className='border-b'>
             <nav className='-mb-px flex space-x-8'>
               <button
-                className={`py-2 px-1 border-b-2 text-sm font-medium ${activeTab === 'description'
-                  ? 'border-blue-500 text-blue-500'
-                  : 'border-transparent text-gray-500 hover:text-blue-500'
-                  }`}
+                className={`py-2 px-1 border-b-2 text-sm font-medium ${
+                  activeTab === 'description'
+                    ? 'border-blue-500 text-blue-500'
+                    : 'border-transparent text-gray-500 hover:text-blue-500'
+                }`}
                 onClick={() => setActiveTab('description')}
               >
                 Description
               </button>
               <button
-                className={`py-2 px-1 border-b-2 text-sm font-medium ${activeTab === 'reviews'
-                  ? 'border-gray-500 text-gray-500'
-                  : 'border-transparent text-gray-500 hover:text-gray-500'
-                  }`}
+                className={`py-2 px-1 border-b-2 text-sm font-medium ${
+                  activeTab === 'reviews'
+                    ? 'border-gray-500 text-gray-500'
+                    : 'border-transparent text-gray-500 hover:text-gray-500'
+                }`}
                 onClick={() => setActiveTab('reviews')}
               >
                 Reviews (5)

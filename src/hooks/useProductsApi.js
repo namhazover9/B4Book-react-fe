@@ -81,6 +81,12 @@ const productsApi = {
     const url = `${PRODUCT_API_ENDPOINT}/${id}`;
     return axiosClient.delete(url);
   },
+
+  // Lấy tất cả feedback của một sản phẩm theo ID
+  showAllFeedbacks: (id) => {
+    const url = `${PRODUCT_API_ENDPOINT}/showAllFeedbacks/${id}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default productsApi;
