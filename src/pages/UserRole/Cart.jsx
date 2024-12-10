@@ -91,7 +91,13 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   }, [cartItems, onTotalPriceChange, onCartItemsChange]);
 
-  const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
+  const totalPriceAfterDiscount = cartItems.reduce((total, item) => {
+    if (item.select) {
+      const itemTotal = item.price * item.quantity;
+      return total + itemTotal;
+    }
+    return total - discount;
+  }, 0) - discount;
 
   // Handle quantity change
   const handleQuantityChange = async (id, quantity) => {
@@ -165,6 +171,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const handleSelectItems = (selectedItems) => {
     if (selectedItems.length === 0) {
       message.warning('Please select at least one item to checkout');
+
       return;
     } else {
       dispatch(setSelectedItems(selectedItems));
