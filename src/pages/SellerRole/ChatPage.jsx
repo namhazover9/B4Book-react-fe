@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Input, Button } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 
 const ChatPage = () => {
     const [messages, setMessages] = useState([
@@ -20,7 +21,7 @@ const ChatPage = () => {
     return (
         <div className="flex-1 relative">
             {/* Chat Header */}
-            <header className="bg-white p-4 text-gray-700 border-b border-gray-300">
+            <header className="bg-white p-4 h-14 text-gray-700 border-b border-gray-300">
                 <h1 className="text-2xl font-semibold">Alice</h1>
             </header>
 
@@ -62,7 +63,7 @@ const ChatPage = () => {
                         onPressEnter={handleSend}
                     />
                     <Button className="ml-2" type="primary" onClick={handleSend}>
-                        Send
+                        <SendOutlined />
                     </Button>
                 </div>
             </footer>
