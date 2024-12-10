@@ -137,7 +137,7 @@ const BookShowcase = () => {
                     <div className='relative overflow-hidden rounded-2xl '>
                       <img
                         src={book.image}
-                        className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
+                        className='w-full h-60 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                         <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>

@@ -7,6 +7,9 @@
   .z-1 {
     z-index: 1;
   }
+  .ant-table-cell {
+    @apply border-none p-0 bg-transparent text-left;
+  }
 }
 
 @layer base {

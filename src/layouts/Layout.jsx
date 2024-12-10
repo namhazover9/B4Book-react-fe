@@ -83,7 +83,7 @@ export default function Layout({ children }) {
   useEffect(() => {
     console.log('Sidebar status:', isSidebarOpen);
   }, [isSidebarOpen]);
-  
+
   useEffect(() => {
     if (userId) {
       const fetchUserProfile = async () => {
@@ -175,16 +175,16 @@ export default function Layout({ children }) {
     setTotalPriceBeforeDiscount(
       Array.isArray(cartItems)
         ? cartItems.reduce((sum, item) => {
-            return sum + item.price * item.quantity;
-          }, 0)
+          return sum + item.price * item.quantity;
+        }, 0)
         : 0,
     );
   }, [cartItems]);
 
   const subtotal = Array.isArray(cartItems)
     ? cartItems.reduce((sum, item) => {
-        return sum + item.price * item.quantity;
-      }, 0)
+      return sum + item.price * item.quantity;
+    }, 0)
     : 0;
 
   return (
@@ -204,7 +204,7 @@ export default function Layout({ children }) {
 
           {/* Mobile View - Sidebar and Shopping Cart */}
           <div className='block lg:hidden flex items-center space-x-8'>
-          <Badge
+            <Badge
               count={
                 Array.isArray(cartItems) && cartItems.length > 0
                   ? cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -226,11 +226,10 @@ export default function Layout({ children }) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative font-bold transition duration-300 ${
-                  location.pathname === item.path
-                    ? 'text-[#4F6F52] text-lg after:w-full'
-                    : 'text-gray-700 text-lg after:w-0'
-                } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
+                className={`relative font-bold transition duration-300 ${location.pathname === item.path
+                  ? 'text-[#4F6F52] text-lg after:w-full'
+                  : 'text-gray-700 text-lg after:w-0'
+                  } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
@@ -295,44 +294,42 @@ export default function Layout({ children }) {
 
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-          isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
-        } lg:hidden`}
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
+          } lg:hidden`}
         onClick={toggleSidebar} // Close sidebar when clicking outside
       ></div>
 
       {/* Sidebar - Only visible when open */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 lg:hidden`}
+        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 lg:hidden`}
       >
         <div className='flex justify-between'>
           {/* Login Button */}
           {isLoggedIn ? (
-              <Dropdown overlay={userMenu} trigger={['click']}>
-                <div className='flex items-center space-x-2 cursor-pointer'>
-                  <img
-                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
-                    alt='Avatar'
-                    className='w-10 h-10 rounded-full'
-                  />
-                  <span className='text-gray-700 font-medium'>
-                    Hi, {userInfo?.userName || 'Guest'}
-                  </span>
-                </div>
-              </Dropdown>
-            ) : (
-              <button
-                onClick={handleNavigate}
-                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
-              >
-                Login
-              </button>
-            )}
+            <Dropdown overlay={userMenu} trigger={['click']}>
+              <div className='flex items-center space-x-2 cursor-pointer'>
+                <img
+                  src={userInfo?.avartar || 'https://via.placeholder.com/150'}
+                  alt='Avatar'
+                  className='w-10 h-10 rounded-full'
+                />
+                <span className='text-gray-700 font-medium'>
+                  Hi, {userInfo?.userName || 'Guest'}
+                </span>
+              </div>
+            </Dropdown>
+          ) : (
+            <button
+              onClick={handleNavigate}
+              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+            >
+              Login
+            </button>
+          )}
           <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
         </div>
-        
+
         <nav className='mt-4'>
           {menuItems.map((item) => (
             <Link
@@ -352,7 +349,7 @@ export default function Layout({ children }) {
             options={languages}
           /> */}
 
-          
+
         </nav>
       </div>
 
@@ -373,9 +370,8 @@ export default function Layout({ children }) {
 
       {/* Cart Side Bar */}
       <div
-        className={`fixed inset-y-0 right-0 w-80 bg-white shadow-lg z-50 transition-transform duration-300 ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-y-0 right-0 w-80 bg-white shadow-lg z-50 transition-transform duration-300 ${isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         {/* Header */}
         <div className='flex justify-between items-center border-b pb-2 p-4'>
@@ -425,7 +421,7 @@ export default function Layout({ children }) {
             <Button
               block
               onClick={toggleCartSidebar}
-              className='!bg-gray-200 !text-black hover:!bg-gray-300 rounded-2xl'
+              className='!bg-[#679089] !text-white hover:opacity-90 font-semibold rounded-2xl'
             >
               View Cart
             </Button>

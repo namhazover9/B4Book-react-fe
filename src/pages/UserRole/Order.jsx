@@ -288,7 +288,7 @@ const Checkout = () => {
         console.log('Place Order Response:', response);
         if (response?.data) {
           navigate(`/orderconfirm`);
-          
+
         }
       } else {
         notification.success({
@@ -308,7 +308,7 @@ const Checkout = () => {
     setSelectedAddressId(addressId); // Cập nhật địa chỉ mặc định được chọn
   };
 
-  const handleUpdateDefault = () => {};
+  const handleUpdateDefault = () => { };
 
   const handlePaymentChange = (e) => {
     setFieldValue('paymentMethod', e.target.value);
@@ -467,13 +467,13 @@ const Checkout = () => {
         footer={
           stores[selectedStore]?.vouchers.length > 0
             ? [
-                <Button key='cancel' onClick={() => setIsVoucherModalVisible(false)}>
-                  Cancel
-                </Button>,
-                <Button key='apply' type='primary' onClick={handleApplyVoucher}>
-                  Apply Voucher
-                </Button>,
-              ]
+              <Button key='cancel' onClick={() => setIsVoucherModalVisible(false)}>
+                Cancel
+              </Button>,
+              <Button key='apply' type='primary' onClick={handleApplyVoucher}>
+                Apply Voucher
+              </Button>,
+            ]
             : null
         }
       >
