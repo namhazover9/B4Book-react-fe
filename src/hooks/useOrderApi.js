@@ -48,6 +48,11 @@ const orderApi = {
     const url = `${ORDER_API_ENDPOINT}/place-order`; // Endpoint của BE
     return axiosClient.post(url, orderData); // Gửi dữ liệu đơn hàng
   },
+
+  getTotalOrdersInTransit: () => {
+    const url = `${ORDER_API_ENDPOINT}/totalOrdersInTransit`; 
+    return axiosClient.get(url);
+  }
  
 };
 

@@ -101,19 +101,6 @@ const Settings = () => {
                   />
                 </div>
 
-                <div className="mb-5.5">
-                  <label htmlFor="username" className="block text-sm font-medium text-black dark:text-white">
-                  Address
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    value={userInfo?.address || ''}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
-                    className="w-full rounded border border-stroke bg-gray py-3 px-4.5 focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4"
-                  />
-                </div>
-
                 <div className="flex justify-end">
                   <button
                     type="button"
@@ -139,7 +126,7 @@ const Settings = () => {
               <div className="mb-4 flex items-center gap-3">
                 <div className="h-20 w-20 rounded-full overflow-hidden">
                   <img
-                    src={userInfo?.avatar || 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1733216067/user_olhgzp.png'}
+                    src={userInfo?.avartar || 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1733216067/user_olhgzp.png'}
                     alt="User Avatar"
                     className="h-full w-full object-cover"
                   />
