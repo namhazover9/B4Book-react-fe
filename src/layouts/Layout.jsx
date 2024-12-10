@@ -38,6 +38,7 @@ export default function Layout({ children }) {
   const avatar = useSelector((state) => state.user.avartar);
   //console.log(avatar);
 
+
   const userMenu = (
     <Menu>
       <Menu.Item key='profile' icon={<UserOutlined />} onClick={() => navigate('/userprofile')}>
@@ -82,6 +83,9 @@ export default function Layout({ children }) {
   };
   const handleNavigate = () => {
     navigate('/login'); // Điều hướng đến trang login
+  };
+  const handleNavigateOrderList = () => {
+    navigate(`/orderlist/${userId}`);  // Truyền userId vào URL
   };
 
   // useEffect(() => {
@@ -276,14 +280,14 @@ export default function Layout({ children }) {
 
             {/* Login Button or Avatar */}
             {isLoggedIn ? (
-              <Dropdown overlay={userMenu} trigger={['click']}>
+              <Dropdown overlay={userMenu} trigger={['hover']}>
                 <div className='flex items-center space-x-2 cursor-pointer'>
                   <img
                     src={avatar || 'https://via.placeholder.com/150'}
                     alt='Avatar'
                     className='w-10 h-10 rounded-full'
                   />
-                  <span className='text-gray-700 font-medium'>Hi, {userName || 'User'}</span>
+                  <span className='text-gray-700 font-medium' onClick={handleNavigateOrderList}>Hi, {userName || 'User'}</span>
                 </div>
               </Dropdown>
             ) : (
