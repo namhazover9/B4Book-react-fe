@@ -23,7 +23,7 @@ const OrderConfirmation = () => {
           ></img>
         </div>
         {/* Heading */}
-        <h2 className='text-2xl font-bold text-gray-800 mb-2'>Thank you for your order!</h2>
+        <h2 className='text-2xl font-bold text-[#f18966] mb-2'>Thank you for your order!</h2>
         {/* Subtext */}
         <p className='text-gray-600 mb-6'>
           A confirmation has been sent to your email.
@@ -32,7 +32,7 @@ const OrderConfirmation = () => {
         </p>
         {/* Button */}
         <button
-          className='bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out'
+          className='bg-[#679089] hover:bg-[#679070] text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out'
           onClick={handleReturnHome} // Gọi hàm khi nhấn vào nút
         >
           Return to Home

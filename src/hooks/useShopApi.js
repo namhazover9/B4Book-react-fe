@@ -27,6 +27,17 @@ const shopApi = {
     return axiosClient.get(url);
   },
 
+  getWithdrawalByShopId: () => {
+    const url = `/shop/withdrawals`; 
+    return axiosClient.get(url);
+  },
+
+  searchWithdrawal: (keyword) => {
+    const url = `/shop/withdrawals/search?keyword=${keyword}`; 
+    return axiosClient.get(url);
+  },
+ 
+
   totalShop: () => {
     const url = `/shop/totalShop`; 
     return axiosClient.get(url);
