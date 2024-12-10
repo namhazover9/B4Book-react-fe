@@ -1,18 +1,172 @@
 import React, { useEffect, useState } from 'react';
 import userApi from '../../hooks/userApi';
-import { Button, Card, Col, Input, List, Progress, Row, Typography, Radio, message } from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  List,
+  Progress,
+  Row,
+  Typography,
+  Radio,
+  message,
+  Select,
+  Modal,
+} from 'antd';
 import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from '@ant-design/icons';
 import { u } from 'framer-motion/client';
+import { useSelector, useDispatch } from 'react-redux';
+
 const { Title, Text } = Typography;
 
 export default function UserProfile() {
   const [userInfo, setUserInfo] = useState(null); // Khởi tạo userInfo null để phân biệt trạng thái đang tải
   const [loading, setLoading] = useState(true); // Trạng thái loading
   const [originalUserInfo, setOriginalUserInfo] = useState(null);
-  const hasChanges = JSON.stringify(userInfo) !== JSON.stringify(originalUserInfo);
   const [saving, setSaving] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const [newAddress, setNewAddress] = useState({ street: '', city: '', country: '' });
+  const [isEditAddressModalOpen, setIsEditAddressModalOpen] = useState(false);
+  const [currentEditAddress, setCurrentEditAddress] = useState({
+    street: '',
+    city: '',
+    country: '',
+  });
+
+  const [editingAddress, setEditingAddress] = useState(null);
+
+  const compareWithoutAddress = (obj1, obj2) => {
+    const { address: _, ...rest1 } = obj1 || {};
+    const { address: __, ...rest2 } = obj2 || {};
+    return JSON.stringify(rest1) === JSON.stringify(rest2);
+  };
+  
+  const hasChanges = !compareWithoutAddress(userInfo, originalUserInfo);
+  
+  
+  const handleOpenNewAddressModal = () => {
+    setNewAddress({ street: '', city: '', country: '' }); // Reset dữ liệu khi mở modal
+    setIsNewAddressModalOpen(true);
+  };
+
+  const handleCloseNewAddressModal = () => {
+    setIsNewAddressModalOpen(false);
+  };
+
+  const handleOpenEditAddressModal = (address) => {
+    setCurrentEditAddress({ ...address }); // Giữ toàn bộ thông tin địa chỉ, bao gồm cả `_id`
+    setIsEditAddressModalOpen(true);
+  };
+  
+
+  const handleSaveEditAddress = async () => {
+    try {
+      if (!currentEditAddress.street || !currentEditAddress.city || !currentEditAddress.country) {
+        message.error('All fields are required!');
+        return;
+      }
+
+      // Gọi API cập nhật địa chỉ
+      const response = await userApi.updateAddress(currentEditAddress._id, currentEditAddress);
+
+      if (response) {
+        message.success('Address updated successfully!');
+
+        // Cập nhật địa chỉ trong state
+        const updatedAddresses = addresses.map((addr) =>
+          addr._id === currentEditAddress._id ? currentEditAddress : addr,
+        );
+        setUserInfo({ ...userInfo, address: updatedAddresses });
+
+        setIsEditAddressModalOpen(false); // Đóng modal sau khi lưu
+      }
+    } catch (error) {
+      console.error('Failed to update address:', error);
+      message.error('Failed to update address. Please try again.');
+    }
+  };
+
+  const handleDeleteAddress = async (address) => {
+    try {
+      // Gọi API xóa địa chỉ
+      const response = await userApi.deleteAddress(address._id);
+  
+      if (response) {
+        message.success('Address deleted successfully!');
+  
+        // Cập nhật state sau khi xóa thành công
+        const updatedAddresses = addresses.filter((addr) => addr._id !== address._id);
+        setUserInfo({ ...userInfo, address: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Failed to delete address:', error);
+      message.error('Failed to delete address. Please try again.');
+    }
+  };
+
+  const confirmDeleteAddress = (address) => {
+    Modal.confirm({
+      title: 'Are you sure?',
+      content: `Do you really want to delete the address: ${address.street}, ${address.city}, ${address.country}?`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: () => handleDeleteAddress(address),
+    });
+  };
+  
+
+
+  const handleAddNewAddress = async () => {
+    //console.log(newAddress);
+    try {
+      if (!newAddress.street || !newAddress.city || !newAddress.country) {
+        message.error('All fields are required!');
+        return;
+      }
+      const response = await userApi.newAddress(newAddress);
+
+      if (response) {
+        message.success('Address added successfully!');
+
+        // Cập nhật địa chỉ mới vào state `userInfo.address`
+        setUserInfo((prevUserInfo) => {
+          return {
+            ...prevUserInfo,
+            address: [...prevUserInfo.address, newAddress], // Thêm địa chỉ mới vào danh sách
+          };
+        });
+
+        handleCloseNewAddressModal(); // Đóng modal sau khi thêm
+      }
+    } catch (error) {
+      console.error('Failed to add new address:', error);
+      message.error('Failed to add address. Please try again.');
+    }
+  };
+
   const handleInputChange = (key, value) => {
-    setUserInfo({ ...userInfo, [key]: value });
+    if (key === 'address') {
+      setUserInfo({ ...userInfo, [key]: JSON.parse(value) });
+    } else {
+      setUserInfo({ ...userInfo, [key]: value });
+    }
+  };
+
+  const addresses = userInfo?.address || []; // Lấy địa chỉ từ `userInfo`
+  const defaultAddress = addresses.length > 0 ? addresses[0] : null;
+  {
+    addresses.length === 0 && <Text type='secondary'>No addresses available</Text>;
+  }
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -142,11 +296,11 @@ export default function UserProfile() {
                   <Text strong>Address:</Text>
                 </Col>
                 <Col xs={24} sm={16}>
-                  <Input
-                    value={userInfo.address.street + ', ' + userInfo.address.city + ', ' + userInfo.address.country }
-                    onChange={(e) => handleInputChange('address', e.target.value)}
-                  />
+                  <Button type='primary' onClick={handleOpenModal}>
+                    Manage Addresses
+                  </Button>
                 </Col>
+
                 {hasChanges && (
                   <Button type='primary' onClick={handleSaveProfile} loading={saving}>
                     Save
@@ -162,14 +316,94 @@ export default function UserProfile() {
               <Text strong className='text-base'>
                 Expenditure 🤑
               </Text>
-              <Progress percent={80} />
-              <Text strong className='text-base'>
-                Orders
-              </Text>
-              <Progress percent={72} />
+              
             </Card>
           </Col>
         </Row>
+        <Modal
+          title='Manage Addresses'
+          visible={isModalOpen}
+          onCancel={handleCloseModal}
+          footer={[
+            <Button key='new' type='primary' onClick={handleOpenNewAddressModal}>
+              New Address
+            </Button>,
+          ]}
+        >
+          <List
+            dataSource={addresses}
+            renderItem={(address) => (
+              <List.Item
+                actions={[
+                  <Button key='edit' onClick={() => handleOpenEditAddressModal(address)}>
+                    Edit
+                  </Button>,
+                  <Button key='delete' danger onClick={() => confirmDeleteAddress(address)}>
+                  Delete
+                </Button>,        
+                ]}
+              >
+                {`${address.street}, ${address.city}, ${address.country}`}
+              </List.Item>
+            )}
+          />
+        </Modal>
+
+        <Modal
+          title='Add New Address'
+          visible={isNewAddressModalOpen}
+          onCancel={handleCloseNewAddressModal}
+          onOk={handleAddNewAddress}
+          okText='Add'
+        >
+          <Input
+            placeholder='Street'
+            value={newAddress.street}
+            onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='City'
+            value={newAddress.city}
+            onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='Country'
+            value={newAddress.country}
+            onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
+          />
+        </Modal>
+
+        <Modal
+          title='Edit Address'
+          visible={isEditAddressModalOpen}
+          onCancel={() => setIsEditAddressModalOpen(false)}
+          onOk={handleSaveEditAddress}
+          okText='Save'
+        >
+          <Input
+            placeholder='Street'
+            value={currentEditAddress.street}
+            onChange={(e) =>
+              setCurrentEditAddress({ ...currentEditAddress, street: e.target.value })
+            }
+            className='mb-2'
+          />
+          <Input
+            placeholder='City'
+            value={currentEditAddress.city}
+            onChange={(e) => setCurrentEditAddress({ ...currentEditAddress, city: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='Country'
+            value={currentEditAddress.country}
+            onChange={(e) =>
+              setCurrentEditAddress({ ...currentEditAddress, country: e.target.value })
+            }
+          />
+        </Modal>
       </div>
     </section>
   );

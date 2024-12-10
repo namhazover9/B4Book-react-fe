@@ -38,6 +38,27 @@ const shopApi = {
   },
  
 
+  totalShop: () => {
+    const url = `/shop/totalShop`; 
+    return axiosClient.get(url);
+  },
+ 
+  totalRevenue: () => {
+    const url = `/shop/totalRevenue`; 
+    return axiosClient.get(url);
+  },
+  
+  getMonthlyRevenue: () => {
+    const url = `/shop/monthlyRevenue`; 
+    return axiosClient.get(url);
+  },
+
+  // Tạo yêu cầu rút tiền
+  createWithdrawRequest: (amount) => {
+    const url = `/shop/withdraws`;
+    return axiosClient.post(url, { amount });
+  },
 };
+
 
 export default shopApi;

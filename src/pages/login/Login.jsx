@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
+import { fetchCart } from '../../reducers/carts';
 
 import CheckboxField from '../../components/Field/CheckboxField';
 import InputField from '../../components/Field/InputField';
@@ -38,7 +39,6 @@ function Login() {
       // if (process.env.NODE_ENV === 'production')
       //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
-
       
     } catch (error) {
       message.error('Lỗi đăng nhập.');
@@ -46,15 +46,15 @@ function Login() {
   };
 
   // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
-  useEffect(() => {
-    if (isAuth && userRole) {
-      if (userRole === 'Admin') {
-        navigate('/admin');
-      } else if (userRole === 'Customer') {
-        navigate('/');
-      }
-    }
-  }, [isAuth, userRole, navigate]);
+  // useEffect(() => {
+  //   if (isAuth && userRole) {
+  //     if (userRole === 'Admin') {
+  //       window.location.href = '/admin';
+  //     } else if (userRole === 'Customer') {
+  //       window.location.href = '/';
+  //     }
+  //   }
+  // }, [isAuth, userRole, navigate]);
 
   const onLogin = async (account) => {
     try {

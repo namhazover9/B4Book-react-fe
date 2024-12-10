@@ -3,18 +3,22 @@ import { Button, Carousel, } from 'antd';
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons';
-import pic1 from '../../assets/images/BestSelling/1.jpg';
-import pic2 from '../../assets/images/BestSelling/4.jpg';
-import pic3 from '../../assets/images/BestSelling/7.jpg';
-import pic4 from '../../assets/images/BestSelling/9.jpg';
-import pic5 from '../../assets/images/BestSelling/12.jpg';
-import pic6 from '../../assets/images/BestSelling/13.jpg';
-import pic7 from '../../assets/images/BestSelling/15.jpg';
-import pic8 from '../../assets/images/BestSelling/16.jpg';
-import pic9 from '../../assets/images/BestSelling/30.jpg';
 import store1 from '../../assets/images/BestSelling/h6_banner4.jpg';
+import { useEffect, useState } from 'react';
+import productsApi from '../../hooks/useProductsApi';
 
 const BookShowcase = () => {
+  const [books, setbooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const response = await productsApi.getProductHomePage();
+      setbooks(
+        Array.isArray(response.data.bestSellingProducts) ? response.data.bestSellingProducts : [],
+      );
+    };
+    fetchBooks();
+  }, []);
   const banner = {
     id: 1,
     sologan: ' Why not send the gift of a book to family & friends.',
@@ -22,80 +26,7 @@ const BookShowcase = () => {
     detail: '20%',
     contact: 'Shop Now',
   };
-  const books = [
-    {
-      id: 1,
-      title: 'Christmas Short',
-      author: 'Warren Graham',
-      price: '$741.23',
-      rating: 4,
-      image: pic1,
-    },
-    {
-      id: 2,
-      title: 'Heartland Stars',
-      author: 'Ernesto Wade',
-      price: '$664.55',
-      rating: 5,
-      image: pic2,
-    },
-    {
-      id: 3,
-      title: 'House of Sky',
-      author: 'Ernesto Wade',
-      price: '$72.99',
-      rating: 4,
-      image: pic3,
-    },
-    {
-      id: 4,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$914.53',
-      rating: 3,
-      image: pic4,
-    },
-    {
-      id: 5,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$94.53',
-      rating: 3,
-      image: pic5,
-    },
-    {
-      id: 6,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$114',
-      rating: 3,
-      image: pic6,
-    },
-    {
-      id: 7,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$53',
-      rating: 3,
-      image: pic7,
-    },
-    {
-      id: 8,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$53',
-      rating: 3,
-      image: pic8,
-    },
-    {
-      id: 9,
-      title: 'My Dearest Darkest',
-      author: 'Enrique Wallace',
-      price: '$53',
-      rating: 3,
-      image: pic9,
-    },
-  ];
+
   return (
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
@@ -126,17 +57,17 @@ const BookShowcase = () => {
                 {
                   breakpoint: 768,
                   settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 2,
                   },
                 },
               ]}
             >
               {books.map((book) => (
-                <div key={book.id} className='w-1/4 p-2 '>
+                <div key={book._id} className='w-1/4 p-2 '>
                   <div className='group relative '>
                     <div className='relative overflow-hidden rounded-2xl '>
                       <img
-                        src={book.image}
+                        src={book.images[0]}
                         className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
@@ -168,7 +99,7 @@ const BookShowcase = () => {
                         {[...Array(5)].map((_, i) => (
                           <span
                             key={i}
-                            className={`text-lg ${i < book.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                            className={`text-lg ${i < book.ratingResult ? 'text-yellow-400' : 'text-gray-300'}`}
                           >
                             ★
                           </span>
