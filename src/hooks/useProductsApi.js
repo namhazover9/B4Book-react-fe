@@ -65,7 +65,6 @@ const productsApi = {
     });
   },
 
-
     // Cập nhật sản phẩm
     updateProduct: (id, formData) => {
       const url = `${PRODUCT_API_ENDPOINT}/${id}`;
@@ -76,12 +75,15 @@ const productsApi = {
       });
     },
   
-  
   deleteProduct: (id) => {
     const url = `${PRODUCT_API_ENDPOINT}/${id}`;
     return axiosClient.delete(url);
   },
 
+  getProductHomePage: () => {
+    const url = `${PRODUCT_API_ENDPOINT}/getProductInLandingPage`;
+    return axiosClient.get(url);
+  },
   // Lấy tất cả feedback của một sản phẩm theo ID
   showAllFeedbacks: (id) => {
     const url = `${PRODUCT_API_ENDPOINT}/showAllFeedbacks/${id}`;
