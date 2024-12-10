@@ -165,9 +165,9 @@ const Details = () => {
               feedbacks.map((feedback, index) => (
                 <div key={index} className='p-4 bg-gray-50 rounded-md shadow-sm'>
                   <div className='flex justify-between'>
-                    <p className='text-sm font-semibold'>{feedback.userId}</p>
+                    <p className='text-sm font-semibold'>{feedback.userName}</p>
                     <p className='text-sm text-gray-500'>
-                      {new Date(feedback.date).toLocaleDateString()}
+                      {new Date(feedback.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <Rate disabled defaultValue={feedback.rating} className='text-sm' />
@@ -176,7 +176,7 @@ const Details = () => {
               ))
             )}
 
-            {/* Form thêm review (có thể thêm nếu cần) */}
+            {/* Form thêm review (có thể thêm nếu cần)
             <form className='mt-6 space-y-4'>
               <h4 className='font-semibold text-gray-700'>Write a review:</h4>
               <Rate allowHalf className='text-sm' />
@@ -200,7 +200,7 @@ const Details = () => {
               <Button type='primary' className='bg-blue-500'>
                 Submit
               </Button>
-            </form>
+            </form> */}
           </div>
         );
 
