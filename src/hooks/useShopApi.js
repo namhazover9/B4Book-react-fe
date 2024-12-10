@@ -26,7 +26,22 @@ const shopApi = {
     const url = `/showDetailShop/${id}`; 
     return axiosClient.get(url);
   },
+
+  totalShop: () => {
+    const url = `/shop/totalShop`; 
+    return axiosClient.get(url);
+  },
  
+  totalRevenue: () => {
+    const url = `/shop/totalRevenue`; 
+    return axiosClient.get(url);
+  },
+  
+  getMonthlyRevenue: () => {
+    const url = `/shop/monthlyRevenue`; 
+    return axiosClient.get(url);
+  }
 };
+
 
 export default shopApi;

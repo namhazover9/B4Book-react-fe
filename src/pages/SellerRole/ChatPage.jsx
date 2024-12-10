@@ -1,27 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Button } from "antd";
+import chatApi from "../../hooks/useChatApi";
+import { useParams } from "react-router-dom";
 
 const ChatPage = () => {
-    const [messages, setMessages] = useState([
-        { sender: "Alice", content: "Hey Bob, how's it going?", type: "incoming" },
-        { sender: "Me", content: "Hi Alice! I'm good, just finished a great book.", type: "outgoing" },
-        // Add more messages here...
-    ]);
-
+    const [messages, setMessages] = useState([]);
+    const [participants, setParticipants] = useState({});
     const [input, setInput] = useState("");
-
-    const handleSend = () => {
-        if (input.trim()) {
-            setMessages([...messages, { sender: "Me", content: input, type: "outgoing" }]);
-            setInput("");
+    const { chatId, id } = useParams(); // `id` là ID của bạn
+    let name;
+    const fetchChat = async () => {
+        try {
+            const response = await chatApi.getChatById(chatId);
+            const { customerMessages, shopMessages, participants } = response.data.chat;
+            // Lưu thông tin participants
+            setParticipants(participants);
+            // Gắn role và avatar cho tin nhắn  
+            const formattedMessages = [
+                ...customerMessages.map((msg) => ({
+                    ...msg,
+                    senderId: participants.customer.senderId,
+                    role: "customer",
+                    avatar: participants.customer.avatar,
+                    name: participants.customer.name
+                })),
+                ...shopMessages.map((msg) => ({
+                    ...msg,
+                    senderId: participants.shop.senderId,
+                    role: "shop",
+                    avatar: participants.shop.avatar,
+                    name:participants.shop.name
+                })),
+            ];
+            
+            // Sắp xếp tin nhắn theo thời gian
+            formattedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            setMessages(formattedMessages);
+        } catch (error) {
         }
     };
+
+    useEffect(() => {
+        fetchChat();
+    }, [chatId]);
+
+    const handleSend = async () => {
+        try {
+            if (!input.trim()) return;
+    
+            const data = {
+                content: input,
+                senderId: id, // Gửi senderId của người dùng hiện tại
+                timestamp: new Date(),
+            };
+    
+            // Gửi yêu cầu tới API và truyền đúng userId
+            await chatApi.sendMessage(chatId, id, data);  // `id` cần phải là userId
+            setInput(""); // Xóa nội dung input sau khi gửi
+            fetchChat();
+        } catch (error) {
+            console.error("Failed to send message:", error);
+        }
+    };
+    const getOtherParticipantName = () => {
+        if (!participants.customer || !participants.shop) return "";
+        return participants.customer.senderId === id ? participants.shop.name : participants.customer.name;
+    };
+    
 
     return (
         <div className="flex-1 relative">
             {/* Chat Header */}
             <header className="bg-white p-4 text-gray-700 border-b border-gray-300">
-                <h1 className="text-2xl font-semibold">Alice</h1>
+                <h1 className="text-2xl font-semibold">{getOtherParticipantName()}</h1>
             </header>
 
             {/* Chat Messages */}
@@ -29,23 +80,42 @@ const ChatPage = () => {
                 {messages.map((message, index) => (
                     <div
                         key={index}
-                        className={`flex mb-4 ${message.type === "outgoing" ? "justify-end" : ""}`}
+                        className={`flex mb-4 ${
+                            message.senderId === id ? "justify-end" : "justify-start"
+                        }`}
                     >
-                        {message.type === "incoming" && (
+                        {/* Avatar hiển thị bên trái cho người khác */}
+                        {message.senderId !== id && (
                             <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
                                 <img
-                                    src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-                                    alt="User Avatar"
+                                    src={message.avatar}
+                                    alt="Avatar"
                                     className="w-8 h-8 rounded-full"
                                 />
                             </div>
                         )}
+
+                        {/* Tin nhắn */}
                         <div
-                            className={`flex max-w-96 rounded-lg p-3 gap-3 ${message.type === "outgoing" ? "bg-indigo-500 text-white" : "bg-white text-gray-700"
-                                }`}
+                            className={`max-w-96 rounded-lg p-3 ${
+                                message.senderId === id
+                                    ? "bg-indigo-500 text-white"
+                                    : "bg-gray-100 text-gray-700"
+                            }`}
                         >
                             <p>{message.content}</p>
                         </div>
+
+                        {/* Avatar hiển thị bên phải cho chính bạn */}
+                        {message.senderId === id && (
+                            <div className="w-9 h-9 rounded-full flex items-center justify-center ml-2">
+                                <img
+                                    src={message.avatar}
+                                    alt="Avatar"
+                                    className="w-8 h-8 rounded-full"
+                                />
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
