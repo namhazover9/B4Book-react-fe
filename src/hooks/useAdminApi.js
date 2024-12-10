@@ -50,7 +50,12 @@ const adminApi = {
 
     const url = `${ADMIN_API_URL}/allWithdrawals?${queryParams}`;
     return axiosClient.get(url);
-  }
+  },
+
+  updateWithdrawRequest: (requestId, status) => {
+    const url = `${ADMIN_API_URL}/withdrawals/update`;
+    return axiosClient.patch(url, { requestId, status }); // Gửi yêu cầu PATCH với dữ liệu body
+  },
 };
 
 export default adminApi;
