@@ -4,11 +4,12 @@ import {
   GiftOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, message, Steps } from 'antd';
+import { Breadcrumb, Button, message, Steps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import orderApi from '../../hooks/useOrderApi';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const contentStyle = {
   margin: 0,
@@ -25,7 +26,7 @@ export default function OrderDetailPage() {
   const { orderId } = useParams();
   const [loading, setLoading] = useState(true);
   const [orderDetail, setOrderDetail] = useState(null);
-
+  const userId = useSelector((state) => state.user._id);
   const statuses = [
     { title: 'Pending', icon: <LoadingOutlined /> },
     { title: 'Confirmed', icon: <CheckCircleOutlined /> },
@@ -51,11 +52,11 @@ export default function OrderDetailPage() {
     try {
       if (!refresh) setLoading(true);
       const response = await orderApi.getDetailOrderCustomer(orderId);
+      console.log(response.data);
       const shops = response.data.data.shops;
       const statusesOfShops = shops.map((shop) => shop.status); // Lấy tất cả các trạng thái của các shop
       setCurrentStep(statusesOfShops); // Gán tất cả các trạng thái
       setOrderDetail(response.data);
-      console.log(shops);
     } catch (error) {
       console.error('Error fetching order detail:', error);
       message.error('Failed to fetch order details');
@@ -75,8 +76,11 @@ export default function OrderDetailPage() {
   if (!orderDetail) {
     return <div>Order detail not found.</div>;
   }
-
-  const { shops, shippingAddress, shippedDate } = orderDetail.data;
+  {
+    if (currentStep === 'Delivered') {
+    }
+  }
+  const { shops, shippingAddress } = orderDetail.data;
 
   return (
     <div>
@@ -129,20 +133,45 @@ export default function OrderDetailPage() {
                   <div className='mt-5'>
                     <h4 className='font-medium'>Products:</h4>
                     {shop.orderItems && Array.isArray(shop.orderItems) ? (
-                      shop.orderItems.map((product) => (
-                        <div key={product.productId} className='mb-4'>
-                          {product.images && product.images.length > 0 && (
-                            <img
-                              src={product.images[0]}
-                              alt={product.description}
-                              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                            />
-                          )}
-                          <p>{product.title}</p>
-                          <p>Price: {product.price}</p>
-                          <p>Quantity: {product.quantity}</p>
-                        </div>
-                      ))
+                      shop.orderItems.map((product, index) => {
+                        // Kiểm tra nếu user đã feedback sản phẩm
+                        const hasFeedbackByUser = 
+                        Array.isArray(product.feedBacks) &&
+                        product.feedBacks.some((feedback) => {
+                          return feedback.orderId === orderId;
+                        });
+                        console.log(hasFeedbackByUser);
+                        return (
+                          <div key={product.productId} className='mb-4'>
+                            {product.images && product.images.length > 0 && (
+                              <img
+                                src={product.images[0]}
+                                alt={product.description}
+                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                              />
+                            )}
+                            <p>{product.title}</p>
+                            <p>Price: {product.price}</p>
+                            <p>Quantity: {product.quantity}</p>
+
+                            {/* Hiển thị nút Feedback nếu trạng thái là Delivered và user chưa feedback */}
+                            {shop.status === 'Delivered' && !hasFeedbackByUser && (
+                              <div className='mt-4 text-center'>
+                                <NavLink to={`/feedbackProduct/${orderId}/${product.productId}`}>
+                                  <Button
+                                    className='btn btn-primary'
+                                    onClick={() =>
+                                      console.log(`Feedback for Product ID: ${product.productId}`)
+                                    }
+                                  >
+                                    Leave Feedback
+                                  </Button>
+                                </NavLink>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
                     ) : (
                       <p>No products available.</p>
                     )}
