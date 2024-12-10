@@ -1,3 +1,4 @@
+
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 
@@ -20,7 +21,7 @@ export default {
   },
   proxy: {
     '/': {
-      target: 'http://localhost:8000',
+      target: process.env.NODE_ENV,
       changeOrigin: true,
     },
   },
