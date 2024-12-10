@@ -47,7 +47,6 @@ const Footer = () => {
             <p className='text-gray-100 mt-2'>1418 River Drive, Suite 35</p>
             <p className='text-gray-100'>Cottonhall, CA 9622</p>
             <p className='text-gray-100 mt-2'>Monday – Friday: 9:00–20:00</p>
-            <p className='text-gray-100'>Saturday: 11:00–15:00</p>
             <p className='text-gray-100 mt-2'>contact@example.com</p>
           </div>
 
@@ -69,9 +68,8 @@ const Footer = () => {
               <li className='hover:text-red-400 cursor-pointer'>Help Center</li>
               <li className='hover:text-red-400 cursor-pointer'>Returns</li>
               <li className='hover:text-red-400 cursor-pointer'>Product Recalls</li>
-              <li className='hover:text-red-400 cursor-pointer'>Accessibility</li>
               <li className='hover:text-red-400 cursor-pointer'>Contact Us</li>
-              <li className='hover:text-red-400 cursor-pointer'>Store Pickup</li>
+
             </ul>
           </div>
         </div>

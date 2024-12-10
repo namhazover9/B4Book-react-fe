@@ -354,13 +354,13 @@ export default function SellerPage() {
   return (
     <div className=''>
       <Content className='mx-2 my-7 lg:mx-5'>
-        {/* <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>All Shop</Breadcrumb.Item>
-          <Breadcrumb.Item>Name Shop</Breadcrumb.Item>
-        </Breadcrumb> */}
+        <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base '>
+           <Breadcrumb.Item>Your Books</Breadcrumb.Item>
+           <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} 👋🏻</Breadcrumb.Item>
+        </Breadcrumb> 
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='text-3xl font-semibold hidden lg:block'>Products</h1>
+            <h1 className='text-3xl font-semibold hidden lg:block text-[#679089]'>Book List</h1>
             <div className='w-full lg:w-4/5 flex flex-col lg:flex-row items-center justify-between'>
               <Input
                 onChange={handleSearchChange}
@@ -376,11 +376,11 @@ export default function SellerPage() {
                   <span className='ml-2 text-lg text-bold'>Export</span>
                 </button>
                 <button
-                  className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                  className='text-base bg-[#679089] text-white px-6 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'
                   type='primary'
                   onClick={() => setVisibleAdd(true)}
                 >
-                  Add Product
+                  Sell Book
                 </button>
               </div>
             </div>
@@ -421,7 +421,11 @@ export default function SellerPage() {
       <Modal
         open={visibleAdd}
         className='text-center'
-        title='Add New Product'
+        title={
+          <h2 className="text-2xl font-bold text-[#f18966]  animate-slideIn">
+            Create New Book
+          </h2>
+        }
         onCancel={handleCancelAdd}
         footer={null}
       >
@@ -470,8 +474,8 @@ export default function SellerPage() {
         >
           {({ setFieldValue, errors, touched, isSubmitting }) => (
             <Form className='mt-5'>
-              <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Title</label>
+              <div className='flex-input-tnvd '>
+                <label className='label-input-tnvd'>Title:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='title' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -482,7 +486,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Price</label>
+                <label className='label-input-tnvd'>Price:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field
                     name='price'
@@ -499,7 +503,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Description</label>
+                <label className='label-input-tnvd truncate'>Description:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='description' as={TextArea} rows={4} className='w-full py-1' />
                   <div className='h-8 py-1'>
@@ -510,7 +514,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Author</label>
+                <label className='label-input-tnvd'>Author:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='author' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -521,7 +525,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Publisher</label>
+                <label className='label-input-tnvd'>Publisher:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='publisher' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -532,7 +536,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Language</label>
+                <label className='label-input-tnvd'>Language:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='language' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -543,7 +547,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>ISBN</label>
+                <label className='label-input-tnvd'>ISBN:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='ISBN' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -554,7 +558,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Stock</label>
+                <label className='label-input-tnvd'>Stock:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='stock' as={Input} className='w-full py-2' type='number' />
                   <div className='h-8 py-1'>
@@ -565,7 +569,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Category</label>
+                <label className='label-input-tnvd truncate'>Category:</label>
                 {/* <Field
                                     name="category"
                                     as={Input}
@@ -592,8 +596,8 @@ export default function SellerPage() {
                   </div>
                 </div>
               </div>
-              <div className='flex items-flex-start justify-flex-start'>
-                <label className='label-input-tnvd truncate'>Upload Image</label>
+              <div className='flex items-start justify-center'>
+                <label className='label-input-tnvd truncate'>Image:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
                     listType='picture-card'
@@ -623,11 +627,11 @@ export default function SellerPage() {
                 </div>
               </div>
               <button
-                className='text-end text-base bg-green-600 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-green-600'
+                className='text-end text-base bg-[#679089] text-white px-6 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'
                 type='submit'
                 disabled={isSubmitting} // Disable button while submitting
               >
-                Add
+                Save Details
               </button>
             </Form>
           )}
@@ -637,8 +641,12 @@ export default function SellerPage() {
       {/* Edit Product */}
       <Modal
         open={visibleEdit}
-        className='text-center'
-        title='Edit Product'
+        className='text-center  '
+        title={
+          <h2 className="text-2xl font-bold text-[#f18966]  animate-slideIn">
+            Edit Book 
+          </h2>
+        }
         onCancel={handleCancelEdit}
         footer={null}
       >
@@ -654,7 +662,7 @@ export default function SellerPage() {
             ISBN: product?.ISBN || '',
             stock: product?.stock || 0,
             category: product?.category || [],
-            uploadImage: product?.images || [],
+            uploadImage: product?.images  || [],
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting, setFieldError }) => {
@@ -686,7 +694,7 @@ export default function SellerPage() {
           {({ setFieldValue, errors, touched, values, isSubmitting }) => (
             <Form className='mt-5'>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Title</label>
+                <label className='label-input-tnvd'>Title:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='title' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -697,7 +705,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Price</label>
+                <label className='label-input-tnvd'>Price:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='price' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -708,7 +716,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Description</label>
+                <label className='label-input-tnvd truncate'>Description:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='description' as={TextArea} rows={4} className='w-full py-1' />
                   <div className='h-8 py-1'>
@@ -719,7 +727,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Author</label>
+                <label className='label-input-tnvd'>Author:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='author' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -730,7 +738,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Publisher</label>
+                <label className='label-input-tnvd'>Publisher:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='publisher' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -741,7 +749,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Language</label>
+                <label className='label-input-tnvd'>Language:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='language' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -752,7 +760,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>ISBN</label>
+                <label className='label-input-tnvd'>ISBN:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='ISBN' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -763,7 +771,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd'>Stock</label>
+                <label className='label-input-tnvd'>Stock:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Field name='stock' as={Input} className='w-full py-2' />
                   <div className='h-8 py-1'>
@@ -774,7 +782,7 @@ export default function SellerPage() {
                 </div>
               </div>
               <div className='flex-input-tnvd'>
-                <label className='label-input-tnvd truncate'>Category</label>
+                <label className='label-input-tnvd truncate'>Category:</label>
                 {/* <Field
                                     name="category"
                                     as={Input}
@@ -803,8 +811,8 @@ export default function SellerPage() {
                 </div>
               </div>
             
-              <div className='flex items-flex-start justify-flex-start'>
-                <label className='label-input-tnvd truncate'>Upload Image</label>
+              <div className='flex items-start justify-center'>
+                <label className='label-input-tnvd truncate'>Image:</label>
                 <div className='w-2/3 flex flex-col items-start'>
                   <Upload
                     listType='picture-card'
@@ -863,11 +871,11 @@ export default function SellerPage() {
               </div>
               
               <button
-                className='text-end text-base bg-blue-500 text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-blue-500'
+                className='text-end text-base bg-[#679089] text-white px-8 py-2 rounded-full hover:bg-slate-300 duration-300 hover:text-[#679089]'
                 type='submit'
                 disabled={isSubmitting} // Disable button while submitting
               >
-                Edit Product
+                Update details
               </button>
               {/* Đoạn useEffect sẽ cập nhật các giá trị trong form nếu có selectedProduct */}
             </Form>
