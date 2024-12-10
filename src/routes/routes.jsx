@@ -28,13 +28,14 @@ const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
 const ApprovedProduct = lazy(() => import('@pages/AdminRole/ApproveProduct'));
+const WithdrawalAdmin = lazy(() => import('@pages/AdminRole/WithdrawalAdmin'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/Dashboard/ECommerce'));
 const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
 const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
-
+const Withdrawal = lazy(() => import('@pages/SellerRole/Withdrawal'));
 export const routes_here = [
   {
     path: '/',
@@ -93,6 +94,12 @@ export const routes_here = [
   {
     path: '/admin/registerProductForm',
     element: <ApprovedProduct />,
+    layout: 'admin',
+    isPrivate: true,
+  },
+  {
+    path: '/admin/allWithdrawals',
+    element: <WithdrawalAdmin />,
     layout: 'admin',
     isPrivate: true,
   },
@@ -157,6 +164,18 @@ export const routes_here = [
     isPrivate: false,
   },
   {
+    path: '/shop/:name/voucher/:id',
+    element: <DiscountPage />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop/:name/withdrawals/:id',
+    element: <Withdrawal />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
     path: '/userprofile',
     element: <UserProfile />,
     layout: 'user',
@@ -194,6 +213,7 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+
   {
     path: '/orderconfirm',
     element: <OrderConfirm />,

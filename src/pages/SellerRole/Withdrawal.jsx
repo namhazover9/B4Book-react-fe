@@ -4,60 +4,65 @@ import { Content } from 'antd/es/layout/layout';
 import { text } from 'framer-motion/client';
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import orderApi from '../../hooks/useOrderApi';
+import shopApi from '../../hooks/useShopApi';
 
-export default function OrderPageOfSeller() {
-  const [orders, setOrders] = useState([]); // Dữ liệu bảng
+export default function withdrawal() {
+
+  const [withdrawals, setWithdrawals] = useState([]); // Dữ liệu bảng
   const [loading, setLoading] = useState(false); // Trạng thái loading
   const id = useParams().id;
   const shopName = useParams().name;
-  const [selectedSort, setSelectedSort] = useState('All Orders');
+  const [selectedSort, setSelectedSort] = useState('All Withdrawals');
   const [searchKeyword, setSearchKeyword] = useState('');
   const navigate = useNavigate(); 
-  const fetchOrders = async () => {
+
+  const fetchWithdrawals = async () => {
     setLoading(true);
     try {
-      const response = await orderApi.getAllOrderByShop(id, selectedSort);
-      const orders = response.data?.orders || []; // Kiểm tra để đảm bảo `orders` là mảng
-      setOrders(
-        orders.map((order, index) => ({
+      const response = await shopApi.getWithdrawalByShopId(id, selectedSort);
+      
+      const withdrawalList =  response.data.withdrawRequests || []; // Kiểm tra để đảm bảo `orders` là mảng
+      setWithdrawals(
+        withdrawalList.map((withdrawal, index) => ({
           key: index + 1,
-          id: order._id,
-          name: order.customer?.userName || 'Unknown',
-          email: order.customer?.email || 'N/A',
-          phoneNumber: order.customer?.phoneNumber || 'N/A',
-          status: order.shops?.status || 'Unknown',
-          totalPrice: `$${order.totalOrderPrice || 0}`,
+          id: withdrawal._id,
+          name: withdrawal.shop?.shopName || 'Unknown',
+          email: withdrawal.shop?.shopEmail || 'N/A',
+          phoneNumber: withdrawal.shop?.phoneNumber || 'N/A',
+          status: withdrawal.status || 'Unknown',
+          amount: withdrawal.amount || 0,
         })),
       );
+
     } catch (error) {
-      message.error('No orders found');
+      console.log(error);
+      message.error('No withdrawal found');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchOrders(); // Gọi API khi component được mount
+    fetchWithdrawals(); // Gọi API khi component được mount
   }, [id, selectedSort]);
 
-  const searchOrders = async (keyword) => {
+  const searchWithdrawals = async (keyword) => {
     setLoading(true);
     try {
-      const response = await orderApi.searchOrder(keyword);
-      const data = response.data?.orders || []; // Đảm bảo data là mảng
-      setOrders(data);
+      const response = await shopApi.searchWithdrawal(keyword);
+      const data = response.data?.withdrawals || []; // Đảm bảo data là mảng
+      setWithdrawals(data);
     } catch (error) {
-      console.error('Error searching orders:', error);
+      console.error('Error searching withdrawals:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearchClick = () => {
-    // Điều hướng đến route chi tiết đơn hàng với các tham số
-    navigate(`/shop/${shopName}/orders/order-detail/${orderId}`);
-  };
+  // const handleSearchClick = () => {
+  //   // Điều hướng đến route chi tiết đơn hàng với các tham số
+  //   navigate(`/shop/${shopName}/orders/order-detail/${orderId}`);
+  // };
 
 
   const handleSearchChange = (e) => {
@@ -66,10 +71,10 @@ export default function OrderPageOfSeller() {
     
     if (keyword.trim() === '') {
       // Nếu từ khóa tìm kiếm trống, gọi lại fetchOrders để lấy tất cả các đơn hàng
-      fetchOrders();
+      fetchWithdrawals();
     } else {
       // Nếu từ khóa không trống, gọi searchOrders với từ khóa tìm kiếm
-      searchOrders(keyword);
+      searchWithdrawals(keyword);
     }
   };
 
@@ -92,7 +97,7 @@ export default function OrderPageOfSeller() {
       ...alignCenter,
     },
     {
-      title: 'Full Name',
+      title: 'Shop Name',
       width: 175,
       dataIndex: 'name',
       key: 'name',
@@ -101,7 +106,7 @@ export default function OrderPageOfSeller() {
       render: (text, record) => <span className='text-red-500'>{text}</span>,
     },
     {
-      title: 'Email',
+      title: 'Shop Email',
       dataIndex: 'email',
       key: 'email',
       width: 150,
@@ -115,33 +120,19 @@ export default function OrderPageOfSeller() {
       ...alignCenter,
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amonut',
       width: 75,
       ...alignCenter,
     },
     {
-      title: 'Total Price',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       width: 100,
       ...alignCenter,
-    },
-    {
-      title: 'Action',
-      key: 'operation',
-      // fixed: 'right',
-      width: 100,
-      ...alignCenter,
-      render: (text, record) => (
-        <div className='flex items-center justify-center'>
-        <NavLink to={`/shop/${shopName}/${id}/orders/order-detail/${record.id}`}><button className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-[#679089]'>
-            <SearchOutlined />
-          </button></NavLink>
-        </div>
-      ),
-    },
+    }
   ];
 
   const onChange = (sorter) => {
@@ -152,14 +143,14 @@ export default function OrderPageOfSeller() {
     <div className=''>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>Your Orders</Breadcrumb.Item>
+          <Breadcrumb.Item>Your Withdrawals</Breadcrumb.Item>
           <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} 👋🏻</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block text-[#679089]'>Order List</h1>
+            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block text-[#679089]'>Withdrawal List</h1>
             <div className='w-full lg:w-4/5 flex flex-col items-start lg:flex-row lg:items-center justify-between'>
-              <Input placeholder='Search Order ...' className='w-full lg:w-2/3 py-3' onChange={handleSearchChange}/>
+              <Input placeholder='Search Withdrawals ...' className='w-full lg:w-2/3 py-3' onChange={handleSearchChange}/>
               <div className='mt-4 lg:mt-0 option-show lg:ml-5'>
                 <Select
                   defaultValue='Default sorting'
@@ -167,12 +158,10 @@ export default function OrderPageOfSeller() {
                   onChange={(value) => setSelectedSort(value)} // Cập nhật selectedSort
                   className='w-52 mr-2'
                   options={[
-                    { value: 'All Orders', label: 'All Orders' },
+                    { value: 'All Withdrawals', label: 'All Withdrawals' },
                     { value: 'Pending', label: 'Pending' },
-                    { value: 'Confirmed', label: 'Confirmed' },
-                    { value: 'Shipped', label: 'Shipped' },
-                    { value: 'Delivered', label: 'Delivered' },
-                    { value: 'Cancelled', label: 'Cancelled' },
+                    { value: 'Paid', label: 'Paid' },
+                    { value: 'Rejected', label: 'Rejected' }
                   ]}
                 />
               </div>
@@ -181,7 +170,7 @@ export default function OrderPageOfSeller() {
           <div className='data-shop-page my-4 lg:my-6'>
             <Table
               columns={columns}
-              dataSource={orders}
+              dataSource={withdrawals}
               onChange={onChange}
               scroll={{
                 x: 'max-content',

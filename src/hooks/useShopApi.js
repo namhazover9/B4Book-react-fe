@@ -26,7 +26,18 @@ const shopApi = {
     const url = `/showDetailShop/${id}`; 
     return axiosClient.get(url);
   },
+
+  getWithdrawalByShopId: () => {
+    const url = `/shop/withdrawals`; 
+    return axiosClient.get(url);
+  },
+
+  searchWithdrawal: (keyword) => {
+    const url = `/shop/withdrawals/search?keyword=${keyword}`; 
+    return axiosClient.get(url);
+  },
  
+
 };
 
 export default shopApi;

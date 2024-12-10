@@ -70,10 +70,10 @@ function LoginGoogle({ title = 'Google+', className = '' }) {
   return (
     <div
       onClick={handleLogin}
-      className={`flex items-center justify-between px-4 py-2 bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-md shadow-lg cursor-pointer ${className}`}
+      className={`flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-md shadow-lg cursor-pointer ${className}`}
     >
       <img src={ggIcon} alt="Google Icon" className="h-6 w-6" />
-      <span className="text-white text-center flex-grow ml-[-40px]">{title}</span>
+      <span className="text-white   ">{title}</span>
     </div>
   );
 }
