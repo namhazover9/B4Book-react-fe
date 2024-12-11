@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom';
 import { message } from 'antd';
 import { use } from 'react';
 import { desc, s, text } from 'framer-motion/client';
-import { set } from 'react-hook-form';
+//import { set } from 'react-hook-form';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
@@ -209,7 +209,7 @@ export default function ProfileOfSeller() {
             <div className='absolute mt-15 lg:mt-20 lg:mx-auto w-11/12 p-3 min-h-96 bg-white rounded-lg'>
               <div className='pt-15 sm:pt-20 pb-5'>
                 <div className='info text-center'>
-                  <h1 className='text-xl font-bold text-[#d0a874]'>{shop.shopName}</h1>
+                  <h1 className='text-xl font-bold text-[#f18966]'>{shop.shopName}</h1>
                   <p className='text-sm font-normal text-gray-400'>{shop.shopAddress}</p>
                 </div>
                 <div className='field-info'>
@@ -340,11 +340,11 @@ export default function ProfileOfSeller() {
                           
                         <div className='absolute z-10 right-5 top-5'>
                           <button
-                            className='animate-bounce bg-blue-500 rounded-xl hover:bg-white border-2 border-white hover:border-blue-500'
+                            className='animate-bounce bg-[#679089] rounded-xl hover:bg-white border-2 border-white hover:border-[#679089] duration-300 ease-in-out'
                             disabled={!isDisabled || isSubmitting} // Disable button if inputs are locked or if form is submitting
                             >
 
-                            <SaveOutlined className='text-white px-5 py-2 hover:scale-125 hover:text-blue-500 duration-300' />
+                            <SaveOutlined className='text-white px-5 py-2 hover:scale-125 hover:text-[#679089] duration-300' />
                           </button>
                         </div>
                       </Form>
@@ -353,10 +353,10 @@ export default function ProfileOfSeller() {
                 </div>
                 <div className='withdraw-money w-5/6 mx-auto mt-2 lg:mt-5 flex justify-end items-center'>
                   <h4 className='mr-5'>
-                    wallet: <span className='text-red-500 font-semibold'>{shop.wallet}$</span>
+                    wallet: <span className='text-[#f18966] font-semibold'>{shop.wallet}$</span>
                   </h4>
                   <button
-                    className='px-5 py-2 text-white bg-blue-500 rounded-xl hover:text-blue-500 hover:bg-white border-2 border-white hover:border-blue-500 duration-300 ease-in-out'
+                    className='px-5 py-2 text-white bg-[#679089] rounded-xl hover:text-[#679089] hover:bg-white border-2 border-white hover:border-[#679089] duration-300 ease-in-out'
                     onClick={showModal}
                   >
                     Withdraw Money
