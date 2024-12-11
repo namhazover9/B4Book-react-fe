@@ -143,7 +143,7 @@ export default function ApproveProduct() {
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
           <Breadcrumb.Item>Admin Page</Breadcrumb.Item>
-          <Breadcrumb.Item>Register Forms</Breadcrumb.Item>
+          <Breadcrumb.Item>Register Products</Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>

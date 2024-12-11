@@ -31,8 +31,8 @@ export default function ProductPage() {
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
-    'ChristianLiving',
-    'ChurchHistory',
+    'Adventure',
+    'Fantasy',
     'Educational Curriculum',
     'Fiction & Fantasy',
     'Religion & Spirituality',

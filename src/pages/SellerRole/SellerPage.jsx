@@ -229,6 +229,20 @@ export default function SellerPage() {
       sorter: (a, b) => a.salesNumber - b.salesNumber,
     },
     {
+      title: 'Status',
+      dataIndex: 'isApproved',
+      key: 'isApproved',
+      width: 150,
+      ...alignCenter,
+      render: (isApproved) => (
+        <span className={isApproved ? 'text-green-500' : 'text-red-500'}>
+          {isApproved ? 'Approve' : 'Unapproved'}
+        </span>
+      ),
+    },
+    
+    
+    {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
