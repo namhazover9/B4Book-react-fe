@@ -151,7 +151,7 @@ export default function OrderDetailPage() {
                               />
                             )}
                             <p>{product.title}</p>
-                            <p>Price: {product.price}</p>
+                            <p>Price: ${product.price}</p>
                             <p>Quantity: {product.quantity}</p>
 
                             {/* Hiển thị nút Feedback nếu trạng thái là Delivered và user chưa feedback */}

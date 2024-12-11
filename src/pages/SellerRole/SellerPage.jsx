@@ -585,9 +585,16 @@ export default function SellerPage() {
                     }}
                     onChange={(value) => setFieldValue('category', value)}
                   >
-                    <Select.Option value='Comedy'>Comedy</Select.Option>
-                    <Select.Option value='Drama'>Drama</Select.Option>
-                    <Select.Option value='Horror'>Horror</Select.Option>
+                    <Select.Option value='ChristianLiving'>ChristianLiving</Select.Option>
+                    <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
+                    <Select.Option value='Educational Curriculum'>Educational Curriculum</Select.Option>
+                    <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
+                    <Select.Option value='Fiction & Fantasy'>Fiction & Fantasy</Select.Option>
+                    <Select.Option value='Religion & Spirituality'>Religion & Spirituality</Select.Option>
+                    <Select.Option value='Romance Books'>Romance Books</Select.Option>
+                    <Select.Option value='Literature & Fiction'>Literature & Fiction</Select.Option>
+                    <Select.Option value='Biographies & Memoirs'>Biographies & Memoirs</Select.Option>
+                    <Select.Option value='Children Book'>Children Book</Select.Option>
                   </Select>
                   <div className='h-8 py-1'>
                     {touched.category && errors.category && (
