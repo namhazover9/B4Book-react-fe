@@ -14,7 +14,7 @@ import { use } from 'react';
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [shop, setShop] = useState({});
-
+  const shopName = useParams().name;
   const normFileAddProduct = (e) => {
     if (Array.isArray(e)) {
       return e;

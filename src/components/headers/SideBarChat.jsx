@@ -3,9 +3,11 @@ import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import chatApi from '../../hooks/useChatApi';
 import { Drawer, Button } from "antd";
 import { MenuUnfoldOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 const SideBarChat = () => {
   const { id, name } = useParams(); // Lấy user ID từ URL params
+  const userId = useSelector((state) => state.user._id);
   const [contacts, setContacts] = useState([]); // Lưu danh sách liên lạc
   const [role, setRole] = useState(null); // Lưu role (customer hoặc shop)
   const navigate = useNavigate();
@@ -68,7 +70,13 @@ const SideBarChat = () => {
 
   // Hàm để xác định URL quay lại tùy theo role
   const handleBackNavigation = () => {
-    console.log(role);
+    if(role === null){
+      if(id === userId){
+        setRole("customer");
+      }else{
+        setRole("shop");
+      }
+     }
     if (role === 'shop') {
         navigate(`/shop/${name}/profile/${id}`);
     } else if (role === 'customer') {
