@@ -281,7 +281,7 @@ export default function ProductPage() {
             value={searchKeyword}
             onChange={handleSearchChange} // Handle search input change
             placeholder='Search products...'
-            className='flex-grow outline-none bg-white text-sm sm:text-base text-gray-700 px-2'
+            className='flex-grow outline-none text-sm sm:text-base bg-gray-100 text-gray-700 px-2'
           />
           <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-[#679089] p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
         </div>
@@ -370,15 +370,13 @@ export default function ProductPage() {
           <div className='header-all-books flex justify-between items-center mx-4 my-2 lg:my-0 lg:w-11/12'>
             <div className='option-form-left flex items-center w-1/12 justify-end lg:justify-start'>
               <QrcodeOutlined
-                className={`md:mr-2 choice-icon-tnvd ${
-                  viewMode === 'block' ? 'text-blue-500' : ''
-                }`}
+                className={`md:mr-2 choice-icon-tnvd ${viewMode === 'block' ? 'text-blue-500' : ''
+                  }`}
                 onClick={() => handleViewModeChange('block')}
               />
               <BarsOutlined
-                className={`choice-icon-tnvd hidden md:block ${
-                  viewMode === 'line' ? 'text-blue-500' : ''
-                }`}
+                className={`choice-icon-tnvd hidden md:block ${viewMode === 'line' ? 'text-blue-500' : ''
+                  }`}
                 onClick={() => handleViewModeChange('line')}
               />
             </div>
@@ -466,11 +464,10 @@ export default function ProductPage() {
                                         </Link>
                                       </button>
                                       <button
-                                        className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
-                                          addingToCart
-                                            ? 'opacity-50 cursor-not-allowed'
-                                            : 'hover:bg-red-500 hover:text-white'
-                                        } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+                                        className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${addingToCart
+                                          ? 'opacity-50 cursor-not-allowed'
+                                          : 'hover:bg-red-500 hover:text-white'
+                                          } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
                                         onClick={() => handleAddToCart(book._id, quantity)}
                                         disabled={addingToCart} // Vô hiệu hóa khi đang thêm
                                       >
@@ -485,9 +482,8 @@ export default function ProductPage() {
                                 </div>
 
                                 <p
-                                  className={`text-xl font-bold mb-1 text-[#F18966] ${
-                                    isTruncated[index] ?? true ? 'truncate' : ''
-                                  }`}
+                                  className={`text-xl font-bold mb-1 text-[#F18966] ${isTruncated[index] ?? true ? 'truncate' : ''
+                                    }`}
                                   onClick={() => toggleTitle(index)}
                                 >
                                   {book.title}
@@ -501,11 +497,10 @@ export default function ProductPage() {
                                   {[...Array(5)].map((_, index) => (
                                     <span
                                       key={index}
-                                      className={`text-2xl ${
-                                        index < book.ratingResult
-                                          ? 'text-yellow-500'
-                                          : 'text-gray-300'
-                                      }`}
+                                      className={`text-2xl ${index < book.ratingResult
+                                        ? 'text-yellow-500'
+                                        : 'text-gray-300'
+                                        }`}
                                     >
                                       ★
                                     </span>
@@ -586,9 +581,8 @@ export default function ProductPage() {
                                     </p>
                                     <div className='sm:hidden'>
                                       <div
-                                        className={`relative overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-                                          expandedItems[index] ? 'max-h-[500px]' : 'max-h-[80px]'
-                                        }`}
+                                        className={`relative overflow-hidden transition-[max-height] duration-300 ease-in-out ${expandedItems[index] ? 'max-h-[500px]' : 'max-h-[80px]'
+                                          }`}
                                       >
                                         <p className='text-gray-600 text-sm mr-2 text-balance'>
                                           {book.description}

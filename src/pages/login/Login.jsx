@@ -95,7 +95,9 @@ function Login() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f8f6]">
+    
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e6dbcd] via-[#eee5da] to-[#917f74]" 
+    >
       <div className="flex flex-col md:flex-row w-11/12 max-w-lg md:max-w-6xl bg-white shadow-2xl rounded-lg overflow-hidden mx-auto">
         {/* Left Section */}
         <div
@@ -106,7 +108,7 @@ function Login() {
         ></div>
          
         {/* Right Section */}
-        <div className="w-full md:w-1/2 flex flex-col p-6 sm:p-8 md:p-12 bg-[#eee5da]">
+        <div className="w-full md:w-1/2 flex flex-col p-6 sm:p-8 md:p-12 bg-gradient-to-br from-[#e6dbcd] via-[#eee5da] to-[#917f74]">
          
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left text-[#f18966]">
             Welcome to BigFour 👋

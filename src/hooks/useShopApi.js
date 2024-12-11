@@ -53,6 +53,15 @@ const shopApi = {
     return axiosClient.get(url);
   },
 
+  getTotalRevenueForShop: (id) => {
+    const url = `/shop/totalRevenueForShop/${id}`; 
+    return axiosClient.get(url);
+  },
+
+  getMonthlyRevenueForShop: (id) => {
+    const url = `/shop/monthlyRevenue/${id}`; 
+    return axiosClient.get(url);
+  },
   // Tạo yêu cầu rút tiền
   createWithdrawRequest: (amount) => {
     const url = `/shop/withdraws`;
