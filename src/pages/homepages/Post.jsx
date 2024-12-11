@@ -91,7 +91,7 @@ const BlogSection = () => {
           </div>
 
           {/* Center Column - Featured Post */}
-          <div className='col-span-12 md:col-span-6'>
+          <div className='col-span-12 md:col-span-3 lg:col-span-6 hidden lg:block'>
             <div className='group cursor-pointer'>
               <div className='relative overflow-hidden rounded-2xl h-[400px]'>
                 <img
@@ -125,8 +125,10 @@ const BlogSection = () => {
             </div>
           </div>
 
+
+
           {/* Right Column */}
-          <div className='col-span-12 md:col-span-3'>
+          <div className='col-span-12 md:col-span-3 hidden lg:block'>
             <div className='h-[400px] flex flex-col justify-between'>
               {rightPosts.map((post, index) => (
                 <div key={index} className='group cursor-pointer flex gap-4 h-[120px]'>

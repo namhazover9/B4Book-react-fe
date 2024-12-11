@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import chatApi from '../../hooks/useChatApi';
+import { Drawer, Button } from "antd";
+import { MenuUnfoldOutlined } from '@ant-design/icons';
 
 const SideBarChat = () => {
   const { id, name } = useParams(); // Lấy user ID từ URL params
   const [contacts, setContacts] = useState([]); // Lưu danh sách liên lạc
   const [role, setRole] = useState(null); // Lưu role (customer hoặc shop)
   const navigate = useNavigate();
-
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [drawerVisible, setDrawerVisible] = useState(false);
   const fetchHistoryChat = async () => {
     try {
       const response = await chatApi.getAllChats(id); // Fetch dữ liệu từ API
@@ -53,6 +56,14 @@ const SideBarChat = () => {
 
   useEffect(() => {
     fetchHistoryChat();
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+  };
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+      window.removeEventListener("resize", handleResize);
+  };
   }, [id]);
 
   // Hàm để xác định URL quay lại tùy theo role
@@ -81,7 +92,7 @@ const SideBarChat = () => {
       {/* Contact List */}
       <div className='overflow-y-auto h-screen p-3 mb-9 pb-20'>
         {contacts.map((contact) => (
-          <NavLink to={`/${name}/chat/${id}/${contact.id}`} key={contact.id}>
+          <NavLink to={`/${name}/chat/${id}/${contact.id}`} key={contact.id}  onClick={() => isMobile && setDrawerVisible(false)}>
             <div className='flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md'>
               <div className='w-12 h-12 bg-gray-300 rounded-full mr-3'>
                 <img
@@ -99,6 +110,7 @@ const SideBarChat = () => {
         ))}
       </div>
     </div>
+    
   );
 };
 
