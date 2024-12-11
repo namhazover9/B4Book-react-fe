@@ -586,15 +586,25 @@ export default function SellerPage() {
                     }}
                     onChange={(value) => setFieldValue('category', value)}
                   >
-                    <Select.Option value='ChristianLiving'>ChristianLiving</Select.Option>
-                    <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
+                    <Select.Option value='Adventure'>Adventure</Select.Option>
+                    <Select.Option value='Fantasy'>Fantasy</Select.Option>
                     <Select.Option value='Educational Curriculum'>Educational Curriculum</Select.Option>
-                    <Select.Option value='Fiction & Fantasy'>Fiction & Fantasy</Select.Option>
-                    <Select.Option value='Religion & Spirituality'>Religion & Spirituality</Select.Option>
-                    <Select.Option value='Romance Books'>Romance Books</Select.Option>
-                    <Select.Option value='Literature & Fiction'>Literature & Fiction</Select.Option>
-                    <Select.Option value='Biographies & Memoirs'>Biographies & Memoirs</Select.Option>
+                    <Select.Option value='Science Fiction'>Science Fiction</Select.Option>
+                    <Select.Option value='Mystery & Thriller'>Mystery & Thriller</Select.Option>
+                    <Select.Option value='Romance'>Romance</Select.Option>
+                    <Select.Option value='Literary Fiction'>Literary Fiction</Select.Option>
+                    <Select.Option value='Biography/Autobiography'>Biography/Autobiography</Select.Option>
                     <Select.Option value='Children Book'>Children Book</Select.Option>
+                    <Select.Option value='Self-help'>Self-help</Select.Option>
+                    <Select.Option value='Cookbooks'>Cookbooks</Select.Option>
+                    <Select.Option value='History'>History</Select.Option>
+                    <Select.Option value='Graphic Novels/Comic'>Graphic Novels/Comic</Select.Option>
+                    <Select.Option value='Poetry'>Poetry</Select.Option>
+                    <Select.Option value='Business'>Business</Select.Option>
+                    <Select.Option value='Philosophy'>Philosophy</Select.Option>
+                    <Select.Option value='Travel'>Travel</Select.Option>
+                    <Select.Option value='Novel/Light Novel'>Novel/Light Novel</Select.Option>
+
                   </Select>
                   <div className='h-8 py-1'>
                     {touched.category && errors.category && (
