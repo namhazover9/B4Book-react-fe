@@ -64,7 +64,7 @@ const options: ApexOptions = {
 const ChartTwo: React.FC = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState<number[]>([]);
   const [monthlyRevenue5Percent, setMonthlyRevenue5Percent] = useState<number[]>([]);
-  const {id} = useParams();
+
   interface Series {
     name: string;
     data: number[];
@@ -85,7 +85,7 @@ const ChartTwo: React.FC = () => {
 
   const fetchMonthlyRevenue = async () => {
     try {
-      const response = await shopApi.getTotalRevenueForShop(id);
+      const response = await shopApi.getMonthlyRevenue();
       setMonthlyRevenue(response.data.monthlyRevenue);
       setMonthlyRevenue5Percent(response.data.monthlyRevenue5Percent);
     } catch (error) {
