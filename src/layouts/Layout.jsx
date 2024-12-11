@@ -412,7 +412,7 @@ export default function Layout({ children }) {
       >
         {/* Header */}
         <div className='flex justify-between items-center border-b pb-2 p-4'>
-          <h2 className='text-xl font-semibold'>Shopping cart</h2>
+          <h2 className='text-xl font-semibold text-[#f18966]'>Shopping cart</h2>
           <CloseOutlined onClick={toggleCartSidebar} className='cursor-pointer text-lg' />
         </div>
 

@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import userApi from '../../hooks/userApi';
+import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
   Col,
   Input,
   List,
-  Progress,
-  Row,
-  Typography,
-  Radio,
   message,
-  Select,
   Modal,
+  Row,
+  Typography
 } from 'antd';
-import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from '@ant-design/icons';
-import { u } from 'framer-motion/client';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import userApi from '../../hooks/userApi';
+import LoadingSpinner from '../../components/loading';
 
 const { Title, Text } = Typography;
 
@@ -196,7 +192,7 @@ export default function UserProfile() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Hoặc thêm spinner/loading animation
+    return <LoadingSpinner />;
   }
 
   if (!userInfo) {
