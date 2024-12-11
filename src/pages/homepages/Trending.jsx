@@ -79,7 +79,7 @@ const BookShowcase = () => {
                     <div className='relative overflow-hidden rounded-2xl '>
                       <img
                         src={book.images[0]}
-                        className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
+                        className='w-90 h-60 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                         <div className='absolute right-4 bottom-5 top-1/2 -translate-y-1/2 flex flex-col gap-3'>
@@ -96,12 +96,12 @@ const BookShowcase = () => {
                       </div>
                     </div>
 
-                    <div className='mt-3'>
+                    <div className='mt-3 text-left'>
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
-                        <button className='truncate block w-full'>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate text-left'>
+                        <button className='truncate block'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>
