@@ -28,8 +28,8 @@ const AppRoutes = () => {
   const isAuth = useSelector((state) => state.authenticate.isAuth);
   const userRole = useSelector((state) => state.user.role[0]?.name);
   const userId = useSelector((state) => state.user._id);
-  console.log('userId', userId);
-  
+  const token = localStorage.getItem('access_token');
+
   // Kiểm tra xác thực
   useEffect(() => {
     dispatch(getIsAuth());
@@ -37,13 +37,13 @@ const AppRoutes = () => {
 
   // Lấy thông tin người dùng khi xác thực thành công
   useEffect(() => {
-    if (isAuth) {
-      console.log('User ID:', isAuth);
+    if (isAuth && token) {
+      console.log('token ID:', token);
       
       dispatch(getUserRequest());
       dispatch(fetchCart());
     }
-  }, [isAuth, dispatch]);
+  }, [isAuth, dispatch, token]);
   
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
