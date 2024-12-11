@@ -150,9 +150,9 @@ export default function OrderDetailPage() {
                                 style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                               />
                             )}
-                            <p className='font-bold text-sm text-[#f18966] mt-2'>{product.title}</p>
-                            <p className='text-xs'>Price: {product.price}</p>
-                            <p className='text-xs'>Quantity: {product.quantity}</p>
+                            <p>{product.title}</p>
+                            <p>Price: ${product.price}</p>
+                            <p>Quantity: {product.quantity}</p>
 
                             {/* Hiển thị nút Feedback nếu trạng thái là Delivered và user chưa feedback */}
                             {shop.status === 'Delivered' && !hasFeedbackByUser && (

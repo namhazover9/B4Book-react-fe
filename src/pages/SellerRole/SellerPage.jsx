@@ -589,6 +589,7 @@ export default function SellerPage() {
                     <Select.Option value='ChristianLiving'>ChristianLiving</Select.Option>
                     <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
                     <Select.Option value='Educational Curriculum'>Educational Curriculum</Select.Option>
+                    <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
                     <Select.Option value='Fiction & Fantasy'>Fiction & Fantasy</Select.Option>
                     <Select.Option value='Religion & Spirituality'>Religion & Spirituality</Select.Option>
                     <Select.Option value='Romance Books'>Romance Books</Select.Option>

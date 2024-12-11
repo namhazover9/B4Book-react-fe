@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { nav, s, u } from 'framer-motion/client';
 import orderApi from '../../hooks/useOrderApi'; // Import API
 import { Link, useNavigate } from 'react-router-dom';
+import shopApi from '../../hooks/useShopApi'; // Import API
 
 const Checkout = () => {
   const addresses = useSelector((state) => state.user.address || []);
@@ -18,8 +19,9 @@ const Checkout = () => {
 
   const selectedItems = useSelector((state) => state.carts.selectedItems);
   // console.log('Selected Items', selectedItems);
-
+  const [productTotal, setProductTotal] = useState(0);
   const [voucherCodes, setVoucherCodes] = useState({});
+  const [discountedTotal, setDiscountedTotal] = useState(0);
   const [selectedStore, setSelectedStore] = useState(null);
   const [isVoucherModalVisible, setIsVoucherModalVisible] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -28,7 +30,6 @@ const Checkout = () => {
   const [cardOption, setCardOption] = useState('');
   const userId = useSelector((state) => state.user._id);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     //console.log('Selected Items:', selectedItems);
@@ -56,7 +57,7 @@ const Checkout = () => {
           shopId: item.shopId, // Lưu shopId
           name: item.shopName, // Lưu tên cửa hàng (vẫn giữ tên cửa hàng để hiển thị)
           checked: false,
-          shippingCost: randomShippingCost(), // Gán giá trị ngẫu nhiên cho shippingCost
+          shippingCost: shippingCost, // Gán giá trị ngẫu nhiên cho shippingCost
           products: [item],
           vouchers: [], // Cập nhật các voucher liên quan ở đây
         });
@@ -65,7 +66,24 @@ const Checkout = () => {
     }, []),
   );
 
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      const updatedStores = await Promise.all(
+        stores.map(async (store) => {
+          try {
+            const response = await shopApi.getAllVoucherForShop(store.shopId);
+            return { ...store, vouchers: response.data || [] };
+          } catch (error) {
+            console.error(`Failed to fetch vouchers for shop ${store.shopId}:`, error);
+            return store; // Trả về store hiện tại nếu lỗi xảy ra
+          }
+        }),
+      );
+      setStores(updatedStores);
+    };
 
+    fetchVouchers();
+  }, []);
 
   const handleVoucherChange = (storeIndex, voucherCode) => {
     setVoucherCodes((prevVoucherCode) => ({
@@ -75,51 +93,28 @@ const Checkout = () => {
   };
 
   const handleApplyVoucher = () => {
-    const selectedVoucherCode = voucherCodes[selectedStore];
-    if (selectedVoucherCode) {
-      const selectedStoreVouchers = stores[selectedStore].vouchers;
-      const selectedVoucher = selectedStoreVouchers.find(
-        (voucher) => voucher.code === selectedVoucherCode,
+    const selectedVoucher = stores[selectedStore]?.vouchers.find(
+      (voucher) => voucher._id === voucherCodes[selectedStore],
+    );
+
+    if (selectedVoucher) {
+      const voucherValue = selectedVoucher.value; // Lấy giá trị phần trăm từ voucher
+      const storeProducts = stores[selectedStore].products;
+
+      // Tính tổng giá sản phẩm của cửa hàng trước khi giảm giá
+      const totalCost = storeProducts.reduce(
+        (total, product) => total + product.price * product.quantity,
+        0,
       );
+      console.log(totalCost, 'totalCost');
 
-      if (selectedVoucher) {
-        const totalPrice = stores[selectedStore].products.reduce(
-          (sum, product) => sum + (product.checked ? product.price * product.quantity : 0),
-          0,
-        );
+      // Tính giá sau khi áp dụng voucher
+      const discountAmount = totalCost * (voucherValue / 100); // Giảm giá theo phần trăm
+      const totalAfterDiscount = totalCost - discountAmount; // Giá sau khi giảm
+      console.log(totalAfterDiscount, 'totalAfterDiscount');
 
-        if (selectedVoucher.code === 'FREESHIP') {
-          setDiscount(0);
-          setShippingCost(0);
-          notification.success({
-            message: 'Voucher Applied',
-            description: 'Shipping cost has been waived!',
-          });
-          setIsVoucherModalVisible(false);
-          return;
-        }
-
-        if (selectedVoucher.discountRate) {
-          const discountAmount = totalPrice * selectedVoucher.discountRate;
-          setDiscount(discountAmount);
-          setShippingCost(30000);
-          notification.success({
-            message: 'Voucher Applied',
-            description: `You received a discount of ${discountAmount.toLocaleString()}$!`,
-          });
-          setIsVoucherModalVisible(false);
-        }
-      } else {
-        notification.error({
-          message: 'Invalid Voucher Code',
-          description: 'The voucher code you entered is not valid. Please try again.',
-        });
-      }
-    } else {
-      notification.error({
-        message: 'Voucher Code Missing',
-        description: 'Please select a valid voucher code.',
-      });
+      // Cập nhật tổng giá đã giảm vào state hoặc tính toán khi render
+      setDiscountedTotal(totalAfterDiscount); // Lưu vào state tổng đã giảm
     }
   };
 
@@ -136,9 +131,12 @@ const Checkout = () => {
         return sum + product.price * product.quantity;
       }, 0);
 
+      // Lấy voucher code cho từng cửa hàng
       const voucherCode = voucherCodes[storeIndex];
-      const selectedVoucher = store.vouchers.find((voucher) => voucher.code === voucherCode);
-      const storeDiscount = selectedVoucher ? storeTotal * selectedVoucher.discountRate : 0;
+      const selectedVoucher = store.vouchers.find((voucher) => voucher._id === voucherCode);
+
+      // Tính giá trị giảm giá cho cửa hàng, nếu có voucher
+      const storeDiscount = selectedVoucher ? storeTotal * (selectedVoucher.value / 100) : 0;
 
       totalPrice += storeTotal;
       totalDiscount += storeDiscount;
@@ -166,22 +164,13 @@ const Checkout = () => {
   };
 
   const columns = (storeName, storeIndex) => [
-    // {
-    //   title: 'Shop Name',
-    //   dataIndex: 'shopName',
-    //   render: (shopName) => <p>{shopName}</p>,
-    // },    
     {
       title: 'Image',
       dataIndex: 'images',
       key: 'image',
       className: 'w-[8em]',
       render: (images) => (
-        <img
-          src={images[0]}
-          alt='Product'
-          className='w-12 h-12 lg:block hidden'
-        />
+        <img src={images[0]} alt='Product' className='w-12 h-12 lg:block hidden' />
       ),
     },
 
@@ -203,22 +192,9 @@ const Checkout = () => {
     {
       title: 'Total',
       render: (_, record) => {
-        const productTotal = Math.round(record.price * record.quantity); // Làm tròn về số nguyên
+        setProductTotal(Math.round(record.price * record.quantity));
         return `${productTotal}$`;
       },
-    },
-    {
-      title: () => (
-        <Button
-          onClick={() => {
-            setSelectedStore(storeIndex);
-            setIsVoucherModalVisible(true);
-          }}
-          className='bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded'
-        >
-          Voucher
-        </Button>
-      ),
     },
   ];
 
@@ -240,6 +216,26 @@ const Checkout = () => {
       return;
     }
 
+    // Hàm tính tổng giá tiền của cửa hàng
+    const calculateStoreTotal = (store) => {
+      // Kiểm tra nếu store hoặc products không tồn tại
+      if (!store || !store.products || !Array.isArray(store.products)) {
+        throw new Error('Dữ liệu cửa hàng không hợp lệ.');
+      }
+
+      // Tính tổng giá của sản phẩm và cộng thêm chi phí vận chuyển
+      const total =
+        store.products.reduce((total, product) => {
+          // Kiểm tra nếu sản phẩm hợp lệ
+          if (!product.price || !product.quantity) {
+            throw new Error('Dữ liệu sản phẩm không hợp lệ.');
+          }
+          return total + product.price * product.quantity;
+        }, 0) + store.shippingCost;
+
+      return total;
+    };
+
     // Lấy thông tin địa chỉ từ Redux hoặc local state
     const selectedAddress = addresses.find((addr) => addr._id === selectedAddressId);
 
@@ -257,9 +253,7 @@ const Checkout = () => {
         })),
         shippingCost: store.shippingCost,
         voucherDiscount: null, // Bạn có thể thay đổi phần này nếu muốn thêm mã giảm giá
-        totalShopPrice:
-          store.products.reduce((total, product) => total + product.price * product.quantity, 0) +
-          store.shippingCost,
+        totalShopPrice: calculateStoreTotal(store),
       })),
       shippingAddress: {
         address: selectedAddress.street,
@@ -272,7 +266,7 @@ const Checkout = () => {
       // paidAt: null, // Chưa thanh toán thì để null
     };
 
-    //console.log('Complete Order Data:', orderData);
+    console.log('Complete Order Data:', orderData);
 
     try {
       if (paymentMethod === 'card' && cardOption === 'vnpay') {
@@ -301,7 +295,6 @@ const Checkout = () => {
         console.log('Place Order Response:', response);
         if (response?.data) {
           navigate(`/orderconfirm`);
-
         }
       } else {
         notification.success({
@@ -321,7 +314,7 @@ const Checkout = () => {
     setSelectedAddressId(addressId); // Cập nhật địa chỉ mặc định được chọn
   };
 
-  const handleUpdateDefault = () => { };
+  const handleUpdateDefault = () => {};
 
   const handlePaymentChange = (e) => {
     setFieldValue('paymentMethod', e.target.value);
@@ -389,14 +382,20 @@ const Checkout = () => {
                         components={{
                           header: {
                             cell: ({ children, ...restProps }) => (
-                              <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                              <th
+                                {...restProps}
+                                style={{ backgroundColor: '#E6DBCD', color: 'black' }}
+                              >
                                 {children}
                               </th>
                             ),
                           },
                           body: {
                             row: ({ children, ...restProps }) => (
-                              <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                              <tr
+                                {...restProps}
+                                className='bg-white hover:bg-[#e6e4e0]  transition-colors duration-200'
+                              >
                                 {children}
                               </tr>
                             ),
@@ -404,7 +403,9 @@ const Checkout = () => {
                         }}
                       />
                       <div className='flex justify-end mr-5'>
-                        <p className='mt-3 font-semibold'>Shipping Cost: {Math.round(store.shippingCost)}$</p>
+                        <p className='mt-3 font-semibold'>
+                          Shipping Cost: {Math.round(store.shippingCost)}$
+                        </p>
                       </div>
                       {/* Hiển thị shippingCost cho mỗi cửa hàng */}
                       {storeIndex < stores.length - 1 && <Divider />}
@@ -483,6 +484,14 @@ const Checkout = () => {
                     </p>
                     <p className='mt-3'>Total Cost of Goods: {Math.round(totalProducts())}$</p>
                     <p className='mt-3'>Total Amount: {Math.round(calculateTotalAmount())}$</p>
+                    {/* <p className='mt-3'>
+                      Total Amount:
+                      {discountedTotal === 0
+                        ? Math.round(calculateTotalAmount())
+                        : Math.round(discountedTotal + Math.round(calculateTotalShippingCost()))}
+                      $
+                    </p> */}
+
                     <div className='mt-3'>
                       <button
                         type='submit'
@@ -502,40 +511,24 @@ const Checkout = () => {
         visible={isVoucherModalVisible}
         onOk={handleApplyVoucher}
         onCancel={() => setIsVoucherModalVisible(false)}
-        okText='Apply Voucher'
-        cancelText='Cancel'
+        // okText='Apply Voucher'
+        // cancelText='Cancel'
         width={400}
         footer={
-          stores[selectedStore]?.vouchers.length > 0
-            ? [
-              <Button key='cancel' onClick={() => setIsVoucherModalVisible(false)}>
-                Cancel
-              </Button>,
-              <Button key='apply' type='primary' onClick={handleApplyVoucher}>
-                Apply Voucher
-              </Button>,
-            ]
-            : null
+          null
         }
       >
         <p className=' text-[1.19em]'>Apply Voucher</p>
         <div className='flex flex-col gap-4'>
           {stores[selectedStore]?.vouchers.length > 0 ? (
-            <Radio.Group>
-              {stores[selectedStore].vouchers.map((voucher) => (
-                <div
-                  key={voucher.code}
-                  className='flex items-center justify-between p-3 border border-gray-200 rounded-md space-y-3 m-3'
-                >
-                  <Radio
-                    value={voucher.code}
-                    checked={voucherCodes[selectedStore] === voucher.code}
-                    onChange={(e) => handleVoucherChange(selectedStore, e.target.value)}
-                  >
-                    <div>
-                      <p className='font-semibold'>{voucher.code}</p>
-                      <p className='text-gray-500'>{voucher.description}</p>
-                    </div>
+            <Radio.Group
+              onChange={(e) => handleVoucherChange(selectedStore, e.target.value)}
+              value={voucherCodes[selectedStore]}
+            >
+              {stores[selectedStore]?.vouchers.map((voucher) => (
+                <div key={voucher._id} className='flex items-center justify-between'>
+                  <Radio value={voucher._id}>
+                    {voucher.name} ({voucher.value ? `${voucher.value}%` : 'Free Ship'})
                   </Radio>
                 </div>
               ))}
@@ -570,7 +563,6 @@ const Checkout = () => {
                   <p className='m-0'>
                     {addr.street}, {addr.city} ,{addr.country}
                   </p>
-
                 </div>
               </Radio>
             </div>
