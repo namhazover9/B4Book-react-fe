@@ -33,7 +33,7 @@ const BookSaleBanners = () => {
               placeholder='Your email address'
               className='w-full px-6 py-3 rounded-full border-0 focus:outline-none'
             />
-            <button className='absolute right-0 bg-[#ff6b6b] text-white px-8 py-3  rounded-full hover:bg-[#ff5252] transition-colors duration-200'>
+            <button className='absolute right-0 bg-[#679089] text-white px-8 py-3  rounded-full hover:bg-[#679079] transition-colors duration-200'>
               Subscribe
             </button>
           </div>

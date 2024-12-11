@@ -26,7 +26,7 @@ const BookSaleBanners = () => {
       discount: null,
       overlayColor: 'bg-amber-500',
       overlayOpacity: 'bg-opacity-20',
-      buttonText: 'Shop Now',
+      buttonText: null,
     },
   ];
 
