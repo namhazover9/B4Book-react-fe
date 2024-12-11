@@ -492,12 +492,12 @@ export default function ProductPage() {
                                 <div className='flex flex-col justify-between items-start mr-5 space-y-1'>
                                   <p className='text-base text-gray-600 truncate'>{book.author}</p>
                                 </div>
-                                <div className='flex my-1'>
+                                <div className='flex my-1 items-center'>
                                   {/* Vòng lặp tạo sao */}
                                   {[...Array(5)].map((_, index) => (
                                     <span
                                       key={index}
-                                      className={`text-2xl ${index < book.ratingResult
+                                      className={`text-xl ${index < book.ratingResult
                                         ? 'text-yellow-500'
                                         : 'text-gray-300'
                                         }`}
@@ -505,7 +505,7 @@ export default function ProductPage() {
                                       ★
                                     </span>
                                   ))}
-                                  {/* <span className='text-[#F18966] ml-2'>{book.ratingResult}</span> */}
+                                  <span className='text-[#F18966] text-base ml-2'>{book.ratingResult}</span>
                                 </div>
 
                                 <div className='flex items-center justify-between mb-2'>
