@@ -280,9 +280,9 @@ export default function ProductPage() {
 
   return (
     <div className='container mx-auto'>
-      <div className='header my-5 bg-[#EEE5DA] p-5 sm:p-10 flex justify-center sm:justify-between items-center'>
+      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#f8f4ef] to-transparent'>
         <h1 className='hidden sm:block text-2xl text-red-500 font-medium'>
-          <span className='text-lg text-black sm:hidden md:block'>Welcome to</span> <span className='text-lg text-[#F18966] sm:hidden md:block'>Books Page!</span>
+          <h1 className='text-lg text-black sm:hidden md:block font-bold'>Welcome to</h1> <span className=' text-[#F18966] sm:hidden md:block  font-bold'>Books Page!</span>
         </h1>
         <div className='flex w-4/5 py-1 sm:w-1/2 md:w-2/3 items-center border rounded-full px-2 sm:px-3 sm:py-3 bg-gray-100'>
           <input
@@ -356,6 +356,7 @@ export default function ProductPage() {
               <Slider
                 range
                 defaultValue={priceRange}
+                onChange={handlePriceRangeChange}
                 max={200000}
                 className='w-full md:w-5/6 mx-auto'
                 disabled={disabled}
@@ -441,17 +442,17 @@ export default function ProductPage() {
                         </h2>
                       </div>
                     ) : (
-                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 xl:gap-2'>
+                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 xl:gap-2 '>
                         {bookList.map((book, index) => {
                           const imageUrl = book.images[0] ? book.images[0] : '';
                           return (
                             <div
-                              className='flex flex-col sm:flex-row justify-between items-start'
+                              className='flex flex-col sm:flex-row justify-between items-start '
                               key={index}
                             >
                               <div
                                 id={index}
-                                className='bg-white w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
+                                className='bg-gradient-to-tl from-[#f8f4ef] to-transparent w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
                               >
                                 <div className='relative group overflow-hidden rounded-lg mb-4'>
                                   <img
@@ -501,12 +502,12 @@ export default function ProductPage() {
                                 <div className='flex flex-col justify-between items-start mr-5 space-y-1'>
                                   <p className='text-base text-gray-600 truncate'>{book.author}</p>
                                 </div>
-                                <div className='flex my-1'>
+                                <div className='flex my-1 items-center'>
                                   {/* Vòng lặp tạo sao */}
                                   {[...Array(5)].map((_, index) => (
                                     <span
                                       key={index}
-                                      className={`text-2xl ${index < book.ratingResult
+                                      className={`text-xl ${index < book.ratingResult
                                         ? 'text-yellow-500'
                                         : 'text-gray-300'
                                         }`}
@@ -514,7 +515,7 @@ export default function ProductPage() {
                                       ★
                                     </span>
                                   ))}
-                                  {/* <span className='text-[#F18966] ml-2'>{book.ratingResult}</span> */}
+                                  <span className='text-[#F18966] text-base ml-2'>{book.ratingResult}</span>
                                 </div>
 
                                 <div className='flex items-center justify-between mb-2'>
@@ -525,7 +526,7 @@ export default function ProductPage() {
                                   </div>
                                   <div className='hidden sm:block'>
                                     <div className='flex items-center'>
-                                      <p className='text-xs text-yellow-500 mr-2'>
+                                      <p className='text-sm mr-2'>
                                         Sales number:
                                         <span className='text-[#F18966] truncate'>
                                           {' '}
@@ -535,7 +536,7 @@ export default function ProductPage() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className='text-lg font-bold text-red-500'>${book.price}</p>
+                                <p className='text-lg font-bold text-[#679089]'>${book.price}</p>
                               </div>
                             </div>
                           );
@@ -544,7 +545,7 @@ export default function ProductPage() {
                     )}
                   </div>
                 ) : (
-                  <div className='list-by-line'>
+                  <div className='list-by-line '>
                     {bookList.length === 0 ? (
                       <div className='not-found'>
                         <h2 className='text-center my-20'>
@@ -584,8 +585,8 @@ export default function ProductPage() {
                                 </div>
                                 <div id={index} className='w-1/2 md:w-3/4 h-auto m-2'>
                                   <div className=''>
-                                    <p className='text-xl font-bold mb-2 text-wrap'>{book.title}</p>
-                                    <p className='text-gray-400 text-sm mb-2 truncate'>
+                                    <p className='text-[#f18966] text-xl font-bold mb-2 text-wrap'>{book.title}</p>
+                                    <p className='text-gray-600 text-sm mb-2 truncate'>
                                       {book.author}
                                     </p>
                                     <div className='sm:hidden'>
@@ -624,7 +625,7 @@ export default function ProductPage() {
                                       </div>
                                       <div className='hidden sm:block'>
                                         <div className='flex items-center mb-2'>
-                                          <div className='text-sm text-yellow-500 mr-2'>
+                                          <div className='text-sm text-gray-600 mr-2'>
                                             Sales number:{' '}
                                           </div>
                                           <span className='text-base text-gray-600 truncate'>
@@ -633,7 +634,7 @@ export default function ProductPage() {
                                         </div>
                                       </div>
                                     </div>
-                                    <p className='text-red-500 text-2xl font-bold truncate'>
+                                    <p className='text-[#679089] text-2xl font-bold truncate'>
                                       $ {book.price}
                                     </p>
                                   </div>

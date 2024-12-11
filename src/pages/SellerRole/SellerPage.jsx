@@ -463,6 +463,7 @@ export default function SellerPage() {
               const response = await productsApi.postCreateProduct(formData);
               message.success('Product added successfully!');
               handleCancelAdd(); // Assuming handleCancelAdd closes the modal
+              fetchProducts();
             } catch (error) {
               // Handle network errors or other unexpected issues
               console.error('Error adding product:', error);
@@ -585,9 +586,15 @@ export default function SellerPage() {
                     }}
                     onChange={(value) => setFieldValue('category', value)}
                   >
-                    <Select.Option value='Comedy'>Comedy</Select.Option>
-                    <Select.Option value='Drama'>Drama</Select.Option>
-                    <Select.Option value='Horror'>Horror</Select.Option>
+                    <Select.Option value='ChristianLiving'>ChristianLiving</Select.Option>
+                    <Select.Option value='ChurchHistory'>ChurchHistory</Select.Option>
+                    <Select.Option value='Educational Curriculum'>Educational Curriculum</Select.Option>
+                    <Select.Option value='Fiction & Fantasy'>Fiction & Fantasy</Select.Option>
+                    <Select.Option value='Religion & Spirituality'>Religion & Spirituality</Select.Option>
+                    <Select.Option value='Romance Books'>Romance Books</Select.Option>
+                    <Select.Option value='Literature & Fiction'>Literature & Fiction</Select.Option>
+                    <Select.Option value='Biographies & Memoirs'>Biographies & Memoirs</Select.Option>
+                    <Select.Option value='Children Book'>Children Book</Select.Option>
                   </Select>
                   <div className='h-8 py-1'>
                     {touched.category && errors.category && (
@@ -683,6 +690,7 @@ export default function SellerPage() {
               const response = await productsApi.updateProduct(product._id, formData);
               message.success('Product updated successfully!');
               handleCancelEdit();
+              fetchProducts();
             } catch (error) {
               console.error('Error updating product:', error);
               message.error('An error occurred while updating the product.');

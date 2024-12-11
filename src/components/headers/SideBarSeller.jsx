@@ -1,4 +1,4 @@
-import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, WalletOutlined, ProfileOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, UserSwitchOutlined, WechatOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, AreaChartOutlined, CarOutlined, WalletOutlined, ProfileOutlined, DropboxOutlined, HomeOutlined, PlayCircleTwoTone, RightOutlined, SettingOutlined, TagsOutlined, UserSwitchOutlined, WechatOutlined, ProductOutlined } from '@ant-design/icons';
 import { Button, Drawer, Menu } from 'antd';
 import Item from 'antd/es/list/Item';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
     const [shopDetail, setShopDetail] = useState();
     const Menus = [
         { title: "Profile", icon: <ProfileOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/profile/${shopDetail?._id}` },
-        { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
+        { title: "Product", icon: <ProductOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/orders/${shopDetail?._id}` },
 
         { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/saleData/${shopDetail?._id}` },
@@ -60,10 +60,10 @@ export default function SideBarSeller({ onToggle, isOpen }) {
                         <NavLink
                             key={index}
                             to={menu.path}
-                            className={({ isActive }) => `flex items-center gap-x-4 py-4 h-16 px-7 text-base ${isActive ? 'bg-[#e6dbcd] text-[#f18966]' : 'text-slate-200'} hover:bg-[#eee5da] duration-300 hover:text-black`}
+                            className={({ isActive }) => `flex items-center gap-x-4 py-4 h-16 px-7 text-base ${isActive ? 'bg-[#eee5da] text-[#f18966]' : 'text-slate-200'} hover:bg-[#eee5da] duration-300 hover:text-black`}
                         >
                             {menu.icon}
-                            <span className={`${!isOpen && "scale-0"} origin-left duration-300 text-base font-medium`}>{menu.title}</span>
+                            <span className={`${!isOpen && "scale-0"} origin-left duration-100 text-base font-medium`}>{menu.title}</span>
                         </NavLink>
                     ))}
                 </ul>
@@ -73,12 +73,11 @@ export default function SideBarSeller({ onToggle, isOpen }) {
                 <Button type="primary" onClick={showDrawer} className='text-base bg-[#679089] text-white px-3 py-2 rounded-full hover:bg-slate-100 duration-300 hover:text-bg-teal-500'>
                     <AlignLeftOutlined />
                 </Button>
-                <Drawer title="Menu" onClose={onCloseDrawer} open={openDrawer} placement="left" width={275}>
+                <Drawer title="Menu" onClose={onCloseDrawer} open={openDrawer} placement="left" width={225}>
                     <div className="">
-                        <div className="w-64 h-20">
-                            <div className="w-8/12 flex justify-between items-center mx-2">
-                                <img src={shopDetail?.images[0] || "https://via.placeholder.com/150"} alt="" className={`cursor-pointer duration-500 rounded-full w-16 my-2`} />
-                                <p className={`shop-name text-gray-500 text-base origin-left font-semibold italic duration-300 truncate`}>{shopDetail?.shopName}</p>
+                        <div className="w-64 h-20 mb-4">
+                            <div className="w-8/12 flex justify-center items-center mx-2">
+                                <img src={shopDetail?.images[0] || "https://via.placeholder.com/150"} alt="" className={`cursor-pointer duration-500 rounded-full w-25 h-25 my-2`} />
                             </div>
                         </div>
                         <ul className='pt-6'>

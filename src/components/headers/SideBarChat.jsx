@@ -3,6 +3,7 @@ import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import chatApi from '../../hooks/useChatApi';
 import { Drawer, Button } from "antd";
 import { MenuUnfoldOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 const SideBarChat = () => {
     const { id, name } = useParams(); // Lấy user ID từ URL params
@@ -11,6 +12,7 @@ const SideBarChat = () => {
     const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [drawerVisible, setDrawerVisible] = useState(false);
+    const userId = useSelector((state) => state.user._id);
     const fetchHistoryChat = async () => {
         try {
             const response = await chatApi.getAllChats(id); // Fetch dữ liệu từ API
@@ -68,7 +70,13 @@ const SideBarChat = () => {
 
     // Hàm để xác định URL quay lại tùy theo role
     const handleBackNavigation = () => {
-        console.log(role);
+        if(role === null){
+            if(id === userId){
+              setRole("customer");
+            }else{
+              setRole("shop");
+            }
+           }
         if (role === 'shop') {
             navigate(`/shop/${name}/profile/${id}`);
         } else if (role === 'customer') {
@@ -123,9 +131,8 @@ const SidebarContent = ({ contacts, handleBackNavigation, name, id, isMobile, se
             } bg-white border-r border-gray-300`}
     >
         {/* Sidebar Header */}
-        <header className="p-4 h-16 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-            <h1 className="ml-40 mt-2 text-xl md:text-2xl font-semibold">History Chat</h1>
-
+        <header className="p-4 h-16 border-b border-gray-300 flex justify-between items-center bg-[#679089] text-white">
+            <h1 className=" mt-2 text-xl md:text-2xl font-semibold">History Chat</h1>
         </header>
 
         {/* Contact List */}
@@ -153,7 +160,7 @@ const SidebarContent = ({ contacts, handleBackNavigation, name, id, isMobile, se
             ))}
             <button
                 onClick={handleBackNavigation}
-                className="absolute bottom-4 left-4 px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 text-sm md:text-base"
+                className="absolute bottom-4 left-4 px-6 py-2 bg-[#679089] text-white rounded-md hover:bg-[#679079] text-sm md:text-base font-semibold"
             >
                 Back
             </button>
