@@ -94,6 +94,11 @@ const productsApi = {
     const url = `${PRODUCT_API_ENDPOINT}/feedback/${orderId}/${id}`;
     return axiosClient.put(url, formData);
   },
+
+  getAmountProduct: (id) => {
+    const url = `${PRODUCT_API_ENDPOINT}/getAmountProduct/${id}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default productsApi;
