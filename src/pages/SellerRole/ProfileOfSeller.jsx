@@ -1,5 +1,5 @@
 import { CameraOutlined, EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Upload, Input, Checkbox, Modal } from 'antd';
+import { Breadcrumb, Button, Upload, Input, Checkbox, Modal, List } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
@@ -10,10 +10,21 @@ import shopApi from '../../hooks/useShopApi';
 import { useParams } from 'react-router-dom';
 import { message } from 'antd';
 import { use } from 'react';
+import { desc, s, text } from 'framer-motion/client';
+import { set } from 'react-hook-form';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [shop, setShop] = useState({});
+  const [isModalAddressOpen, setIsModalAddressOpen] = useState(false);
+  const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const [newAddress, setNewAddress] = useState({ street: '', city: '', country: '' });
+  const [isEditAddressModalOpen, setIsEditAddressModalOpen] = useState(false);
+  const [currentEditAddress, setCurrentEditAddress] = useState({
+    street: '',
+    city: '',
+    country: '',
+  });
 
   const normFileAddProduct = (e) => {
     if (Array.isArray(e)) {
@@ -21,11 +32,122 @@ export default function ProfileOfSeller() {
     }
     return e?.fileList;
   };
+  const addresses = shop?.address || []; // Lấy địa chỉ từ `userInfo`
+  const defaultAddress = addresses.length > 0 ? addresses[0] : null;
+  {
+    addresses.length === 0 && <Text type='secondary'>No addresses available</Text>;
+  };
+  const handleOpenAddressModal = () => {
+    setIsModalAddressOpen(true);
+  };
+
+  const handleCloseAddressModal = () => {
+    setIsModalAddressOpen(false);
+  };
+
+  const handleOpenNewAddressModal = () => {
+    setNewAddress({ street: '', city: '', country: '' }); // Reset dữ liệu khi mở modal
+    setIsNewAddressModalOpen(true);
+  };
+
+  const handleCloseNewAddressModal = () => {
+    setIsNewAddressModalOpen(false);
+  };
+
+  const handleOpenEditAddressModal = (address) => {
+    setCurrentEditAddress({ ...address }); // Giữ toàn bộ thông tin địa chỉ, bao gồm cả `_id`
+    setIsEditAddressModalOpen(true);
+  };
+
+  const handleSaveEditAddress = async () => {
+    try {
+      if (!currentEditAddress.street || !currentEditAddress.city || !currentEditAddress.country) {
+        message.error('All fields are required!');
+        return;
+      }
+
+      // Gọi API cập nhật địa chỉ
+      const response = await shopApi.updateAddress(currentEditAddress._id, currentEditAddress);
+
+      if (response) {
+        message.success('Address updated successfully!');
+
+        // Cập nhật địa chỉ trong state
+        const updatedAddresses = addresses.map((addr) =>
+          addr._id === currentEditAddress._id ? currentEditAddress : addr,
+        );
+        setShop({ ...shop, address: updatedAddresses });
+
+        setIsEditAddressModalOpen(false); // Đóng modal sau khi lưu
+      }
+    } catch (error) {
+      console.error('Failed to update address:', error);
+      message.error('Failed to update address. Please try again.');
+    }
+  };
+
+  const handleDeleteAddress = async (address) => {
+    try {
+      // Gọi API xóa địa chỉ
+      const response = await shopApi.deleteAddress(address._id);
+
+      if (response) {
+        message.success('Address deleted successfully!');
+
+        // Cập nhật state sau khi xóa thành công
+        const updatedAddresses = addresses.filter((addr) => addr._id !== address._id);
+        setShop({ ...shop, address: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Failed to delete address:', error);
+      message.error('Failed to delete address. Please try again.');
+    }
+  };
+
+  const confirmDeleteAddress = (address) => {
+    Modal.confirm({
+      title: 'Are you sure?',
+      content: `Do you really want to delete the address: ${address.street}, ${address.city}, ${address.country}?`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: () => handleDeleteAddress(address),
+    });
+  };
+
+  const handleAddNewAddress = async () => {
+    //console.log(newAddress);
+    try {
+      if (!newAddress.street || !newAddress.city || !newAddress.country) {
+        message.error('All fields are required!');
+        return;
+      }
+      const response = await shopApi.newAddress(newAddress);
+
+      if (response) {
+        message.success('Address added successfully!');
+
+        // Cập nhật địa chỉ mới vào state `userInfo.address`
+        setShop((prevUserInfo) => {
+          return {
+            ...prevUserInfo,
+            address: [...prevUserInfo.address, newAddress], // Thêm địa chỉ mới vào danh sách
+          };
+        });
+
+        handleCloseNewAddressModal(); // Đóng modal sau khi thêm
+      }
+    } catch (error) {
+      console.error('Failed to add new address:', error);
+      message.error('Failed to add address. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const fetchShop = async () => {
       try {
         const response = await shopApi.shopInfo();
+
         setShop(response.data);
       } catch (error) {
         console.log(error);
@@ -35,16 +157,18 @@ export default function ProfileOfSeller() {
     fetchShop();
   }, []);
 
+  // Lấy ảnh đầu tiên từ mảng images (nếu có)
+  const shopImage = shop.images && shop.images[0] ? shop.images[0] : '';
+
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email format').required('Email is required'),
-    name: Yup.string().required('Shop name is required'),
-    address: Yup.string().required('Address is required'),
+    shopEmail: Yup.string().email('Invalid email format').required('Email is required'),
+    shopName: Yup.string().required('Shop name is required'),
+    shopAddress: Yup.string().required('Address is required'),
     phoneNumber: Yup.number()
       .typeError('Enter numbers only')
       .positive('Enter positive numbers only')
       .integer('Enter integers only')
       .required('Phone number is required'),
-    uploadImage: Yup.array().min(1, 'At least one image is required').required('Image is required'),
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,20 +186,19 @@ export default function ProfileOfSeller() {
     <div>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>Your Profile</Breadcrumb.Item>
-          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName}</Breadcrumb.Item>
         </Breadcrumb>
         <div className='h-screen'>
           <div className='flex flex-col items-center relative mt-5 lg:-mt-8'>
             <div className='absolute avatar z-10 border-4 border-solid border-white rounded-full'>
               <div className='flex justify-center '>
-                <label className='text-5xl rounded-full relative cursor-pointer'>
+              <label className='text-5xl rounded-full relative cursor-pointer'>
                   <input type='file' accept='image/*' className='none hidden' />
                   <div className='w-full h-auto hover:opacity-50'>
                     <CameraOutlined className='flex justify-center w-full h-full left-1/2 top-1/2 absolute -translate-x-1/2 -translate-y-1/2 text-4xl opacity-0 hover:opacity-100' />
+                    {/* Hiển thị ảnh đầu tiên từ mảng images */}
                     <img
-                      src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732850370/Screenshot_2024-11-29_101701_xvpbq2.png'
-                      alt=''
+                      src={shopImage || 'https://as1.ftcdn.net/v2/jpg/03/58/90/78/1000_F_358907879_Vdu96gF4XVhjCZxN2kCG0THTsSQi8IhT.jpg'} // Nếu không có ảnh thì hiển thị ảnh mặc định
+                      alt='Shop Avatar'
                       className='w-29 h-29 lg:w-40 lg:h-40 rounded-full'
                     />
                   </div>
@@ -92,37 +215,29 @@ export default function ProfileOfSeller() {
                   <Formik
                     enableReinitialize
                     initialValues={{
-                      email: shop.shopEmail || '', // Nếu shop.email không tồn tại, mặc định là chuỗi rỗng
-                      name: shop.shopName || '',
-                      address: shop.shopAddress || '',
+                      shopEmail: shop.shopEmail || '', // Nếu shop.email không tồn tại, mặc định là chuỗi rỗng
+                      shopName: shop.shopName || '',
+                      shopAddress: (shop.address && shop.address.length > 0) ? `${shop.address[0].street}, ${shop.address[0].city}, ${shop.address[0].country}` : '', // Hiển thị địa chỉ đầu tiên
                       phoneNumber: shop.phoneNumber || '',
-                      uploadImage: [], // Upload image mặc định trống
                     }}
                     validationSchema={validationSchema}
                     onSubmit={async (values, { setSubmitting, setFieldError }) => {
                       try {
                         // Preparing form data to match the API expected format (if necessary)
                         const formData = new FormData();
-                        formData.append('email', values.email);
-                        formData.append('price', values.price);
-                        formData.append('name', values.name);
-                        formData.append('address', values.address);
-                        formData.append('publisher', values.publisher);
-                        formData.append('language', values.language);
+                        formData.append('shopEmail', values.shopEmail);
+                        formData.append('shopName', values.shopName);
                         formData.append('phoneNumber', values.phoneNumber);
-                        formData.append('stock', values.stock);
-                        formData.append('category', values.category); // If needed
-                        values.uploadImage.forEach((file) => formData.append('images', file)); // Assuming 'images' is the field name
+                
 
                         // Make the API call to post the new product
                         console.log('Form Data:', Object.fromEntries(formData));
-                        const response = await productsApi.postCreateProduct(formData);
-                        message.success('Product added successfully!');
-                        handleCancelAdd(); // Assuming handleCancelAdd closes the modal
+                        const response = await shopApi.updateShopInfo(formData);
+                        message.success('Shop information updated successfully!');
                       } catch (error) {
                         // Handle network errors or other unexpected issues
-                        console.error('Error adding product:', error);
-                        message.error('An error occurred while adding the product.');
+                        console.error('Error updating shop info:', error);
+                        message.error('An error occurred while updating the shop information.');
                       } finally {
                         setSubmitting(false); // Stop the form submission spinner/loading
                       }
@@ -145,14 +260,14 @@ export default function ProfileOfSeller() {
                             </label>
                             <div className='w-5/6 flex flex-col items-start justify-center mx-auto'>
                               <Field
-                                name='email'
+                                name='shopEmail'
                                 as={Input}
                                 className='w-full py-2'
                                 disabled={!isDisabled}
                               />
                               <div className='h-8 py-1'>
-                                {touched.email && errors.email && (
-                                  <div className='error text-red-500 ml-1'>{errors.email}</div>
+                                {touched.shopEmail && errors.shopEmail && (
+                                  <div className='error text-red-500 ml-1'>{errors.shopEmail}</div>
                                 )}
                               </div>
                             </div>
@@ -163,14 +278,14 @@ export default function ProfileOfSeller() {
                             </label>
                             <div className='w-5/6 flex flex-col items-start justify-center mx-auto'>
                               <Field
-                                name='name'
+                                name='shopName'
                                 as={Input}
                                 className='w-full py-2'
                                 disabled={!isDisabled}
                               />
                               <div className='h-8 py-1'>
-                                {touched.name && errors.name && (
-                                  <div className='error text-red-500 ml-1'>{errors.name}</div>
+                                {touched.shopName && errors.shopName && (
+                                  <div className='error text-red-500 ml-1'>{errors.shopName}</div>
                                 )}
                               </div>
                             </div>
@@ -183,14 +298,16 @@ export default function ProfileOfSeller() {
                             </label>
                             <div className='w-5/6 flex flex-col items-start justify-center mx-auto'>
                               <Field
-                                name='address'
+                                name='shopAddress'
                                 as={Input}
                                 className='w-full py-2'
+                                readOnly
                                 disabled={!isDisabled}
+                                onClick={handleOpenAddressModal} // Mở modal khi click
                               />
                               <div className='h-8 py-1'>
-                                {touched.address && errors.address && (
-                                  <div className='error text-red-500 ml-1'>{errors.address}</div>
+                                {touched.shopAddress && errors.shopAddress && (
+                                  <div className='error text-red-500 ml-1'>{errors.shopAddress}</div>
                                 )}
                               </div>
                             </div>
@@ -215,45 +332,18 @@ export default function ProfileOfSeller() {
                               </div>
                             </div>
                           </div>
+                          
+                          
                         </div>
-                        <div className=''>
-                          {/* <div className='flex items-flex-start justify-flex-start'>
-                                                        <label className='label-input-tnvd truncate'>Upload Image</label>
-                                                        <div className='w-2/3 flex flex-col items-start'>
-                                                            <Upload
-                                                                listType='picture-card'
-                                                                onChange={(info) => {
-                                                                    setFieldValue(
-                                                                        'uploadImage',
-                                                                        info.fileList.map((file) => file.originFileObj),
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <Button
-                                                                    type='button'
-                                                                    style={{
-                                                                        border: 0,
-                                                                        background: 'none',
-                                                                    }}
-                                                                >
-                                                                    <PlusOutlined />
-                                                                    <div>Upload</div>
-                                                                </Button>
-                                                            </Upload>
-                                                            <div className='h-8 py-1'>
-                                                                {touched.uploadImage && errors.uploadImage && (
-                                                                    <div className='error text-red-500 ml-1'>{errors.uploadImage}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div> */}
-                        </div>
+                     
+                          
                         <div className='absolute z-10 right-5 top-5'>
                           <button
                             className='animate-bounce bg-blue-500 rounded-xl hover:bg-white border-2 border-white hover:border-blue-500'
-                            disabled={isSubmitting}
-                          >
-                            <EditOutlined className='text-white px-5 py-2 hover:scale-125 hover:text-blue-500 duration-300' />
+                            disabled={!isDisabled || isSubmitting} // Disable button if inputs are locked or if form is submitting
+                            >
+
+                            <SaveOutlined className='text-white px-5 py-2 hover:scale-125 hover:text-blue-500 duration-300' />
                           </button>
                         </div>
                       </Form>
@@ -352,6 +442,90 @@ export default function ProfileOfSeller() {
           )}
         </Formik>
       </Modal>
+      <Modal
+          title='Manage Addresses'
+          visible={isModalAddressOpen}
+          onCancel={handleCloseAddressModal}
+          footer={[
+            <Button key='new' type='primary' onClick={handleOpenNewAddressModal}>
+              New Address
+            </Button>,
+          ]}
+        >
+          <List
+            dataSource={addresses}
+            renderItem={(address) => (
+              <List.Item
+                actions={[
+                  <Button key='edit' onClick={() => handleOpenEditAddressModal(address)}>
+                    Edit
+                  </Button>,
+                  <Button key='delete' danger onClick={() => confirmDeleteAddress(address)}>
+                    Delete
+                  </Button>,
+                ]}
+              >
+                {`${address.street}, ${address.city}, ${address.country}`}
+              </List.Item>
+            )}
+          />
+        </Modal>
+
+        <Modal
+          title='Add New Address'
+          visible={isNewAddressModalOpen}
+          onCancel={handleCloseNewAddressModal}
+          onOk={handleAddNewAddress}
+          okText='Add'
+        >
+          <Input
+            placeholder='Street'
+            value={newAddress.street}
+            onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='City'
+            value={newAddress.city}
+            onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='Country'
+            value={newAddress.country}
+            onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
+          />
+        </Modal>
+
+        <Modal
+          title='Edit Address'
+          visible={isEditAddressModalOpen}
+          onCancel={() => setIsEditAddressModalOpen(false)}
+          onOk={handleSaveEditAddress}
+          okText='Save'
+        >
+          <Input
+            placeholder='Street'
+            value={currentEditAddress.street}
+            onChange={(e) =>
+              setCurrentEditAddress({ ...currentEditAddress, street: e.target.value })
+            }
+            className='mb-2'
+          />
+          <Input
+            placeholder='City'
+            value={currentEditAddress.city}
+            onChange={(e) => setCurrentEditAddress({ ...currentEditAddress, city: e.target.value })}
+            className='mb-2'
+          />
+          <Input
+            placeholder='Country'
+            value={currentEditAddress.country}
+            onChange={(e) =>
+              setCurrentEditAddress({ ...currentEditAddress, country: e.target.value })
+            }
+          />
+        </Modal>
     </div>
   );
 }
