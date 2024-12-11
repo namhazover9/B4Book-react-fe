@@ -63,7 +63,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/admin">
-          <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png" alt="Logo" className="w-32 h-auto" />
+          <div className='rounded-full bg-gray-100 p-4 flex items-center justify-center'>
+            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1733819443/lgbf_qyw8ac.png" className='object-cover w-32 h-auto' />
+          </div>
         </NavLink>
 
         <button

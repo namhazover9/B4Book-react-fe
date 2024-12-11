@@ -21,7 +21,7 @@ function ForgotPassword() {
       message.error('Email is required');
       return;
     }
-
+  
     try {
       setIsSending(true);
       const result = await accountApi.postSendCodeForgotPW(email); // Truyền email vào API
@@ -49,7 +49,7 @@ function ForgotPassword() {
   const onChangePassword = async (values) => {
     const account = {
       ...values,
-      verifyToken: verifyToken,
+      verifyToken: verifyToken, 
     };
     console.log('Verify Token:', verifyToken);
     try {
@@ -69,7 +69,7 @@ function ForgotPassword() {
       message.error(error.response?.data?.message || 'Cập nhật thất bại. Thử lại');
     }
   };
-
+  
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .trim()
@@ -84,93 +84,90 @@ function ForgotPassword() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8e7768] via-[#eee5da]  to-[#c1b9b1]"
-    >
-      <div className="flex justify-center items-center bg-gray-100 rounded-2xl">
-        {isSuccess && (
-          <Delay wait={constants.DELAY_TIME}>
-            {/* Use Navigate instead of Redirect */}
-            <Navigate to={constants.ROUTES.LOGIN} />
-          </Delay>
-        )}
-        <div className="w-full max-w-md bg-[#eee5da] shadow-lg rounded-lg p-6">
-          <h1 className="text-center text-2xl font-bold mb-6 text-[#f18966]">Change Password</h1>
-          <Formik
-            initialValues={initialValue}
-            validationSchema={validationSchema}
-            onSubmit={onChangePassword}>
-            {(formikProps) => {
-              emailRef.current = formikProps.values.email;
-              const suffixColor = 'rgba(0, 0, 0, 0.25)';
-              return (
-                <Form className="space-y-4">
-                  {/* Email */}
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-tl from-[#f8f4ef] to-transparent">
+      {isSuccess && (
+        <Delay wait={constants.DELAY_TIME}>
+          {/* Use Navigate instead of Redirect */}
+          <Navigate to={constants.ROUTES.LOGIN} />
+        </Delay>
+      )}
+      <div className="w-full max-w-md bg-gradient-to-tl from-[#f8f4ef] to-transparent shadow-lg rounded-lg p-6">
+        <h1 className="text-center text-2xl font-bold mb-6 text-[#f18966]">Change Password</h1>
+        <Formik
+          initialValues={initialValue}
+          validationSchema={validationSchema}
+          onSubmit={onChangePassword}>
+          {(formikProps) => {
+            emailRef.current = formikProps.values.email;
+            const suffixColor = 'rgba(0, 0, 0, 0.25)';
+            return (
+              <Form className="space-y-4">
+                {/* Email */}
+                <FastField
+                  name="email"
+                  component={InputField}
+                  className="w-full"
+                  placeholder="Email *"
+                  size="large"
+                  suffix={
+                    <Tooltip title="Your Email">
+                      <InfoCircleOutlined style={{ color: suffixColor }} />
+                    </Tooltip>
+                  }
+                />
+                {/* Mật khẩu */}
+                <FastField
+                  name="newPassword"
+                  component={InputField}
+                  className="w-full"
+                  type="password"
+                  placeholder="New Password *"
+                  size="large"
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                />
+                {/* Mã xác nhận và Gửi mã */}
+                <div className="flex gap-4">
                   <FastField
-                    name="email"
+                    name="verifyCode"
                     component={InputField}
-                    className="w-full rounded-xl"
-                    placeholder="Email *"
+                    className="flex-1"
+                    placeholder="Verified Code *"
                     size="large"
                     suffix={
-                      <Tooltip title="Your Email">
+                      <Tooltip title="Click gửi mã để nhận mã qua email">
                         <InfoCircleOutlined style={{ color: suffixColor }} />
                       </Tooltip>
                     }
                   />
-                  {/* Mật khẩu */}
-                  <FastField
-                    name="newPassword"
-                    component={InputField}
-                    className="w-full rounded-xl"
-                    type="password"
-                    placeholder="New Password *"
-                    size="large"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
-                  />
-                  {/* Mã xác nhận và Gửi mã */}
-                  <div className="flex gap-4">
-                    <FastField
-                      name="verifyCode"
-                      component={InputField}
-                      className="flex-1 rounded-xl"
-                      placeholder="Verified Code *"
-                      size="large"
-                      suffix={
-                        <Tooltip title="Click gửi mã để nhận mã qua email">
-                          <InfoCircleOutlined style={{ color: suffixColor }} />
-                        </Tooltip>
-                      }
-                    />
-                    <button
-                      className="w-full h-[2.5em] bg-[#679089] hover:text-blue-200  hover:bg-[#4e968a] text-white font-semibold rounded-2xl"
+                  <Button
+                    className="w-full bg-[#679089] text-white font-semibold"
 
-                      size="large"
-                      onClick={onSendCode}
-                      loading={isSending}>
-                      Send OTP
-                    </button>
-                  </div>
-                  {/* Nút Submit */}
-                  <button
-                    className="w-full bg-[#679089] text-white font-semibold py-2 rounded-2xl hover:text-blue-200  hover:bg-[#4e968a]"
                     size="large"
+                    onClick={onSendCode}
+                    loading={isSending}>
+                    Send OTP
+                  </Button>
+                </div>
+                {/* Nút Submit */}
+                <Button
+                  className="w-full bg-[#679089] text-white font-semibold py-2 rounded hover:bg-[#679089]"
+                  size="large"
 
-                    htmlType="submit"
-                    loading={isSubmitting}>
-                    Confirm Change
-                  </button>
-                  <div className="text-center text-gray-600">
-                    Back to <Link to={constants.ROUTES.LOGIN} className="text-blue-500 hover:text-blue-800">Login</Link>
-                    &nbsp; or &nbsp;
-                    <Link to={constants.ROUTES.SIGNUP} className="text-blue-500 hover:text-blue-800">Sign up</Link>
-                  </div>
-                </Form>
-              );
-            }}
-          </Formik>
-        </div>
+                  htmlType="submit"
+                  loading={isSubmitting}>
+                  Confirm Change
+                </Button>
+                <div className="text-center text-gray-600">
+                  Back to <Link to={constants.ROUTES.LOGIN} className="text-blue-500">Login</Link>
+                  &nbsp; or &nbsp;
+                  <Link to={constants.ROUTES.SIGNUP} className="text-blue-500">Sign up</Link>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
       </div>
     </div>
   );

@@ -39,9 +39,9 @@ export default function FavouriteBook() {
         </button>
       </div>
       <div className='mx-4 mt-6 mb-2 border border-solid rounded-lg'>
-        <div className='flex justify-center m-2 sm:flex-row-reverse'>
+        <div className='flex justify-center m-2 sm:flex-row'>
           <div className='hidden sm:block w-1/4 sm:w-1/2 lg:w-1/3 xl:w-1/4'>
-            {books.map((book) => (
+            {books.slice(2, 6).map((book) => (
               <div key={book.title} className='mt-2'>
                 <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-lg mb-3'>
                   <div className='flex'>
@@ -123,7 +123,7 @@ export default function FavouriteBook() {
 
           {/* Danh sách sản phẩm khác */}
           <div className='hidden lg:block w-1/4 lg:w-1/3 xl:w-1/4'>
-            {books.map((book, index) => (
+            {books.slice(7, 10).map((book, index) => (
               <div key={index} className='mt-2'>
                 <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-lg mb-3'>
                   <div className='flex'>
