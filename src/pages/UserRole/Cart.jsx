@@ -303,6 +303,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <Button>Back</Button>
             </Link>
           </div> */}
+
           <div className='flex justify-end pb-4 '>
             <Popconfirm
               title='Are you sure you want to remove all items?'
@@ -329,6 +330,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
             </div>
           ) : (
             <div>
+              <div className='flex justify-end pb-4'>
+                <Popconfirm
+                  title='Are you sure you want to remove all items?'
+                  onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+                  okText='Yes'
+                  cancelText='No'
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                >
+                  <button
+                    type='primary'
+                    className=' w-15 h-15 sm:w-auto flex items-center justify-center rounded-lg'
+                  >
+                    <p className='text-red-400 hover:text-red-700'>Delete All</p>
+                  </button>
+                </Popconfirm>
+              </div>
               {groupedItems.map((group, index) => (
                 <div key={index}>
                   <div className='flex items-center pl-4 p-2 bg-[#679089]  rounded-t-lg py-2'>
