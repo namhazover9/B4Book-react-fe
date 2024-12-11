@@ -17,7 +17,7 @@ import { Spin } from 'antd';
 import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { nav, s } from 'framer-motion/client';
 import { useDispatch } from 'react-redux';
-import { setSelectedItems } from '../../reducers/carts';
+import { fetchCart, setSelectedItems } from '../../reducers/carts';
 
 const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -103,7 +103,6 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const handleQuantityChange = async (id, quantity) => {
     try {
       const itemToUpdate = cartItems.find((item) => item._id === id);
-
       if (!itemToUpdate) {
         console.error('Item not found in cart');
         message.error('Item not found');
@@ -118,6 +117,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
             item._id === id ? { ...item, quantity: quantity > 0 ? quantity : 1 } : item,
           ),
         );
+        dispatch(fetchCart());
         //message.success('Quantity updated successfully!');
       } else {
         message.error('Failed to update quantity');

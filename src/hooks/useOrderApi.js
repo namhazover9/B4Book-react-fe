@@ -66,7 +66,14 @@ const orderApi = {
   getTotalBuyers: (id) => {
     const url = `${ORDER_API_ENDPOINT}/totalBuyers/${id}`; 
     return axiosClient.get(url);
-  }
+  },
+  // Lấy tất cả vouchers của shop
+  getAllVoucherForShop: (shopId) => {
+  
+
+    const url = `${SHOP_API_ENDPOINT}/getAllVoucherForShop/${shopId}?${queryParams}`;
+    return axiosClient.get(url);
+  },
  
 };
 
