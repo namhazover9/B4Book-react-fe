@@ -80,7 +80,7 @@ const AppRoutes = () => {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;
             }
           })}
-          
+
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </>

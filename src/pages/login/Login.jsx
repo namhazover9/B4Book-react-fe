@@ -32,16 +32,16 @@ function Login() {
   const onLoginSuccess = async (data) => {
     try {
       setIsSubmitting(false);
-      message.success('Đăng nhập thành công');
+      message.success('Login successful!');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
     } catch (error) {
-      message.error('Lỗi đăng nhập.');
+      message.error('Login error!.');
     }
   };
-  
-  
+
+
 
   // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
   useEffect(() => {
@@ -54,14 +54,14 @@ function Login() {
       }
     }
   }, [isAuth, userRole]); // Thêm userRole và isAuth vào dependency array
-  
+
 
   const onLogin = async (account) => {
     try {
       setIsSubmitting(true);
       const result = await loginApi.postLogin({ account });
       if (result.status === 200) {
-        
+
         onLoginSuccess(result.data, userRole);
       }
     } catch (error) {
@@ -70,13 +70,13 @@ function Login() {
         const { failedLoginTimes } = error.response.data;
         const messageError = error.response.data.message;
         if (failedLoginTimes >= constants.MAX_FAILED_LOGIN_TIMES) {
-          message.error('Vượt quá số lần đăng nhập.\nKiểm tra email hoặc nhấn "Quên mật khẩu"', 4);
+          message.error('Login attempts exceeded.\nCheck email or click "Forgot Password"', 4);
           setIsDisableLogin(true);
         } else {
           message.error(messageError);
         }
       } else {
-        message.error('Đăng nhập thất bại');
+        message.error('Login failed!');
       }
     }
   };
@@ -90,15 +90,14 @@ function Login() {
 
   // Xác thực form bằng Yup
   const validationSchema = Yup.object().shape({
-    email: Yup.string().trim().required('* Email bạn là gì ?').email('* Email không hợp lệ !'),
-    password: Yup.string().trim().required('* Mật khẩu của bạn là gì ?'),
+    email: Yup.string().trim().required('* Enter your email !').email('* Email invalid !'),
+    password: Yup.string().trim().required('* Enter your password !'),
   });
 
   return (
-    
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e6dbcd] via-[#eee5da] to-[#917f74]" 
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8e7768] via-[#eee5da]  to-[#e7dfd6]"
     >
-      <div className="flex flex-col md:flex-row w-11/12 max-w-lg md:max-w-6xl bg-white shadow-2xl rounded-lg overflow-hidden mx-auto">
+      <div className="flex flex-col md:flex-row w-11/12 max-w-lg md:max-w-6xl bg-white shadow-2xl rounded-2xl overflow-hidden mx-auto">
         {/* Left Section */}
         <div
           className="hidden md:flex w-full md:w-1/2 bg-cover bg-center"
@@ -106,45 +105,46 @@ function Login() {
             backgroundImage: `url('https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733796557/jaredd-craig-HH4WBGNyltc-unsplash_jcjovt.jpg')`,
           }}
         ></div>
-         
+
         {/* Right Section */}
         <div className="w-full md:w-1/2 flex flex-col p-6 sm:p-8 md:p-12 bg-gradient-to-br from-[#e6dbcd] via-[#eee5da] to-[#917f74]">
-         
+
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left text-[#f18966]">
             Welcome to BigFour 👋
           </h1>
-           
+
           <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 text-center md:text-left">
             Open the door to a world of opportunities with BigFour. Sign in to your account.
           </p>
-          
+
           <Formik initialValues={initialValue} validationSchema={validationSchema} onSubmit={onLogin}>
             {(formikProps) => {
               const suffixColor = 'rgba(0, 0, 0, 0.25)';
               return (
+
                 <Form>
                   {/* Email Input */}
                   <div className="mb-4">
                     <FastField
                       name="email"
                       component={InputField}
-                      className="w-full px-4 py-2 border rounded-lg"
+                      className="w-full px-4 py-2 border rounded-xl"
                       placeholder="Email *"
                       size="large"
                       suffix={
-                        <Tooltip title="Email của bạn">
+                        <Tooltip title="Enter your email!">
                           <InfoCircleOutlined style={{ color: suffixColor }} />
                         </Tooltip>
                       }
                     />
                   </div>
-  
+
                   {/* Password Input */}
                   <div className="mb-4">
                     <FastField
                       name="password"
                       component={InputField}
-                      className="w-full px-4 py-2 border rounded-lg"
+                      className="w-full px-4 py-2 border rounded-xl"
                       type="password"
                       placeholder="Password *"
                       size="large"
@@ -153,7 +153,7 @@ function Login() {
                       }
                     />
                   </div>
-  
+
                   {/* Options */}
                   <div className="flex flex-wrap sm:flex-nowrap justify-between items-center mb-4">
                     <FastField name="keepLogin" component={CheckboxField}>
@@ -161,15 +161,15 @@ function Login() {
                     </FastField>
                     <Link
                       to={constants.ROUTES.FORGOT_PASSWORD}
-                      className="text-blue-500 font-medium mt-2 sm:mt-0"
+                      className="text-blue-700 text-sm font-medium hover:opacity-80 mt-2 sm:mt-0"
                     >
                       Forgot Password?
                     </Link>
                   </div>
-  
+
                   {/* Login Button */}
-                  <Button
-                    className="w-full py-2 mb-4 bg-[#679089] text-white rounded-lg"
+                  <button
+                    className="w-full py-2 mb-4 bg-[#679089] hover:bg-[#5c8f86] text-white rounded-xl"
                     size="large"
                     type="primary"
                     htmlType="submit"
@@ -177,20 +177,21 @@ function Login() {
                     loading={isSubmitting}
                   >
                     Sign In
-                  </Button>
-  
+                  </button>
+
                   {/* Divider */}
                   <div className="text-center text-gray-500 mb-4">Or</div>
-  
+
                   {/* Google & Facebook Login */}
                   <LoginGoogle
+                    className='rounded-xl'
                     title={windowWidth > 375 ? 'Sign in with Google' : 'Google'}
                   />
                   <LoginFacebook
-                    className="mt-4 bg-blue-600 hover:bg-blue-500 text-white"
+                    className="mt-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl"
                     title={windowWidth > 375 ? 'Sign in with Facebook' : 'Facebook'}
                   />
-  
+
                   {/* Signup Link 
                   <div className="text-center mt-4">
                     Don’t have an account?
@@ -206,8 +207,8 @@ function Login() {
       </div>
     </div>
   );
-  
-  
+
+
 }
 
 
