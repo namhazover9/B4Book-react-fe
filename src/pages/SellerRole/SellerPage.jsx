@@ -420,7 +420,7 @@ export default function SellerPage() {
       {/* Add Product */}
       <Modal
         open={visibleAdd}
-        className='text-center'
+        className='text-center '
         title={
           <h2 className="text-2xl font-bold text-[#f18966]  animate-slideIn">
             Create New Book
@@ -473,7 +473,7 @@ export default function SellerPage() {
           }}
         >
           {({ setFieldValue, errors, touched, isSubmitting }) => (
-            <Form className='mt-5'>
+            <Form className='mt-5 '>
               <div className='flex-input-tnvd '>
                 <label className='label-input-tnvd'>Title:</label>
                 <div className='w-2/3 flex flex-col items-start'>

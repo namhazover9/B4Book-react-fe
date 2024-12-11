@@ -60,13 +60,7 @@ const TopSellingVendors = () => {
   return (
     <div className='w-full container mx-auto bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
-        <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-3xl font-bold'>Top Vendors</h2>
-          <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-          <button className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
-            View All <ArrowRightOutlined className='w-4 h-4' />
-          </button>
-        </div>
+        
 
         {/* Vendor Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-14 '>
