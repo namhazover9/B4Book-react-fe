@@ -56,6 +56,16 @@ const orderApi = {
   getTotalOrdersInTransit: () => {
     const url = `${ORDER_API_ENDPOINT}/totalOrdersInTransit`; 
     return axiosClient.get(url);
+  },
+
+  getTotalOrdersInShop: (id) => {
+    const url = `${ORDER_API_ENDPOINT}/totalOrderInShop/${id}`; 
+    return axiosClient.get(url);
+  },
+
+  getTotalBuyers: (id) => {
+    const url = `${ORDER_API_ENDPOINT}/totalBuyers/${id}`; 
+    return axiosClient.get(url);
   }
  
 };
