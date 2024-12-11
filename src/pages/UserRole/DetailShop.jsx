@@ -67,11 +67,11 @@ export default function DetailShop() {
                       cover={
                         <img
                           alt={product.name}
-                          src={product.image || "https://via.placeholder.com/150"}
+                          src={product.images[0] || "https://via.placeholder.com/150"}
                         />
                       }
                     >
-                      <Title level={5}>{product.name}</Title>
+                      <Title level={5}>{product.title}</Title>
                       <Text>Sales: {product.salesNumber}</Text>
                       <Text>Price: {product.price}</Text>
                     </Card>
