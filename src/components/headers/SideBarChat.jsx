@@ -3,6 +3,7 @@ import { useParams, useNavigate, NavLink } from 'react-router-dom';
 import chatApi from '../../hooks/useChatApi';
 import { Drawer, Button } from "antd";
 import { MenuUnfoldOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 const SideBarChat = () => {
     const { id, name } = useParams(); // Lấy user ID từ URL params
@@ -11,6 +12,7 @@ const SideBarChat = () => {
     const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [drawerVisible, setDrawerVisible] = useState(false);
+    const userId = useSelector((state) => state.user._id);
     const fetchHistoryChat = async () => {
         try {
             const response = await chatApi.getAllChats(id); // Fetch dữ liệu từ API
@@ -44,9 +46,9 @@ const SideBarChat = () => {
                 // Cập nhật role dựa trên dữ liệu trả về
                 const userRole = contactList[0]?.role// Mặc định là customer nếu không có type
                 if (userRole === 'shop') {
-                    setRole('customer');
+                    setRole('shop');
                 } else { // Cập nhật state role}
-                    setRole("shop");
+                    setRole("customer");
                 }
             }
         } catch (error) {
@@ -69,6 +71,13 @@ const SideBarChat = () => {
     // Hàm để xác định URL quay lại tùy theo role
     const handleBackNavigation = () => {
         console.log(role);
+        if(role === null){
+            if(id === userId){
+              setRole("customer");
+            }else{
+              setRole("shop");
+            }
+           }
         if (role === 'shop') {
             navigate(`/shop/${name}/profile/${id}`);
         } else if (role === 'customer') {

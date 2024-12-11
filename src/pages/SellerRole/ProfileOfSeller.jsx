@@ -16,6 +16,7 @@ import { set } from 'react-hook-form';
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [shop, setShop] = useState({});
+  const shopName = useParams().name;
   const [isModalAddressOpen, setIsModalAddressOpen] = useState(false);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
   const [newAddress, setNewAddress] = useState({ street: '', city: '', country: '' });
