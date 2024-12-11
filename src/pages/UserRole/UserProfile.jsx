@@ -316,11 +316,7 @@ export default function UserProfile() {
               <Text strong className='text-base'>
                 Expenditure 🤑
               </Text>
-              <Progress percent={80} />
-              <Text strong className='text-base'>
-                Orders
-              </Text>
-              <Progress percent={72} />
+              
             </Card>
           </Col>
         </Row>

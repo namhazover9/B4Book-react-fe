@@ -31,14 +31,15 @@ export default function ProductPage() {
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
-    'Classic',
-    'Psychological',
-    'Mystery',
-    'Sci-Fi',
-    'Biography',
-    'Fantasy',
-    'Romance',
-    'History',
+    'ChristianLiving',
+    'ChurchHistory',
+    'Educational Curriculum',
+    'Fiction & Fantasy',
+    'Religion & Spirituality',
+    'Romance Books',
+    'Literature & Fiction',
+    'Biographies & Memoirs',
+    'Children Book',
   ];
   const [addingToCart, setAddingToCart] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -61,7 +62,7 @@ export default function ProductPage() {
       });
       const data = response.data;
       setBookList(data.data);
-      //console.log(data.data);
+      console.log(data.data);
 
       stockList = data.data.map((book) => ({
         productId: book._id,
@@ -92,7 +93,7 @@ export default function ProductPage() {
       setLoading(false);
     }
   };
-  const handleAddToWishlist  = async (productId) => {
+  const handleAddToWishlist = async (productId) => {
     if (!userId) {
       message.warning(
         <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
@@ -108,14 +109,13 @@ export default function ProductPage() {
       );
       return;
     }
-  const respone = await WishlistApi.addProductToWishList(productId);
-  if (respone.status === 200) {
-    message.success('Add product to wishlist successfully');
-  }else{
-    message.error('Product already added to wishlist');
-  }
-
-  }
+    const respone = await WishlistApi.addProductToWishList(productId);
+    if (respone.status === 200) {
+      message.success('Add product to wishlist successfully');
+    } else {
+      message.error('Product already added to wishlist');
+    }
+  };
 
   const handleAddToCart = (productId, quantity) => {
     if (!userId) {
@@ -134,8 +134,6 @@ export default function ProductPage() {
       return;
     }
 
-   
-
     // Tìm thông tin tồn kho từ stockList
     const stockItem = stockList.find((item) => item.productId === productId);
     const stock = stockItem ? stockItem.stock : 0; // Lấy stock của sản phẩm từ stockList
@@ -146,7 +144,9 @@ export default function ProductPage() {
 
     // Kiểm tra tồn kho, nếu số lượng thêm vào giỏ vượt quá tồn kho, thì thông báo lỗi
     if (currentCartQuantity + quantity > stock) {
-      message.error(`You already have ${stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`);
+      message.error(
+        `You already have ${stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`,
+      );
       return;
     }
 
@@ -233,11 +233,47 @@ export default function ProductPage() {
     setViewMode(mode);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const isSmallScreen = window.matchMedia('(max-width: 640px)').matches;
+      if (isSmallScreen) {
+        setViewMode('line');
+      } else {
+        setViewMode('block');
+      }
+    };
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const [expandedItems, setExpandedItems] = useState({});
+  const [isTruncated, setIsTruncated] = useState({});
+
+  const toggleDescription = (index) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const toggleTitle = (index) => {
+    setIsTruncated((prev) => ({
+      ...prev,
+      [index]: !(prev[index] ?? true),
+    }));
+    console.log(index);
+  };
+
   return (
     <div className='container mx-auto'>
-      <div className='header my-5 bg-slate-200 p-5 sm:p-10 flex justify-center sm:justify-between items-center'>
+      <div className='header my-5 bg-[#EEE5DA] p-5 sm:p-10 flex justify-center sm:justify-between items-center'>
         <h1 className='hidden sm:block text-2xl text-red-500 font-medium'>
-          <span className='text-lg text-black sm:hidden md:block'>Welcome to</span> Books Page!
+          <span className='text-lg text-black sm:hidden md:block'>Welcome to</span> <span className='text-lg text-[#F18966] sm:hidden md:block'>Books Page!</span>
         </h1>
         <div className='flex w-4/5 py-1 sm:w-1/2 md:w-2/3 items-center border rounded-full px-2 sm:px-3 sm:py-3 bg-gray-100'>
           <input
@@ -245,9 +281,9 @@ export default function ProductPage() {
             value={searchKeyword}
             onChange={handleSearchChange} // Handle search input change
             placeholder='Search products...'
-            className='flex-grow outline-none bg-transparent text-sm sm:text-base text-gray-700 px-2'
+            className='flex-grow outline-none bg-white text-sm sm:text-base text-gray-700 px-2'
           />
-          <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
+          <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-[#679089] p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
         </div>
       </div>
       <div className='flex flex-col lg:flex-row justify-between md:items-center lg:items-start'>
@@ -255,16 +291,17 @@ export default function ProductPage() {
           <div className='genre'>
             <div className='genre-ipad hidden lg:block'>
               <Menu
-                className='h-80 overflow-y-auto'
+                className='h-100 overflow-y-auto'
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode='inline'
                 items={categorys}
               />
             </div>
-            <div className='genre-phone lg:hidden'>
+            <div className='genre-phone lg:hidden w-11/12 mx-auto'>
               <Select
                 mode='multiple'
+                className='w-full'
                 value={selectedCategories}
                 onChange={(value) => setSelectedCategories(value)} // Cập nhật selectedCategories khi người dùng thay đổi
                 options={hardcodedCategories.map((category) => ({
@@ -274,11 +311,9 @@ export default function ProductPage() {
               />
             </div>
           </div>
-
           <div className='hidden lg:block'>
             <br />
           </div>
-
           <div className='price'>
             <div className='price-ipad hidden lg:block'>
               <Card
@@ -308,19 +343,19 @@ export default function ProductPage() {
                 </div>
               </Card>
             </div>
-            <div className='price-phone lg:hidden mx-5'>
+            <div className='price-phone lg:hidden mx-5 mt-5'>
               <Slider
                 range
                 defaultValue={priceRange}
                 max={200000}
-                className='w-full md:w-5/6'
+                className='w-full md:w-5/6 mx-auto'
                 disabled={disabled}
               />
-              <div className='flex justify-between md:w-5/6 mt-2'>
+              <div className='flex justify-between md:w-5/6 mt-2 mx-auto'>
                 <span>${priceRange[0]}</span>
                 <span>${priceRange[1]}</span>
               </div>
-              <div className='my-1'>
+              <div className='md:w-5/6 my-1 mx-auto'>
                 Disabled:{' '}
                 <Switch
                   size='small'
@@ -335,7 +370,9 @@ export default function ProductPage() {
           <div className='header-all-books flex justify-between items-center mx-4 my-2 lg:my-0 lg:w-11/12'>
             <div className='option-form-left flex items-center w-1/12 justify-end lg:justify-start'>
               <QrcodeOutlined
-                className={`mr-2 choice-icon-tnvd ${viewMode === 'block' ? 'text-blue-500' : ''}`}
+                className={`md:mr-2 choice-icon-tnvd ${
+                  viewMode === 'block' ? 'text-blue-500' : ''
+                }`}
                 onClick={() => handleViewModeChange('block')}
               />
               <BarsOutlined
@@ -389,7 +426,7 @@ export default function ProductPage() {
             ) : (
               <div className=''>
                 {viewMode === 'block' ? (
-                  <div className='list-by-block sm:w-11/12 xl:w-full'>
+                  <div className='list-by-block sm:w-11/12 xl:w-full mx-auto'>
                     {bookList.length === 0 ? (
                       <div className='not-found'>
                         <h2 className='text-center my-20'>
@@ -397,13 +434,12 @@ export default function ProductPage() {
                         </h2>
                       </div>
                     ) : (
-                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
+                      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 xl:gap-2'>
                         {bookList.map((book, index) => {
                           const imageUrl = book.images[0] ? book.images[0] : '';
-
                           return (
                             <div
-                              className='flex flex-col sm:flex-row justify-between items-center'
+                              className='flex flex-col sm:flex-row justify-between items-start'
                               key={index}
                             >
                               <div
@@ -419,7 +455,10 @@ export default function ProductPage() {
                                   <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                                     <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
                                       <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
-                                        <HeartOutlined onClick={() => handleAddToWishlist(book._id)} className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                        <HeartOutlined
+                                          onClick={() => handleAddToWishlist(book._id)}
+                                          className='w-6 h-6 flex justify-center items-center text-black-500'
+                                        />
                                       </button>
                                       <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
                                         <Link to={`/details/${book._id}`}>
@@ -444,12 +483,53 @@ export default function ProductPage() {
                                     </div>
                                   </div>
                                 </div>
-                                <p className='text-2xl font-bold mb-2 truncate'>{book.title}</p>
-                                <div className='flex justify-between mb-2 items-center mr-5'>
-                                  <p className='text-lg text-gray-600 truncate'>{book.author}</p>
-                                  <p className='text-md text-gray-600 italic truncate'>
-                                    {book.category}
-                                  </p>
+
+                                <p
+                                  className={`text-xl font-bold mb-1 text-[#F18966] ${
+                                    isTruncated[index] ?? true ? 'truncate' : ''
+                                  }`}
+                                  onClick={() => toggleTitle(index)}
+                                >
+                                  {book.title}
+                                </p>
+
+                                <div className='flex flex-col justify-between items-start mr-5 space-y-1'>
+                                  <p className='text-base text-gray-600 truncate'>{book.author}</p>
+                                </div>
+                                <div className='flex my-1'>
+                                  {/* Vòng lặp tạo sao */}
+                                  {[...Array(5)].map((_, index) => (
+                                    <span
+                                      key={index}
+                                      className={`text-2xl ${
+                                        index < book.ratingResult
+                                          ? 'text-yellow-500'
+                                          : 'text-gray-300'
+                                      }`}
+                                    >
+                                      ★
+                                    </span>
+                                  ))}
+                                  {/* <span className='text-[#F18966] ml-2'>{book.ratingResult}</span> */}
+                                </div>
+
+                                <div className='flex items-center justify-between mb-2'>
+                                  <div className='flex items-center'>
+                                    <p className='text-sm text-gray-600'>
+                                      Stock: <span className='text-[#F18966]'>{book.stock}</span>
+                                    </p>
+                                  </div>
+                                  <div className='hidden sm:block'>
+                                    <div className='flex items-center'>
+                                      <p className='text-xs text-yellow-500 mr-2'>
+                                        Sales number:
+                                        <span className='text-[#F18966] truncate'>
+                                          {' '}
+                                          {book.salesNumber}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </div>
                                 </div>
                                 <p className='text-lg font-bold text-red-500'>${book.price}</p>
                               </div>
@@ -460,19 +540,108 @@ export default function ProductPage() {
                     )}
                   </div>
                 ) : (
-                  <div className='grid-view'>
-                    {/* Your grid view content goes here */}
-                    {/* For example, you might display the books in a grid layout */}
-                    <div className='grid grid-cols-2 gap-4'>
-                      {bookList.map((book, index) => (
-                        <div key={index} className='card'>
-                          <img src={book.images[0]} alt={book.title} />
-                          <h3>{book.title}</h3>
-                          <p>{book.author}</p>
-                          <p>{book.price}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <div className='list-by-line'>
+                    {bookList.length === 0 ? (
+                      <div className='not-found'>
+                        <h2 className='text-center my-20'>
+                          No books found matching the selected filters.
+                        </h2>
+                      </div>
+                    ) : (
+                      <div className='flex flex-col'>
+                        {bookList.map((book, index) => {
+                          const imageUrl = book.images[0]
+                            ? book.images[0]
+                            : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
+                          return (
+                            <div className='' key={index}>
+                              <div className='flex items-start justify-between md:w-5/6 mx-auto'>
+                                <div className='relative group overflow-hidden w-1/2 md:w-1/4 m-2'>
+                                  <div className=''>
+                                    <img
+                                      src={imageUrl}
+                                      alt={book.title}
+                                      className='w-full h-auto object-cover rounded-lg'
+                                    />
+                                  </div>
+                                  <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
+                                    <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
+                                      <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
+                                        <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                      </button>
+                                      <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
+                                        <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                      </button>
+                                      <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
+                                        <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div id={index} className='w-1/2 md:w-3/4 h-auto m-2'>
+                                  <div className=''>
+                                    <p className='text-xl font-bold mb-2 text-wrap'>{book.title}</p>
+                                    <p className='text-gray-400 text-sm mb-2 truncate'>
+                                      {book.author}
+                                    </p>
+                                    <div className='sm:hidden'>
+                                      <div
+                                        className={`relative overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+                                          expandedItems[index] ? 'max-h-[500px]' : 'max-h-[80px]'
+                                        }`}
+                                      >
+                                        <p className='text-gray-600 text-sm mr-2 text-balance'>
+                                          {book.description}
+                                        </p>
+                                      </div>
+                                      {book.description.split(' ').length > 30 && (
+                                        <button
+                                          className='text-blue-500 underline text-xs'
+                                          onClick={() => toggleDescription(index)}
+                                        >
+                                          {expandedItems[index] ? 'Ẩn bớt' : 'Xem thêm'}
+                                        </button>
+                                      )}
+                                    </div>
+                                    <p className='w-11/12 text-gray-600 text-sm mb-2 mr-2 text-balance hidden sm:block'>
+                                      {book.description}
+                                    </p>
+                                    <div className='flex items-center mb-2'>
+                                      <div className='text-yellow-500 mr-2'>★★★★★</div>
+                                      <span className='text-gray-600 truncate'>{book.stock}</span>
+                                    </div>
+                                    <div className='w-5/6 flex items-center justify-between'>
+                                      <div className='flex items-center'>
+                                        <p className='text-sm text-gray-600'>
+                                          Stock:{' '}
+                                          <span className='text-base text-[#F18966]'>
+                                            {book.stock}
+                                          </span>
+                                        </p>
+                                      </div>
+                                      <div className='hidden sm:block'>
+                                        <div className='flex items-center mb-2'>
+                                          <div className='text-sm text-yellow-500 mr-2'>
+                                            Sales number:{' '}
+                                          </div>
+                                          <span className='text-base text-gray-600 truncate'>
+                                            {book.salesNumber}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <p className='text-red-500 text-2xl font-bold truncate'>
+                                      $ {book.price}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='jamb bg-slate-200 h-px w-3/4 my-2'></div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -485,7 +654,7 @@ export default function ProductPage() {
             total={totalPages * booksPerPage} // Tổng số mục = số trang * số mục mỗi trang
             pageSize={booksPerPage} // Sử dụng booksPerPage thay cho pageSize cố định
             onChange={(page) => setCurrentPage(page)} // Cập nhật trang khi người dùng chuyển trang
-            className='mt-4 mb-4'
+            className='mt-4 mb-10 flex justify-center'
           />
         </div>
       </div>

@@ -1,14 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
 import ChartTwo from '../../components/Charts/ChartTwo';
+import shopApi from '../../hooks/useShopApi';
+import userApi from '../../hooks/userApi';
+import orderApi from '../../hooks/useOrderApi';
 
-const ECommerce: React.FC = () => {
+const ECommerce = () => {
+  const [totalShop, setTotalShop] = useState([]);
+  const [totalUser, setTotalUser] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState([]);
+  const [totalOrdersInTransit, setTotalOrdersInTransit] = useState([]);
+
+  const fetchShops = async () => {
+    try {
+      const response = await shopApi.totalShop();
+      setTotalShop(response.data.totalShop);
+    } catch (error) {
+      console.error('Error fetching shop:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userApi.totalUser();
+      setTotalUser(response.data.totalUser);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+  };
+
+  const fetchRevenue = async () => {
+    try {
+      const response = await shopApi.totalRevenue();
+      setTotalRevenue(response.data.totalRevenue);
+    } catch (error) {
+      console.error('Error fetching revenue:', error);
+    }
+  };
+
+  const fetchOrdersInTransit = async () => {
+    try {
+      const response = await orderApi.getTotalOrdersInTransit();
+      setTotalOrdersInTransit(response.data.numOfOrders);
+    } catch (error) {
+      console.error('Error fetching orders in transit:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchShops();
+    fetchUsers();
+    fetchRevenue();
+    fetchOrdersInTransit();
+  }, []);
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+        <CardDataStats title="Total Orders In Transit" total={totalOrdersInTransit}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -27,8 +78,8 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp>
-          <svg
+        <CardDataStats title="Total Monthly Revenue" total={`$ ${totalRevenue}`}>
+        <svg
             className="fill-primary dark:fill-white"
             width="20"
             height="22"
@@ -50,7 +101,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Total Shops" total= {totalShop}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -69,7 +120,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Users" total="3.456" rate="0.95%" levelDown>
+        <CardDataStats title="Total Users" total={totalUser}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -94,10 +145,10 @@ const ECommerce: React.FC = () => {
         </CardDataStats>
       </div>
 
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
+      <div className="mt-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+        {/* <ChartOne /> */}
         <ChartTwo />
-        <ChartThree />
+        {/* <ChartThree /> */}
       </div>
     </>
   );

@@ -32,6 +32,12 @@ export default function Layout({ children }) {
   const [userInfo, setUserInfo] = useState(null);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.carts.items); // Lấy danh sách giỏ hàng từ Redux store
+  // console.log(cartItems, 'cartItems');
+  const userName = useSelector((state) => state.user.userName);
+  //console.log(userName);
+  const avatar = useSelector((state) => state.user.avartar);
+  //console.log(avatar);
+
 
   const userMenu = (
     <Menu>
@@ -50,12 +56,12 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!userId) return; // Nếu không có userId, không cần gọi API
+  // useEffect(() => {
+  //   // if (!userId) return; // Nếu không có userId, không cần gọi API
 
-    // Gọi action fetchCartItems từ Redux
-    dispatch(fetchCart());
-  }, [userId, dispatch]);
+  //   // Gọi action fetchCartItems từ Redux
+  //   dispatch(fetchCart());
+  // }, [userId, dispatch]);
 
   const toggleLoginPopup = () => {
     setIsLoginPopupOpen(!isLoginPopupOpen);
@@ -78,25 +84,29 @@ export default function Layout({ children }) {
   const handleNavigate = () => {
     navigate('/login'); // Điều hướng đến trang login
   };
+  const handleNavigateOrderList = () => {
+    navigate(`/orderlist/${userId}`);  // Truyền userId vào URL
+  };
 
+  // useEffect(() => {
+  //   console.log('Sidebar status:', isSidebarOpen);
+  // }, [isSidebarOpen]);
 
-  useEffect(() => {
-    console.log('Sidebar status:', isSidebarOpen);
-  }, [isSidebarOpen]);
-  
-  useEffect(() => {
-    if (userId) {
-      const fetchUserProfile = async () => {
-        try {
-          const response = await userApi.getUserProfile(userId);
-          setUserInfo(response.data); // Lưu thông tin người dùng
-        } catch (error) {
-          console.error('Failed to fetch user profile:', error);
-        }
-      };
-      fetchUserProfile();
-    }
-  }, [userId]); // Chạy lại khi userId thay đổi
+  // useEffect(() => {
+  //   if (userId) {
+  //     const fetchUserProfile = async () => {
+  //       try {
+  //         const response = await userApi.getUserProfile(userId);
+  //         setUserInfo(response.data); // Lưu thông tin người dùng
+  //       } catch (error) {
+  //         console.error('Failed to fetch user profile:', error);
+  //       }
+  //     };
+  //     fetchUserProfile();
+  //   } else {
+  //     setUserInfo(null); // Đảm bảo trạng thái chính xác khi userId không tồn tại
+  //   }
+  // }, [userId]);
 
   useEffect(() => {
     const token = localStorage.getItem(constants.ACCESS_TOKEN_KEY);
@@ -126,7 +136,8 @@ export default function Layout({ children }) {
       // Optionally, reset any Redux state or global state related to user authentication
 
       // Navigate to the login page or wherever you'd like to redirect after logout
-      navigate('/');
+      //navigate('/');
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -139,7 +150,7 @@ export default function Layout({ children }) {
       const shop = response.data.data; // Truy cập data
       const shopName = shop.shopName; // Lấy shopName
       if (response.data.message === 'success') {
-        navigate(`/shop/${shopName}/home/${shop._id}`); // Điều hướng
+        navigate(`/shop/${shopName}/profile/${shop._id}`); // Điều hướng
       }
     } catch (error) {
       console.error('Error fetching shop detail:', error);
@@ -175,16 +186,16 @@ export default function Layout({ children }) {
     setTotalPriceBeforeDiscount(
       Array.isArray(cartItems)
         ? cartItems.reduce((sum, item) => {
-            return sum + item.price * item.quantity;
-          }, 0)
+          return sum + item.price * item.quantity;
+        }, 0)
         : 0,
     );
   }, [cartItems]);
 
   const subtotal = Array.isArray(cartItems)
     ? cartItems.reduce((sum, item) => {
-        return sum + item.price * item.quantity;
-      }, 0)
+      return sum + item.price * item.quantity;
+    }, 0)
     : 0;
 
   return (
@@ -193,18 +204,17 @@ export default function Layout({ children }) {
         {/* Main Container */}
         <div className='container mx-auto flex justify-between items-center px-4 py-2'>
           {/* Logo */}
-          <div className='flex items-center cursor-pointer' onClick={() => navigate('/')}>
+          <div className='flex items-center cursor-pointer pl-8' onClick={() => navigate('/')}>
             <img
-              className='w-20 h-20'
-              src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1732094490/logo_b4b_pvldap.png'
+              className='w-18 h-18'
+              src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1733819443/lgbf_qyw8ac.png'
               alt='Logo'
             />
-            <h2 className='text-2xl font-bold m-0'>BigFour</h2>
           </div>
 
           {/* Mobile View - Sidebar and Shopping Cart */}
           <div className='block lg:hidden flex items-center space-x-8'>
-          <Badge
+            <Badge
               count={
                 Array.isArray(cartItems) && cartItems.length > 0
                   ? cartItems.reduce((total, item) => total + item.quantity, 0)
@@ -226,11 +236,10 @@ export default function Layout({ children }) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative font-bold transition duration-300 ${
-                  location.pathname === item.path
-                    ? 'text-[#4F6F52] text-lg after:w-full'
-                    : 'text-gray-700 text-lg after:w-0'
-                } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
+                className={`relative font-bold transition duration-300 ${location.pathname === item.path
+                  ? 'text-[#4F6F52] text-lg after:w-full'
+                  : 'text-gray-700 text-lg after:w-0'
+                  } hover:text-[#4F6F52] after:content-[''] after:block after:h-0.5 after:bg-[#4F6F52] after:transition-all after:duration-300`}
               >
                 <Translate text={item.name} />
               </Link>
@@ -269,16 +278,14 @@ export default function Layout({ children }) {
 
             {/* Login Button or Avatar */}
             {isLoggedIn ? (
-              <Dropdown overlay={userMenu} trigger={['click']}>
+              <Dropdown overlay={userMenu} trigger={['hover']}>
                 <div className='flex items-center space-x-2 cursor-pointer'>
                   <img
-                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
+                    src={avatar || 'https://via.placeholder.com/150'}
                     alt='Avatar'
                     className='w-10 h-10 rounded-full'
                   />
-                  <span className='text-gray-700 font-medium'>
-                    Hi, {userInfo?.userName || 'Guest'}
-                  </span>
+                  <span className='text-gray-700 font-medium' onClick={handleNavigateOrderList}>Hi, {userName || 'User'}</span>
                 </div>
               </Dropdown>
             ) : (
@@ -295,45 +302,39 @@ export default function Layout({ children }) {
 
       {/* Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-          isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
-        } lg:hidden`}
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${isSidebarOpen ? 'opacity-50 z-40' : 'opacity-0 -z-10'
+          } lg:hidden`}
         onClick={toggleSidebar} // Close sidebar when clicking outside
       ></div>
 
       {/* Sidebar - Only visible when open */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 lg:hidden`}
+        className={`fixed inset-y-0 left-0 w-64 bg-white bg-opacity-90 h-full flex flex-col p-4 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 lg:hidden`}
       >
         <div className='flex justify-between'>
-          {/* Login Button */}
+          {/* Login/Logout Button */}
           {isLoggedIn ? (
-              <Dropdown overlay={userMenu} trigger={['click']}>
-                <div className='flex items-center space-x-2 cursor-pointer'>
-                  <img
-                    src={userInfo?.avartar || 'https://via.placeholder.com/150'}
-                    alt='Avatar'
-                    className='w-10 h-10 rounded-full'
-                  />
-                  <span className='text-gray-700 font-medium'>
-                    Hi, {userInfo?.userName || 'Guest'}
-                  </span>
-                </div>
-              </Dropdown>
-            ) : (
-              <button
-                onClick={handleNavigate}
-                className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
-              >
-                Login
-              </button>
-            )}
+            <div className='flex items-center space-x-2 cursor-pointer'>
+              <img
+                src={avatar || 'https://via.placeholder.com/150'}
+                alt='Avatar'
+                className='w-10 h-10 rounded-full'
+              />
+              <span className='text-gray-700 font-medium'>Hi, {userName || 'User'}</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleNavigate}
+              className='text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+            >
+              Login
+            </button>
+          )}
           <CloseOutlined onClick={toggleSidebar} className='text-2xl cursor-pointer' />
         </div>
-        
-        <nav className='mt-4'>
+
+        <nav className='mt-4 flex-grow'>
           {menuItems.map((item) => (
             <Link
               key={item.path}
@@ -344,16 +345,36 @@ export default function Layout({ children }) {
               <Translate text={item.name} />
             </Link>
           ))}
-          {/* Language Switcher */}
-          {/* <Select
-            className='w-full mt-4'
-            defaultValue={localStorage.getItem('locale') ?? 'en'}
-            onChange={handleChange}
-            options={languages}
-          /> */}
+          {isLoggedIn && (
+            <Link
+              to='/userprofile'
+              className='block space-x-2 cursor-pointer py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <UserOutlined className='text-gray-700' />
+              <span className='text-gray-700'>Profile</span>
+            </Link>
+          )}
 
-          
+          {isLoggedIn && (
+            <div
+              onClick={handleSwitchShop}
+              className='block space-x-2 cursor-pointer py-2 px-4 text-gray-700 border-b-2 border-red-200 hover:bg-gray-200'
+            >
+              <UserSwitchOutlined className='text-gray-700' />
+              <span className='text-gray-700'>Switch Shop</span>
+            </div>
+          )}
+
+          {/* Show Log out button only if user is logged in */}
         </nav>
+        {isLoggedIn && (
+          <button
+            className='mt-auto text-sm text-white bg-red-500 rounded-md px-4 py-2 hover:bg-red-400'
+            onClick={handleLogout}
+          >
+            Log out
+          </button>
+        )}
       </div>
 
       {/* Login Popup */}
@@ -373,9 +394,8 @@ export default function Layout({ children }) {
 
       {/* Cart Side Bar */}
       <div
-        className={`fixed inset-y-0 right-0 w-80 bg-white shadow-lg z-50 transition-transform duration-300 ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-y-0 right-0 w-80 bg-white shadow-lg z-50 transition-transform duration-300 ${isCartOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         {/* Header */}
         <div className='flex justify-between items-center border-b pb-2 p-4'>
@@ -425,7 +445,7 @@ export default function Layout({ children }) {
             <Button
               block
               onClick={toggleCartSidebar}
-              className='!bg-gray-200 !text-black hover:!bg-gray-300 rounded-2xl'
+              className='!bg-[#679089] !text-white font-semibold hover:opacity-90 rounded-2xl'
             >
               View Cart
             </Button>

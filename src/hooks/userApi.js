@@ -55,6 +55,11 @@ const userApi = {
       },
     });
   },
+
+  totalUser: () => {
+    const url = `/user/total`; 
+    return axiosClient.get(url);
+  },
   
   
 };

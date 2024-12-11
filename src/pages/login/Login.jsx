@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
+import { fetchCart } from '../../reducers/carts';
 
 import CheckboxField from '../../components/Field/CheckboxField';
 import InputField from '../../components/Field/InputField';
@@ -20,6 +21,7 @@ function Login() {
   const windowWidth = window.screen.width;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDisableLogin, setIsDisableLogin] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
   const dispatch = useDispatch();
 
   // Retrieve the role from Redux in the main function
@@ -34,11 +36,9 @@ function Login() {
 
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      // if (process.env.NODE_ENV === 'production')
-      //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
       dispatch(setIsAuth(true));
+      window.location.reload();
 
-      
     } catch (error) {
       message.error('Lỗi đăng nhập.');
     }
@@ -47,13 +47,15 @@ function Login() {
   // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
   useEffect(() => {
     if (isAuth && userRole) {
+      // Điều hướng sau khi trạng thái xác thực và userRole đã được cập nhật
       if (userRole === 'Admin') {
-        navigate('/admin');
+        window.location.href = '/admin';
       } else if (userRole === 'Customer') {
-        navigate('/');
+        window.location.href = '/';
       }
     }
-  }, [isAuth, userRole, navigate]);
+  }, [isAuth, userRole]); // Thêm userRole và isAuth vào dependency array
+  
 
   const onLogin = async (account) => {
     try {
@@ -94,76 +96,118 @@ function Login() {
   });
 
   return (
-    <div className='min-h-screen flex flex-col items-center justify-center'>
-      <h1 className='text-xl font-bold underline underline-offset-4 mb-5'>Đăng nhập</h1>
-      <Formik initialValues={initialValue} validationSchema={validationSchema} onSubmit={onLogin}>
-        {(formikProps) => {
-          const suffixColor = 'rgba(0, 0, 0, 0.25)';
-          return (
-            <Form className='bg-white p-6 rounded-lg shadow-lg w-full max-w-md'>
-              <div className='mb-4'>
-                <FastField
-                  name='email'
-                  component={InputField}
-                  className='w-full px-3 py-2 border rounded-lg'
-                  placeholder='Email *'
-                  size='large'
-                  suffix={
-                    <Tooltip title='Email của bạn'>
-                      <InfoCircleOutlined
-                        style={{
-                          color: suffixColor,
-                        }}
-                      />
-                    </Tooltip>
-                  }
-                />
-              </div>
-              <div className='mb-4'>
-                <FastField
-                  name='password'
-                  component={InputField}
-                  className='w-full px-3 py-2 border rounded-lg'
-                  type='password'
-                  placeholder='Mật khẩu *'
-                  size='large'
-                  autocomplete='on'
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                />
-              </div>
-              <div className='flex justify-between items-center mb-4'>
-                <FastField name='keepLogin' component={CheckboxField}>
-                  <b>Duy trì đăng nhập</b>
-                </FastField>
-                <Link to={constants.ROUTES.FORGOT_PASSWORD} className='text-blue-500 font-medium'>
-                  <b>Quên mật khẩu ?</b>
-                </Link>
-              </div>
-              <Button
-                className='w-full py-2 mb-4 bg-blue-500 text-white rounded-lg'
-                size='large'
-                type='primary'
-                htmlType='submit'
-                disabled={isDisableLogin}
-                loading={isSubmitting}
-              >
-                Đăng nhập
-              </Button>
-              <div className='text-center text-gray-500 mb-4'>HOẶC</div>
-              <LoginGoogle title={windowWidth > 375 ? 'Đăng nhập với Gmail' : 'Gmail'} />
-              <LoginFacebook className='mt-4 bg-blue-600 hover:bg-blue-500 text-white' title={windowWidth > 375 ? ' Đăng nhập với Facebook' : 'Facebook'} />
-              <div className='text-center mt-4'>
-                Bạn chưa có tài khoản?
-                <Link to={constants.ROUTES.SIGNUP} className='text-blue-500 ml-1'>
-                  Đăng ký
-                </Link>
-              </div>
-            </Form>
-          );
-        }}
-      </Formik>
+    <div className="min-h-screen flex items-center justify-center bg-[#f8f8f6]">
+      <div className="flex flex-col md:flex-row w-11/12 max-w-lg md:max-w-6xl bg-white shadow-2xl rounded-lg overflow-hidden mx-auto">
+        {/* Left Section */}
+        <div
+          className="hidden md:flex w-full md:w-1/2 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733796557/jaredd-craig-HH4WBGNyltc-unsplash_jcjovt.jpg')`,
+          }}
+        ></div>
+         
+        {/* Right Section */}
+        <div className="w-full md:w-1/2 flex flex-col p-6 sm:p-8 md:p-12 bg-[#eee5da]">
+         
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center md:text-left text-[#f18966]">
+            Welcome to BigFour 👋
+          </h1>
+           
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 text-center md:text-left">
+            Open the door to a world of opportunities with BigFour. Sign in to your account.
+          </p>
+          
+          <Formik initialValues={initialValue} validationSchema={validationSchema} onSubmit={onLogin}>
+            {(formikProps) => {
+              const suffixColor = 'rgba(0, 0, 0, 0.25)';
+              return (
+                <Form>
+                  {/* Email Input */}
+                  <div className="mb-4">
+                    <FastField
+                      name="email"
+                      component={InputField}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      placeholder="Email *"
+                      size="large"
+                      suffix={
+                        <Tooltip title="Email của bạn">
+                          <InfoCircleOutlined style={{ color: suffixColor }} />
+                        </Tooltip>
+                      }
+                    />
+                  </div>
+  
+                  {/* Password Input */}
+                  <div className="mb-4">
+                    <FastField
+                      name="password"
+                      component={InputField}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      type="password"
+                      placeholder="Password *"
+                      size="large"
+                      iconRender={(visible) =>
+                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                      }
+                    />
+                  </div>
+  
+                  {/* Options */}
+                  <div className="flex flex-wrap sm:flex-nowrap justify-between items-center mb-4">
+                    <FastField name="keepLogin" component={CheckboxField}>
+                      <b>Keep me logged in</b>
+                    </FastField>
+                    <Link
+                      to={constants.ROUTES.FORGOT_PASSWORD}
+                      className="text-blue-500 font-medium mt-2 sm:mt-0"
+                    >
+                      Forgot Password?
+                    </Link>
+                  </div>
+  
+                  {/* Login Button */}
+                  <Button
+                    className="w-full py-2 mb-4 bg-[#679089] text-white rounded-lg"
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    disabled={isDisableLogin}
+                    loading={isSubmitting}
+                  >
+                    Sign In
+                  </Button>
+  
+                  {/* Divider */}
+                  <div className="text-center text-gray-500 mb-4">Or</div>
+  
+                  {/* Google & Facebook Login */}
+                  <LoginGoogle
+                    title={windowWidth > 375 ? 'Sign in with Google' : 'Google'}
+                  />
+                  <LoginFacebook
+                    className="mt-4 bg-blue-600 hover:bg-blue-500 text-white"
+                    title={windowWidth > 375 ? 'Sign in with Facebook' : 'Facebook'}
+                  />
+  
+                  {/* Signup Link 
+                  <div className="text-center mt-4">
+                    Don’t have an account?
+                    <Link to={constants.ROUTES.SIGNUP} className="text-blue-500 ml-1">
+                      Sign Up
+                    </Link>
+                  </div>*/}
+                </Form>
+              );
+            }}
+          </Formik>
+        </div>
+      </div>
     </div>
   );
+  
+  
 }
+
 
 export default Login;
