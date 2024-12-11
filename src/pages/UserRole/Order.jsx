@@ -326,7 +326,7 @@ const Checkout = () => {
   };
   return (
     <div className='flex items-center justify-center min-h-screen bg-[#EEE5DA] sm:px-5 pb-12 text-gray-800'>
-      <div className='flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-[#F8F8F6] shadow-xl rounded-lg md:w-3/4 overflow-auto w-full max-w-7xl'>
+      <div className='flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-[#F8F8F6] shadow-xl rounded-xl md:w-3/4 overflow-auto w-full max-w-7xl'>
         <Formik
           initialValues={{
             paymentMethod: 'card',
@@ -336,7 +336,7 @@ const Checkout = () => {
         >
           {({ setFieldValue, values }) => (
             <FormikForm>
-              <h1 className='text-2xl text-[#F18966] font-bold mb-4 flex items-center justify-center mt-7 lg:mt-0'>
+              <h1 className='text-2xl text-[#679089] font-bold mb-4 flex items-center justify-center mt-7 lg:mt-0'>
                 Your Order
               </h1>
 
@@ -384,6 +384,22 @@ const Checkout = () => {
                         showHeader={false}
                         pagination={false}
                         rowClassName={'bg-[#F8F8F6]'}
+                        components={{
+                          header: {
+                            cell: ({ children, ...restProps }) => (
+                              <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                                {children}
+                              </th>
+                            ),
+                          },
+                          body: {
+                            row: ({ children, ...restProps }) => (
+                              <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                                {children}
+                              </tr>
+                            ),
+                          },
+                        }}
                       />
                       <div className='flex justify-end mr-5'>
                         <p className='mt-3 font-semibold'>Shipping Cost: {Math.round(store.shippingCost)}$</p>
