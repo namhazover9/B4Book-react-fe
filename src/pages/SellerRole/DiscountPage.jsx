@@ -144,43 +144,52 @@ export default function DiscountPage() {
     {
       title: 'Image',
       dataIndex: 'image',
+      ...alignCenter,
+      width: 150,
       key: 'image',
       render: (text, record) => (
         <img
           src={record.image} // Sử dụng đường dẫn ảnh từ dữ liệu
           alt={record.name || 'Voucher Image'} // Hiển thị tên voucher nếu có
-          style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: '5px' }} // Thiết lập style cho ảnh
+          style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '5px', margin: '0 auto' }} // Thiết lập style cho ảnh
         />
       ),
     },
     {
       title: 'Name',
       dataIndex: 'name',
+      ...alignCenter,
       key: 'name',
     },
     {
       title: 'Code',
       dataIndex: 'code',
+      ...alignCenter,
       key: 'code',
     },
     {
       title: 'Value',
       dataIndex: 'value',
+      width: 75,
+      ...alignCenter,
       key: 'value',
     },
     {
       title: 'Valid Date',
       dataIndex: 'validDate',
+      ...alignCenter,
       key: 'validDate',
     },
     {
       title: 'Expired Date',
       dataIndex: 'expired',
+      ...alignCenter,
       key: 'expired',
     },
     {
       title: 'Status',
       dataIndex: 'isActive',
+      ...alignCenter,
       key: 'isActive',
     },
     {
@@ -378,6 +387,7 @@ export default function DiscountPage() {
               const response = await vouchersApi.postCreateVoucher(formData);
               message.success('Product added successfully!');
               handleCancelAdd(); // Đóng modal
+              fetchVouchers();
             } catch (error) {
               console.error('Error adding product:', error);
               message.error('An error occurred while adding the product.');

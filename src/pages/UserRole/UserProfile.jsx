@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import userApi from '../../hooks/userApi';
+import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
   Col,
   Input,
   List,
-  Progress,
-  Row,
-  Typography,
-  Radio,
   message,
-  Select,
   Modal,
+  Row,
+  Typography
 } from 'antd';
-import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from '@ant-design/icons';
-import { u } from 'framer-motion/client';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import userApi from '../../hooks/userApi';
+import LoadingSpinner from '../../components/loading';
 
 const { Title, Text } = Typography;
 
@@ -196,7 +192,7 @@ export default function UserProfile() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Hoặc thêm spinner/loading animation
+    return <LoadingSpinner />;
   }
 
   if (!userInfo) {
@@ -204,7 +200,7 @@ export default function UserProfile() {
   }
 
   return (
-    <section className='bg-gray-100 p-5 sm:p-6 lg:p-10'>
+    <section className='bg-gradient-to-tl from-[#f8f4ef] to-[#f3eade] p-5 sm:p-6 lg:p-10'>
       <div className='max-w-7xl mx-auto'>
         <Row gutter={[16, 16]}>
           <Col xs={24} md={8} lg={8}>
@@ -216,7 +212,7 @@ export default function UserProfile() {
                 className='rounded-full mx-auto mb-5'
               />
 
-              <Title level={4}>{userInfo.userName}</Title>
+              <Title level={4} >{userInfo.userName}</Title>
               <Text type='secondary'>Member</Text>
               <br />
               {/* <Text type='secondary'>{userInfo.address}</Text> */}
@@ -229,15 +225,15 @@ export default function UserProfile() {
                 dataSource={[
                   {
                     icon: <FacebookOutlined className='text-blue-700' />,
-                    text: 'mdbootstrap',
+                    text: 'facebook',
                   },
                   {
                     icon: <InstagramOutlined className='text-pink-600' />,
-                    text: 'mdbootstrap',
+                    text: 'instagram',
                   },
                   {
                     icon: <TwitterOutlined className='text-blue-400' />,
-                    text: 'mdbootstrap',
+                    text: 'twitter',
                   },
                 ]}
                 renderItem={(item) => (
@@ -313,7 +309,7 @@ export default function UserProfile() {
 
             <Card className='mt-4 h-52'>
               <Title level={5}>
-                <span className='text-blue-500 text-3xl'>Achievements 🏆</span>
+                <span className='text-[#f18966] text-3xl'>Achievements 🏆</span>
               </Title>
               <Text strong className='text-base'>
                 Expenditure 🤑

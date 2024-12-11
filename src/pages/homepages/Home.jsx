@@ -17,7 +17,7 @@ import Banner from './Banner';
 
 export default function Home() {
   // testBackendConnection();
-  
+
   return (
     <div className='flex flex-col gap-y-4'>
       <BannerSlider />

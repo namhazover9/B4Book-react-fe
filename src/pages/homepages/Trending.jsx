@@ -1,24 +1,109 @@
 // eslint-disable-next-line no-unused-vars
-import { Button, Carousel } from 'antd';
+import { Button, Carousel, message, Spin } from 'antd';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, EyeOutlined, HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import store1 from '../../assets/images/BestSelling/h6_banner4.jpg';
 import productsApi from '../../hooks/useProductsApi';
 import { useEffect, useState } from 'react';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import WishlistApi from '../../hooks/useWishlistApi';
+import { addToCart } from '../../reducers/carts';
 const BookShowcase = () => {
   const [books, setbooks] = useState([]);
-
+  const navigate = useNavigate();
+  const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
+  let [stockList, setStockList] = useState([]);
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const userId = useSelector((state) => state.user._id);
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await productsApi.getProductHomePage();
-      console.log(response.data.trendingProducts);
-
       setbooks(Array.isArray(response.data.trendingProducts) ? response.data.trendingProducts : []);
+      stockList = response.data.trendingProducts.map((book) => ({
+        productId: book._id,
+        stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
+      }));
+      setStockList(stockList);
+
+      
     };
     fetchBooks();
   }, []);
 
+  const handleAddToWishlist = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your wishlist.</span>
+        </div>,
+      );
+      return;
+    }
+    const respone = await WishlistApi.addProductToWishList(productId);
+    if (respone.status === 200) {
+      message.success('Add product to wishlist successfully');
+    } else {
+      message.error('Product already added to wishlist');
+    }
+  };
+
+  const handleAddToCart = (productId, quantity) => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your cart.</span>
+        </div>,
+      );
+      return;
+    }
+
+    // Tìm thông tin tồn kho từ stockList
+    const stockItem = stockList.find((item) => item.productId === productId);
+    const stock = stockItem ? stockItem.stock : 0; // Lấy stock của sản phẩm từ stockList
+    //console.log('Stock:', stock);
+    // Kiểm tra số lượng sản phẩm trong giỏ hàng hiện tại
+    const cartItem = cartItems.find((item) => item.product === productId);
+    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+
+    // Kiểm tra tồn kho, nếu số lượng thêm vào giỏ vượt quá tồn kho, thì thông báo lỗi
+    if (currentCartQuantity + quantity > stock) {
+      message.error(
+        `You already have ${stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`,
+      );
+      return;
+    }
+
+    const cartData = {
+      productId: productId,
+      quantity: quantity,
+    };
+
+    dispatch(addToCart(cartData))
+      .then(() => {
+        message.success('Product successfully added to cart!');
+      })
+      .catch((error) => {
+        console.error('Error adding product to cart:', error);
+        message.error('Failed to add product to cart. Please try again.');
+      });
+  };
 
   const banner = {
     id: 1,
@@ -34,9 +119,9 @@ const BookShowcase = () => {
         <div className='flex justify-between items-center mb-4'>
           <h2 className='text-3xl font-bold text-[#f18966]'>Trending Now</h2>
           <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-          <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
+          <Link to={'/products'}><button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
             View All <ArrowRightOutlined className='w-4 h-4' />
-          </button>
+          </button></Link>
         </div>
 
         <div className='container flex flex-col lg:flex-row w-full max-w-6xl mx-auto p-4 gap-4'>
@@ -70,29 +155,48 @@ const BookShowcase = () => {
                     <div className='relative overflow-hidden rounded-2xl '>
                       <img
                         src={book.images[0]}
-                        className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
+                        className='w-90 h-60 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                         <div className='absolute right-4 bottom-5 top-1/2 -translate-y-1/2 flex flex-col gap-3'>
                           <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 shadow-lg'>
-                            <Heart className='w-5 h-5 text-black-500' />
+                          <HeartOutlined
+                                  onClick={() => handleAddToWishlist(book._id)}
+                                  className='w-6 h-6 flex justify-center items-center text-black-500'
+                                />
                           </button>
                           <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-75 shadow-lg'>
-                            <Eye className='w-5 h-5 text-black-500' />
+                          <Link to={`/details/${book._id}`}>
+                                  <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                </Link>
                           </button>
                           <button className='p-2 bg-white border-2 border-transparent rounded-full hover:bg-red-400 hover:border-white hover:text-white transition-colors transform translate-x-10 group-hover:translate-x-0 transition-transform duration-300 delay-150 shadow-lg'>
-                            <ShoppingCart className='w-5 h-6 text-black-500' />
+                          <button
+                                className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${
+                                  addingToCart
+                                    ? 'opacity-50 cursor-not-allowed'
+                                    : 'hover:bg-red-500 hover:text-white'
+                                } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+                                onClick={() => handleAddToCart(book._id, quantity)}
+                                disabled={addingToCart} // Vô hiệu hóa khi đang thêm
+                              >
+                                {addingToCart ? (
+                                  <Spin size='small' /> // Icon loading từ Ant Design
+                                ) : (
+                                  <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                                )}
+                              </button>
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    <div className='mt-3'>
+                    <div className='mt-3 text-left'>
                       <h3 className='text-lg font-semibold truncate hover:text-red-400'>
                         <button>{book.title}</button>
                       </h3>
-                      <p className='text-gray-600 text-sm hover:text-red-600 truncate'>
-                        <button className='truncate block w-full'>{book.author}</button>
+                      <p className='text-gray-600 text-sm hover:text-red-600 truncate text-left'>
+                        <button className='truncate block'>{book.author}</button>
                       </p>
                       <p className='text-red-500 font-bold mt-1'>{book.price}</p>
                       <div className='flex items-center mt-1'>

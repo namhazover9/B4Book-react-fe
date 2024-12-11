@@ -49,27 +49,27 @@ export default function OrderList() {
   // Cấu hình cột của bảng
   const columns = [
     {
-        title: 'Product',
-        width: 175,
-        dataIndex: 'shops',
-        key: 'shops',
-        ...alignCenter,
-        render: (shops) => {
-          if (!shops || shops.length === 0) return 'N/A';
-          return shops.map((shop) => (
-            <div key={shop.shopId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img
-                src={shop.orderItems[0].images?.[0]}
-                alt={shop.orderItems[0].title || 'Product Image'}
-                style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: '4px', margin: '5px' }}
-              />
-              <span>{shop.orderItems[0].title || 'No Title'}</span>
-            </div>
-          ));
-        },
+      title: 'Product',
+      width: 175,
+      dataIndex: 'shops',
+      key: 'shops',
+      ...alignCenter,
+      render: (shops) => {
+        if (!shops || shops.length === 0) return 'N/A';
+        return shops.map((shop) => (
+          <div key={shop.shopId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img
+              src={shop.orderItems[0].images?.[0]}
+              alt={shop.orderItems[0].title || 'Product Image'}
+              style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: '4px', margin: '5px' }}
+            />
+            <span>{shop.orderItems[0].title || 'No Title'}</span>
+          </div>
+        ));
       },
-      
-      
+    },
+
+
     // {
     //   title: 'Product',
     //   width: 175,
@@ -137,11 +137,11 @@ export default function OrderList() {
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
           <Breadcrumb.Item>Your Orders</Breadcrumb.Item>
-          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} 👋🏻</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName} </Breadcrumb.Item>
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block text-[#679089]'>
+            <h1 className='lg:text-2xl xl:text-3xl font-bold hidden lg:block text-[#f18966]'>
               Order List
             </h1>
           </div>
@@ -153,6 +153,22 @@ export default function OrderList() {
               scroll={{
                 x: 'max-content',
                 y: 500,
+              }}
+              components={{
+                header: {
+                  cell: ({ children, ...restProps }) => (
+                    <th {...restProps} style={{ backgroundColor: '', color: 'black' }}>
+                      {children}
+                    </th>
+                  ),
+                },
+                body: {
+                  row: ({ children, ...restProps }) => (
+                    <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                      {children}
+                    </tr>
+                  ),
+                },
               }}
             />
           </div>

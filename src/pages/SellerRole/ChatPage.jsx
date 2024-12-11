@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Input, Button } from "antd";
-import { SendOutlined } from "@ant-design/icons";
+import { Input, Button, Dropdown, Menu } from "antd";
+import { SendOutlined, SmileOutlined } from "@ant-design/icons";
 import chatApi from "../../hooks/useChatApi";
 import { useParams } from "react-router-dom";
 
@@ -10,12 +10,15 @@ const ChatPage = () => {
     const [input, setInput] = useState("");
     const { chatId, id } = useParams(); // `id` là ID của bạn
     let name;
+
     const fetchChat = async () => {
         try {
             const response = await chatApi.getChatById(chatId);
             const { customerMessages, shopMessages, participants } = response.data.chat;
+
             // Lưu thông tin participants
             setParticipants(participants);
+
             // Gắn role và avatar cho tin nhắn  
             const formattedMessages = [
                 ...customerMessages.map((msg) => ({
@@ -38,6 +41,7 @@ const ChatPage = () => {
             formattedMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             setMessages(formattedMessages);
         } catch (error) {
+            console.error(error);
         }
     };
 
@@ -63,10 +67,25 @@ const ChatPage = () => {
             console.error("Failed to send message:", error);
         }
     };
+
     const getOtherParticipantName = () => {
         if (!participants.customer || !participants.shop) return "";
         return participants.customer.senderId === id ? participants.shop.name : participants.customer.name;
     };
+
+    // Danh sách emojis
+    const emojiList = ['😊', '😂', '😢', '😡', '😍', '👍', '🎉'];
+
+    // Menu chứa các emoji
+    const emojiMenu = (
+        <Menu>
+            {emojiList.map((emoji, index) => (
+                <Menu.Item key={index} onClick={() => setInput((prev) => prev + emoji)}>
+                    {emoji}
+                </Menu.Item>
+            ))}
+        </Menu>
+    );
 
     return (
         <div className="flex-1 relative">
@@ -85,6 +104,7 @@ const ChatPage = () => {
                     }}
                 ></div>
             </div>
+
             {/* Chat Header */}
             <header className="bg-white p-4 h-16 text-gray-700 border-b border-gray-300 text-center">
                 <h1 className="text-2xl font-semibold text-black-2">{getOtherParticipantName()}</h1>
@@ -140,6 +160,9 @@ const ChatPage = () => {
             {/* Chat Input */}
             <footer className="bg-white border-t border-gray-300 p-4 absolute bottom-0 w-full h-20">
                 <div className="flex items-center">
+                    <Dropdown overlay={emojiMenu} trigger={['click']}>
+                        <Button className="mr-2" icon={<SmileOutlined />} />
+                    </Dropdown>
                     <Input
                         type="text"
                         placeholder="Type a message..."

@@ -84,14 +84,14 @@ function ForgotPassword() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-tl from-[#f8f4ef] to-transparent">
       {isSuccess && (
         <Delay wait={constants.DELAY_TIME}>
           {/* Use Navigate instead of Redirect */}
           <Navigate to={constants.ROUTES.LOGIN} />
         </Delay>
       )}
-      <div className="w-full max-w-md bg-[#eee5da] shadow-lg rounded-lg p-6">
+      <div className="w-full max-w-md bg-gradient-to-tl from-[#f8f4ef] to-transparent shadow-lg rounded-lg p-6">
         <h1 className="text-center text-2xl font-bold mb-6 text-[#f18966]">Change Password</h1>
         <Formik
           initialValues={initialValue}

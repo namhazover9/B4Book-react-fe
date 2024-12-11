@@ -148,27 +148,27 @@ export default function Layout({ children }) {
     try {
       const response = await userApi.getSwitchShop(); // Gọi API với userId
       const shop = response.data.data; // Truy cập data
-  
+
       // Kiểm tra nếu shop không có quyền
       if (response.data.message === "You dont have permission") {
         console.log("You don't have permission");
         navigate(`/registerShop`); // Điều hướng sang trang đăng ký shop
         return; // Dừng lại tại đây nếu không có quyền
       }
-  
+
       const shopName = shop.shopName; // Lấy shopName
       if (response.data.message === 'success') {
         navigate(`/shop/${shopName}/profile/${shop._id}`); // Điều hướng đến trang shop profile
       }
-  
+
     } catch (error) {
       console.error('Error fetching shop detail:', error);
       // Xử lý lỗi và điều hướng sang trang đăng ký shop nếu có lỗi xảy ra
       navigate(`/registerShop`);
     }
   };
-  
-  
+
+
 
   useEffect(() => {
     setTotalPriceBeforeDiscount(
@@ -268,7 +268,7 @@ export default function Layout({ children }) {
               onChange={handleChange}
               options={languages}
             /> */}
-          <WechatWorkOutlined onClick={()=> navigate(`/${userName}/chat/${userId}`)} />
+            <WechatWorkOutlined onClick={() => navigate(`/${userName}/chat/${userId}`)} className='text-3xl hover:scale-110' />
             {/* Wishlist */}
             <HeartOutlined
               onClick={toggleWishlistSidebar}
@@ -412,7 +412,7 @@ export default function Layout({ children }) {
       >
         {/* Header */}
         <div className='flex justify-between items-center border-b pb-2 p-4'>
-          <h2 className='text-xl font-semibold'>Shopping cart</h2>
+          <h2 className='text-xl font-semibold text-[#f18966]'>Shopping cart</h2>
           <CloseOutlined onClick={toggleCartSidebar} className='cursor-pointer text-lg' />
         </div>
 

@@ -98,12 +98,12 @@ const Wishlist = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#EEE5DA] p-4 flex flex-col shadow-xl items-center">
-      <div className="w-full max-w-4xl bg-[#F8F8F6] p-4 shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold mb-4 flex items-center justify-center text-[#679089">Wishlist</h1>
+    <div className="min-h-screen p-4 flex flex-col shadow-xl items-center">
+      <div className="w-full max-w-4xl bg-gradient-to-br from-[#eee2d8] via-[#f1eae2] to-transparent p-4 shadow-md rounded-lg">
+        <h1 className="text-2xl font-bold mb-4 flex items-center justify-center text-[#f18966]">Your Wishlist</h1>
         <div className="mb-5">
           <Link to="/">
-            <Button>Back</Button>
+            <Button className='bg-[#679089] text-white px-6 py-2 rounded'>Back</Button>
           </Link>
         </div>
         {loading ? (

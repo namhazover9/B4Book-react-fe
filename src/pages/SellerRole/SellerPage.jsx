@@ -463,6 +463,7 @@ export default function SellerPage() {
               const response = await productsApi.postCreateProduct(formData);
               message.success('Product added successfully!');
               handleCancelAdd(); // Assuming handleCancelAdd closes the modal
+              fetchProducts();
             } catch (error) {
               // Handle network errors or other unexpected issues
               console.error('Error adding product:', error);
@@ -690,6 +691,7 @@ export default function SellerPage() {
               const response = await productsApi.updateProduct(product._id, formData);
               message.success('Product updated successfully!');
               handleCancelEdit();
+              fetchProducts();
             } catch (error) {
               console.error('Error updating product:', error);
               message.error('An error occurred while updating the product.');
