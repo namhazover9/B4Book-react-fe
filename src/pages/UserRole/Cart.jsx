@@ -316,7 +316,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                 type='primary'
                 className=' w-15 h-15 sm:w-auto flex items-center justify-center rounded-lg'
               >
-                <p className='text-red-400 hover:text-red-700'>Delete All</p>
+                <p className='text-white bg-red-500 p-2 rounded hover:bg-red-200 hover:text-red-700'>Delete All</p>
               </button>
             </Popconfirm>
           </div>
@@ -338,12 +338,12 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                   cancelText='No'
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
-                  <button
+                  {/* <button
                     type='primary'
                     className=' w-15 h-15 sm:w-auto flex items-center justify-center rounded-lg'
                   >
                     <p className='text-red-400 hover:text-red-700'>Delete All</p>
-                  </button>
+                  </button> */}
                 </Popconfirm>
               </div>
               {groupedItems.map((group, index) => (

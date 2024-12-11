@@ -1,23 +1,23 @@
 const logos = [
   {
-    src: './src/assets/images/LogoShopBook/brand_1.svg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_6_q2m0zl.png',
     alt: 'Books For Life',
   },
-  { src: './src/assets/images/LogoShopBook/brand_2.svg', alt: 'Cook Books' },
+  { src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_2_mhxvcv.png', alt: 'Cook Books' },
   {
-    src: './src/assets/images/LogoShopBook/brand_3.svg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_4_cobjv6.png',
     alt: 'Mit Media Lab',
   },
   {
-    src: './src/assets/images/LogoShopBook/brand_4.svg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_1_e6w8ka.png',
     alt: 'Mountain  Books',
   },
   {
-    src: './src/assets/images/LogoShopBook/brand_5.svg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_3_r39kth.png',
     alt: 'Particular Books',
   },
   {
-    src: './src/assets/images/LogoShopBook/brand_6.svg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913927/brand_5_l8kj9b.png',
     alt: 'Travel Books',
   },
 ];

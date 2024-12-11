@@ -7,13 +7,13 @@ const slides = [
     title: 'Christmas Pop Up Book Gift Ideas',
     description: 'Find The Perfect Gift For Everyone On Your List',
     color: 'bg-teal-900',
-    image: 'src/assets/images/bannerslider/rev_home6_10.png',
-    miniBg: 'src/assets/images/bannerslider/rev_home6_11.png',
+    image: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913211/rev_home6_10_ryujnw.png',
+    miniBg: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913209/rev_home6_11_gz5e1z.png',
     decoration: {
-      bell: 'src/assets/images/bannerslider/rev_home6_7.png',
-      candy: 'src/assets/images/bannerslider/rev_home6_8.png',
-      title: 'src/assets/images/bannerslider/rev_home6_9.png',
-      giftBox: 'src/assets/images/bannerslider/rev_home6_12.png',
+      bell: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913209/rev_home6_7_ld76ee.png',
+      candy: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913210/rev_home6_8_vr6yqo.png',
+      title: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913210/rev_home6_9_plqgwo.png',
+      giftBox: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913211/rev_home6_12_rfk82y.png',
     },
   },
   {
@@ -21,10 +21,10 @@ const slides = [
     title: 'Reading is for all Ages',
     description: 'Buy Your Books In A Store',
     color: 'bg-lime-700',
-    image: 'src/assets/images/bannerslider/rev_home6_5.png',
-    miniBg: 'src/assets/images/bannerslider/rev_home6_3.png',
+    image: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913212/rev_home6_5_z2m5he.png',
+    miniBg: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913210/rev_home6_3_h8jx4z.png',
     decoration: {
-      giftBox: 'src/assets/images/bannerslider/rev_home6_04.png',
+      giftBox: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733913210/rev_home6_04_innolz.png',
     },
   },
 ];

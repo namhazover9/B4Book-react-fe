@@ -105,6 +105,12 @@ const shopApi = {
       },
     });
   },
+  getAllVoucherForShop: (shopId) => {
+  
+
+    const url = `/shop/getAllVoucherForShop/${shopId}`;
+    return axiosClient.get(url);
+  },
 };
 
 
