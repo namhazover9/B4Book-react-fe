@@ -83,8 +83,8 @@ export default function ShopPage() {
 
   return (
     <div className='container mx-auto'>
-      <div className='header my-5 bg-slate-200 p-5 sm:p-10 flex justify-center sm:justify-between items-center'>
-        <h1 className='hidden sm:block text-2xl text-red-500 font-medium'>
+      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#f8f4ef] to-transparent'>
+        <h1 className='hidden sm:block text-2xl text-[#f18966] font-bold'>
           <span className='text-lg text-black sm:hidden md:block'>Welcome to</span> Shops Page!
         </h1>
         <div className='flex w-4/5 py-1 sm:w-1/2 md:w-2/3 items-center border rounded-full px-2 sm:px-3 sm:py-3 bg-gray-100'>
@@ -95,7 +95,7 @@ export default function ShopPage() {
             placeholder='Search products...'
             className='flex-grow outline-none bg-transparent text-sm sm:text-base text-gray-700 px-2'
           />
-          <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-red-500 p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
+          <SearchOutlined className='text-white cursor-pointer text-lg sm:text-xl bg-[#679089] p-2 rounded-full transition-transform duration-300 transform hover:scale-110' />
         </div>
       </div>
       <div className=''>
@@ -137,7 +137,7 @@ export default function ShopPage() {
                         const imageUrl = shop.images[0] ? shop.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
                         return (
                           <div className='' key={index}>
-                            <div className="flex sm:flex-col items-start sm:items-center justify-between sm:justify-start md:w-5/6 lg:w-11/12 mx-auto hover:shadow-lg duration-300 ease-in-out rounded-md mb-4">
+                            <div className="flex sm:flex-col items-start sm:items-center justify-between sm:justify-start md:w-5/6 lg:w-11/12 mx-auto hover:shadow-lg duration-300 ease-in-out rounded-md mb-4 bg-gradient-to-tl from-[#f8f4ef] to-transparent">
                               <div className='relative group overflow-hidden w-1/2 sm:w-11/12 m-2 rounded-lg'>
                                 <div className="w-full h-55"> 
                                   <img
@@ -157,7 +157,7 @@ export default function ShopPage() {
                               <div id={index} className='w-1/2 sm:w-11/12 h-auto m-2'>
                                 <div className="">
                                   <p className='text-xl font-bold mb-2 text-wrap text-[#F18966]'>{shop.shopName}</p>
-                                  <p className='text-gray-400 text-xs mb-2 truncate'>phone: <span className='text-sm text-[#F18966]'>{shop.phoneNumber}</span></p>
+                                  <p className='text-gray-800 text-xs mb-2 truncate font-bold'>Contact: <span className='text-sm text-black-2'>{shop.phoneNumber}</span></p>
                                   <p className="w-11/12 text-gray-600 text-sm mb-2 mr-2 sm:truncate">
                                     {shop.shopAddress}
                                   </p>
