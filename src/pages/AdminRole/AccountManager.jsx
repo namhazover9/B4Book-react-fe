@@ -132,14 +132,16 @@ const AccountManager = () => {
     },
     {
       title: 'Address',
-      dataIndex: 'shopAddress',
-      key: 'shopAddress',
+      dataIndex: 'address',
+      key: 'address',
       render: (text, record) => {
-        if (text) {
-          return text; // If shopAddress exists, return it.
+        if (Array.isArray(record.address) && record.address.length > 0) {
+          // Lấy địa chỉ đầu tiên từ mảng `address`
+          const firstAddress = record.address[0];
+          // Ghép các trường `street`, `city`, `country` thành chuỗi
+          return `${firstAddress.street}, ${firstAddress.city}, ${firstAddress.country}`;
         }
-        // Check if record.address is an array and not undefined.
-        return Array.isArray(record.address) ? record.address.join(',') : 'No address available';
+        return 'No address available'; // Trường hợp không có địa chỉ
       },
     },
     {
