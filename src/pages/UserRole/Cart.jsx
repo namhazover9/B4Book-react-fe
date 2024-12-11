@@ -257,7 +257,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           <Button type='danger'>
-            <CloseOutlined />
+            <DeleteOutlined className='text-lg text-black hover:text-red-700  m-4' />
           </Button>
         </Popconfirm>
       ),
@@ -295,7 +295,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     return (
       <div className='min-h-screen bg-[#EEE5DA] p-4 flex flex-col items-center'>
         <div className='w-full max-w-4xl bg-[#F8F8F6] p-4 shadow-md rounded-xl'>
-          <h1 className='text-2xl text-[#F18966] font-bold mb-4 flex items-center justify-center'>
+          <h1 className='text-2xl text-[#679089] font-bold mb-4 flex items-center justify-center mt-5'>
             Shopping Cart
           </h1>
           {/* <div className=' p-0'>
@@ -315,7 +315,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                 type='primary'
                 className=' w-15 h-15 sm:w-auto flex items-center justify-center rounded-lg'
               >
-                <DeleteOutlined className='text-2xl text-black hover:text-red-700  m-4' />
+                <p className='text-red-400 hover:text-red-700'>Delete All</p>
               </button>
             </Popconfirm>
           </div>
@@ -348,6 +348,22 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
                     rowClassName={''}
                     scroll={{ x: 'max-content' }}
                     className="table-auto w-full border-collapse text-left text-sm bg-gray-100 text-gray-900 rounded-b-lg"
+                    components={{
+                      header: {
+                        cell: ({ children, ...restProps }) => (
+                          <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                            {children}
+                          </th>
+                        ),
+                      },
+                      body: {
+                        row: ({ children, ...restProps }) => (
+                          <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                            {children}
+                          </tr>
+                        ),
+                      },
+                    }}
                   />
                   {index < groupedItems.length - 1 && <Divider />}
                 </div>

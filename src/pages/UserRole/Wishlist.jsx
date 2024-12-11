@@ -4,7 +4,7 @@ import 'antd/dist/reset.css';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import WishlistApi from '../../hooks/useWishlistApi'; // API Hook
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const Wishlist = () => {
   const [wishListItems, setWishListItems] = useState([]); // Danh sách wishlist
@@ -14,32 +14,32 @@ const Wishlist = () => {
   const userId = useSelector((state) => state.user._id); // Lấy userId từ Redux
 
   // Lấy dữ liệu wishlist khi mount hoặc thay đổi trang
- 
-      const fetchWishlist = async () => {
-        setLoading(true); // Bắt đầu loading
-        try {
-          const response = await WishlistApi.getWishlist(currentPage, 5); // Gọi API wishlist với phân trang
-          if (response.data && response.data.data) {
-            setWishListItems(response.data.data);
-            setTotalPages(response.data.totalPages);
-          } else {
-            setWishListItems([]);
-            setTotalPages(0);
-          }
-        } catch (error) {
-          console.error(error);
-          message.error('Failed to fetch wishlist');
-        } finally {
-          setLoading(false); // Dừng loading
-        }
-      };
+
+  const fetchWishlist = async () => {
+    setLoading(true); // Bắt đầu loading
+    try {
+      const response = await WishlistApi.getWishlist(currentPage, 5); // Gọi API wishlist với phân trang
+      if (response.data && response.data.data) {
+        setWishListItems(response.data.data);
+        setTotalPages(response.data.totalPages);
+      } else {
+        setWishListItems([]);
+        setTotalPages(0);
+      }
+    } catch (error) {
+      console.error(error);
+      message.error('Failed to fetch wishlist');
+    } finally {
+      setLoading(false); // Dừng loading
+    }
+  };
 
 
   useEffect(() => {
     if (userId) {
-      fetchWishlist();  
+      fetchWishlist();
     }
-    }, [userId, currentPage]);
+  }, [userId, currentPage]);
   // Xóa mục trong wishlist
   const handleDelete = async (id) => {
     try {
@@ -75,11 +75,13 @@ const Wishlist = () => {
       title: 'Price',
       dataIndex: ['product', 'price'],
       key: 'price',
+      className: 'w-[13em]',
       render: (price) => `$${price}`,
     },
     {
       title: 'Actions',
       key: 'actions',
+      className: 'w-[4em]',
       render: (_, record) => (
         <Popconfirm
           title="Are you sure you want to remove this item?"
@@ -88,7 +90,7 @@ const Wishlist = () => {
           cancelText="No"
         >
           <Button type="danger">
-            <CloseOutlined />
+            <DeleteOutlined className='text-lg text-black hover:text-red-700  m-4' />
           </Button>
         </Popconfirm>
       ),
@@ -96,9 +98,9 @@ const Wishlist = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
-      <div className="w-full max-w-4xl bg-white p-4 shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold mb-4 flex items-center justify-center">Wishlist</h1>
+    <div className="min-h-screen bg-[#EEE5DA] p-4 flex flex-col shadow-xl items-center">
+      <div className="w-full max-w-4xl bg-[#F8F8F6] p-4 shadow-md rounded-lg">
+        <h1 className="text-2xl font-bold mb-4 flex items-center justify-center text-[#679089">Wishlist</h1>
         <div className="mb-5">
           <Link to="/">
             <Button>Back</Button>
@@ -118,8 +120,25 @@ const Wishlist = () => {
             columns={columns}
             rowKey="_id"
             pagination={false}
-            bordered
+            rowHeader={"rounded-t-lg "}
+            components={{
+              header: {
+                cell: ({ children, ...restProps }) => (
+                  <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                    {children}
+                  </th>
+                ),
+              },
+              body: {
+                row: ({ children, ...restProps }) => (
+                  <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                    {children}
+                  </tr>
+                ),
+              },
+            }}
           />
+
         )}
         {/* Pagination */}
         {totalPages > 1 && (
