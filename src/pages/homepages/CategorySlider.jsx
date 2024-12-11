@@ -4,18 +4,30 @@ import 'antd/dist/reset.css';
 
 const CarouselComponent = () => {
   const categories = [
-    { img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164414/h6_cat3_tiz7yl.png', label: 'ChristianLiving' },
-    { img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164418/h6_cat4_bdjp3x.png', label: 'ChurchHistory' },
+    {
+      img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164414/h6_cat3_tiz7yl.png',
+      label: 'ChristianLiving'
+    },
+    {
+      img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164418/h6_cat4_bdjp3x.png',
+      label: 'ChurchHistory'
+    },
     {
       img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164417/h6_cat5_ehsebl.png',
-      label: 'Educational Curriculum',
+      label: 'Education & Reference',
     },
-    { img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164416/h6_cat6_pyo4lu.png', label: 'Fiction & Fantasy' },
+    {
+      img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164416/h6_cat6_pyo4lu.png',
+      label: 'Fiction & Fantasy'
+    },
     {
       img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164417/h6_cat7_pvzcq0.png',
       label: 'Religion & Spirituality',
     },
-    { img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164415/h6_cat8_ciuwc6.png', label: 'Romance Books' },
+    {
+      img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164415/h6_cat8_ciuwc6.png',
+      label: `Children's Books`
+    },
     {
       img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164415/h6_cat9_zzacv9.png',
       label: 'Literature & Fiction',
@@ -24,7 +36,10 @@ const CarouselComponent = () => {
       img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164126/h6_cat1_ucxjuu.png',
       label: 'Biographies & Memoirs',
     },
-    { img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164413/h6_cat2_muftoi.png', label: 'Children Book' },
+    {
+      img: 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732164413/h6_cat2_muftoi.png',
+      label: 'Romance Books'
+    },
   ];
 
   const carouselRef = useRef(null);

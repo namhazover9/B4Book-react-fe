@@ -1,19 +1,17 @@
-import React, { useEffect, Suspense } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import ScrollTop from '@components/ScrollTop';
 import Layout from '@layouts/Layout';
+import React, { Suspense, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
+import LoadingSpinner from '../components/loading';
 import AdminLayout from '../layouts/AdminLayout';
 import SellerLayout from '../layouts/SellerLayout';
-import { routes_here } from './routes';
-import ScrollTop from '@components/ScrollTop';
-import NotFoundPage from '../pages/pageError/page404';
 import ForbiddenPage from '../pages/pageError/page403';
-import LoadingSpinner from '../components/loading';
+import NotFoundPage from '../pages/pageError/page404';
 import { getIsAuth } from '../reducers/auth';
-import { getUserRequest } from '../reducers/user';
-import LoginPopup from '../components/modalLogin/LoginPopup'; // Import LoginPopup
-import { s } from 'framer-motion/client';
 import { fetchCart } from '../reducers/carts';
+import { getUserRequest } from '../reducers/user';
+import { routes_here } from './routes';
 
 
 const layoutMap = {
@@ -30,7 +28,7 @@ const AppRoutes = () => {
   const isAuth = useSelector((state) => state.authenticate.isAuth);
   const userRole = useSelector((state) => state.user.role[0]?.name);
   const userId = useSelector((state) => state.user._id);
-  const cartItems = useSelector((state) => state.carts.items); // Lấy danh sách giỏ hàng từ Redux store
+  const token = localStorage.getItem('access_token');
 
   // Kiểm tra xác thực
   useEffect(() => {
@@ -39,14 +37,14 @@ const AppRoutes = () => {
 
   // Lấy thông tin người dùng khi xác thực thành công
   useEffect(() => {
-    if (isAuth) {
-      //console.log('User ID:', isAuth);
+    if (isAuth && token) {
+      console.log('token ID:', token);
       
       dispatch(getUserRequest());
       dispatch(fetchCart());
     }
-  }, [isAuth, dispatch]);
-
+  }, [isAuth, dispatch, token]);
+  
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
     if (layout === 'Admin' && userRole !== 'Admin') return false;
@@ -66,11 +64,6 @@ const AppRoutes = () => {
         <ScrollTop />
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
-            // if (isPrivate && !isAuth) {
-            //   // If the user is not authenticated and the route is private, show the LoginPopup
-            //   return <Route key={key} path={path} element={<Navigate to='/login' />} />;
-            // }
-
             if (!hasAccess(layout) && isPrivate) {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;
             }

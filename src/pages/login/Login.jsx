@@ -35,10 +35,6 @@ function Login() {
       message.success('Đăng nhập thành công');
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-  
-      // Dispatch để lấy user sau khi đăng nhập
-      dispatch(getUserRequest());
-  
       dispatch(setIsAuth(true));
     } catch (error) {
       message.error('Lỗi đăng nhập.');
