@@ -25,7 +25,7 @@ export default function Home() {
       <DiscountBanners />
       <TopVendor />
       <FavouriteBook />
-      {/* <Trending /> */}
+      <Trending />
       <Bestseller />
       <Post />
       <LogoShopBook />
