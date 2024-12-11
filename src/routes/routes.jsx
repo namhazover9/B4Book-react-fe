@@ -27,6 +27,7 @@ const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
 const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
 const OrderList = lazy(() => import('@pages/UserRole/OrderList'));
 const SaleData = lazy(() => import('@pages/SellerRole/SellData'));
+const Feedback = lazy(() => import('@pages/UserRole/FeedBack'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
@@ -121,6 +122,12 @@ export const routes_here = [
     element: <Wishlist />,
     layout: 'customer',
     isPrivate: true,
+  },
+  {
+    path: '/feedbackProduct/:orderId/:id',
+    element: <Feedback />,
+    layout: 'customer',
+    isPrivate: false,
   },
   {
     path: '/products',
@@ -258,7 +265,7 @@ export const routes_here = [
   //   isPrivate: true,
   // },
   {
-    path: '/shop/:name/chat/:id/:chatId?',
+    path: '/:name/chat/:id/:chatId?',
     element: <ChatLayout />,
     layout: 'shop',
     isPrivate: true,

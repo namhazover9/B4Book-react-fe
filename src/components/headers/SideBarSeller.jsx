@@ -19,8 +19,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
 
         { title: "Withdrawal", icon: <WalletOutlined className='text-2xl' />, path:  `/shop/${shopDetail?.shopName}/withdrawals/${shopDetail?._id}`},   
         { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}`},
-
-        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
+        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
         { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl' />, path: "/" },
     ];
 

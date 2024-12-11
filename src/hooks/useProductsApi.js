@@ -89,6 +89,11 @@ const productsApi = {
     const url = `${PRODUCT_API_ENDPOINT}/showAllFeedbacks/${id}`;
     return axiosClient.get(url);
   },
+
+  feedBack: (id,orderId, formData) => {
+    const url = `${PRODUCT_API_ENDPOINT}/feedback/${orderId}/${id}`;
+    return axiosClient.put(url, formData);
+  },
 };
 
 export default productsApi;
