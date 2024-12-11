@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
-import ChartTwo from '../../components/Charts/ChartTwo';
+import ChartTwoForShop from '../../components/Charts/ChartTwoForShop';
 import shopApi from '../../hooks/useShopApi';
 import userApi from '../../hooks/userApi';
 import orderApi from '../../hooks/useOrderApi';
@@ -149,7 +149,7 @@ const SellData = () => {
 
       <div className="mt-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         {/* <ChartOne /> */}
-        <ChartTwo />
+        <ChartTwoForShop />
         {/* <ChartThree /> */}
       </div>
     </>
