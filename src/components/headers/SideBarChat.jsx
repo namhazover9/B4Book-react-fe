@@ -132,9 +132,8 @@ const SidebarContent = ({ contacts, handleBackNavigation, name, id, isMobile, se
             } bg-white border-r border-gray-300`}
     >
         {/* Sidebar Header */}
-        <header className="p-4 h-16 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-            <h1 className="ml-40 mt-2 text-xl md:text-2xl font-semibold">History Chat</h1>
-
+        <header className="p-4 h-16 border-b border-gray-300 flex justify-between items-center bg-[#679089] text-white">
+            <h1 className=" mt-2 text-xl md:text-2xl font-semibold">History Chat</h1>
         </header>
 
         {/* Contact List */}
@@ -162,7 +161,7 @@ const SidebarContent = ({ contacts, handleBackNavigation, name, id, isMobile, se
             ))}
             <button
                 onClick={handleBackNavigation}
-                className="absolute bottom-4 left-4 px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 text-sm md:text-base"
+                className="absolute bottom-4 left-4 px-6 py-2 bg-[#679089] text-white rounded-md hover:bg-[#679079] text-sm md:text-base font-semibold"
             >
                 Back
             </button>

@@ -96,30 +96,30 @@ export default function OrderDetailPage() {
                 className='w-full lg:w-5/6 bg-white rounded-lg shadow-lg mx-auto mb-4'
                 key={shop.id}
               >
-                <div className='bg-blue-400 text-white text-center py-2 rounded-t-lg'>
-                  <h2 className='text-base font-medium'>Shop: {shop.shopName}</h2>
+                <div className='bg-[#679089] text-white text-center py-2 rounded-t-lg'>
+                  <h2 className='text-xl font-bold text-[#f18966]'>Shop: {shop.shopName}</h2>
                 </div>
                 <div className='p-5'>
-                  <div className='flex flex-col lg:flex-row justify-between lg:items-center mb-4 lg:mb-5'>
+                  <div className='flex flex-col lg:flex-row justify-center lg:items-center mb-4 lg:mb-5'>
                     <div className='w-full lg:w-1/2 flex items-center'>
-                      <h4 className='h4-info-user'>Shipping Address:</h4>
+                      <h4 className='h4-info-user'>Shipping Address: </h4> 
                       <p className='p-info-user'>
                         {shippingAddress?.address + ', ' + shippingAddress?.city || 'No address'}
                       </p>
                     </div>
                     <div className='w-full lg:w-1/2 flex items-center'>
-                      <h4 className='h4-info-user'>Shipping Date:</h4>
-                      <p className='p-info-user'>{shop.shippedDate || 'No yet'}</p>
+                      <h4 className='h4-info-user'>Shipping Date: </h4>
+                      <p className='p-info-user'> {shop.shippedDate || 'Not yet'}</p>
                     </div>
                     <div className='w-full lg:w-1/2 flex items-center'>
-                      <h4 className='h4-info-user'>Delivered Date:</h4>
-                      <p className='p-info-user'>{shop.deliveredDate || 'No yet'}</p>
+                      <h4 className='h4-info-user'>Delivered Date: </h4>
+                      <p className='p-info-user'> {shop.deliveredDate || 'Not yet'}</p>
                     </div>
                   </div>
 
                   {/* Step Component */}
                   <div className='mt-4'>
-                    <span>Order Status:</span>
+                    <h1 className='text-[#f18966] font-bold mb-2 text-xl'>Order Status:</h1>
                     <Steps
                       current={statuses.findIndex((status) => status.title === currentStep[index])}
                     >
@@ -131,7 +131,7 @@ export default function OrderDetailPage() {
 
                   {/* Product List */}
                   <div className='mt-5'>
-                    <h4 className='font-medium'>Products:</h4>
+                    <h1 className=' text-[#f18966] font-bold mb-2 text-xl'>Products:</h1>
                     {shop.orderItems && Array.isArray(shop.orderItems) ? (
                       shop.orderItems.map((product, index) => {
                         // Kiểm tra nếu user đã feedback sản phẩm
@@ -150,16 +150,16 @@ export default function OrderDetailPage() {
                                 style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                               />
                             )}
-                            <p>{product.title}</p>
-                            <p>Price: {product.price}</p>
-                            <p>Quantity: {product.quantity}</p>
+                            <p className='font-bold text-sm text-[#f18966] mt-2'>{product.title}</p>
+                            <p className='text-xs'>Price: {product.price}</p>
+                            <p className='text-xs'>Quantity: {product.quantity}</p>
 
                             {/* Hiển thị nút Feedback nếu trạng thái là Delivered và user chưa feedback */}
                             {shop.status === 'Delivered' && !hasFeedbackByUser && (
                               <div className='mt-4 text-center'>
                                 <NavLink to={`/feedbackProduct/${orderId}/${product.productId}`}>
                                   <Button
-                                    className='btn btn-primary'
+                                    className='bg-[679089]'
                                     onClick={() =>
                                       console.log(`Feedback for Product ID: ${product.productId}`)
                                     }

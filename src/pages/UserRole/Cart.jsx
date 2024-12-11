@@ -293,9 +293,9 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   if (!showUI)
     return (
-      <div className='min-h-screen bg-[#EEE5DA] p-4 flex flex-col items-center'>
-        <div className='w-full max-w-4xl bg-[#F8F8F6] p-4 shadow-md rounded-xl'>
-          <h1 className='text-2xl text-[#679089] font-bold mb-4 flex items-center justify-center mt-5'>
+      <div className='min-h-screen p-4 flex flex-col items-center'>
+        <div className='w-full max-w-4xl bg-gradient-to-br from-[#e9e1d8] via-[#fdf6ee] to-transparent  p-4 shadow-md rounded-xl'>
+          <h1 className='text-2xl text-[#f18966] font-bold mb-4 flex items-center justify-center mt-5'>
             Shopping Cart
           </h1>
           {/* <div className=' p-0'>
@@ -303,7 +303,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <Button>Back</Button>
             </Link>
           </div> */}
-          <div className='flex justify-end pb-4'>
+          <div className='flex justify-end pb-4 '>
             <Popconfirm
               title='Are you sure you want to remove all items?'
               onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
@@ -331,7 +331,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
             <div>
               {groupedItems.map((group, index) => (
                 <div key={index}>
-                  <div className='flex items-center pl-4 p-2 bg-[#eee5da] rounded-t-lg py-2'>
+                  <div className='flex items-center pl-4 p-2 bg-[#679089]  rounded-t-lg py-2'>
                     <Checkbox
                       checked={group.shopSelect}
                       onChange={(e) => handleShopSelectChange(group.shopId, e.target.checked)}
@@ -383,7 +383,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
           {cartItems.length > 0 && (
             <div className='flex flex-col sm:flex-row justify-between items-center  gap-4 mt-8'>
-              <h2 className='text-md font-bold bg-[#E6DBCD] text-gray-900 rounded-lg p-2 px-3'>
+              <h2 className='text-md font-bold text-[#f18966] rounded-lg p-2 px-3'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
               <button

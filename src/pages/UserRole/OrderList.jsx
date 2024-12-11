@@ -141,7 +141,7 @@ export default function OrderList() {
         </Breadcrumb>
         <div className='p-4 min-h-96 bg-white rounded-lg'>
           <div className='header-shop-page px-5 flex items-center justify-between'>
-            <h1 className='lg:text-2xl xl:text-3xl font-semibold hidden lg:block text-[#679089]'>
+            <h1 className='lg:text-2xl xl:text-3xl font-bold hidden lg:block text-[#f18966]'>
               Order List
             </h1>
           </div>
@@ -157,7 +157,7 @@ export default function OrderList() {
               components={{
                 header: {
                   cell: ({ children, ...restProps }) => (
-                    <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                    <th {...restProps} style={{ backgroundColor: '', color: 'black' }}>
                       {children}
                     </th>
                   ),
