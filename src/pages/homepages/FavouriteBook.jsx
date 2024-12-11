@@ -1,18 +1,31 @@
 import { ArrowRightOutlined } from '@ant-design/icons';
 import productsApi from '../../hooks/useProductsApi';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // console.log(sortedBooks);
 
 export default function FavouriteBook() {
   const [books, setbooks] = useState([]);
-
+  const navigate = useNavigate();
+  const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
+  let [stockList, setStockList] = useState([]);
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const userId = useSelector((state) => state.user._id);
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await productsApi.getProductHomePage();
       setbooks(
         Array.isArray(response.data.favouriteProducts) ? response.data.favouriteProducts : [],
       );
+      stockList = response.data.favouriteProducts.map((book) => ({
+        productId: book._id,
+        stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
+      }));
+      setStockList(stockList);
     };
     fetchBooks();
   }, []);

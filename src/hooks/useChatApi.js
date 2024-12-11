@@ -17,6 +17,11 @@ const chatApi = {
         const url = CHAT_API_ENDPOINT + `/updateChat/${id}/${userId}`;
         return axiosClient.put(url, data);
     },
+
+    createChat: (id) => {
+        const url = CHAT_API_ENDPOINT + `/createChat/${id}`;
+        return axiosClient.post(url);
+    },
 }
 
 export default chatApi;

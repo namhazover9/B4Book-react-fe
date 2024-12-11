@@ -10,7 +10,7 @@ import {
 import { Card, Checkbox, Menu, Pagination, Select, Slider, Spin, Switch, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../../components/loading';
 import productsApi from '../../hooks/useProductsApi';
 import { addToCart } from '../../reducers/carts';
@@ -47,6 +47,15 @@ export default function ProductPage() {
   const [selectedAuthors, setSelectedAuthors] = useState([]);
   const [selectedSort, setSelectedSort] = useState('default');
 
+  const location = useLocation();
+
+  useEffect(() => {
+    // Kiểm tra nếu có state được truyền qua
+    if (location.state?.sort) {
+      setSelectedSort(location.state.sort); // Gán giá trị `sort` từ state
+    }
+  }, [location.state]);
+
   const userId = useSelector((state) => state.user._id);
   const fetchBooks = async () => {
     setLoading(true);
@@ -69,7 +78,7 @@ export default function ProductPage() {
         stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
       }));
       setStockList(stockList);
-      //console.log('Stock List:', stockList); // Hiển thị stock của tất cả sản phẩm
+      console.log('Stock List:', stockList);
       setFilterBooks(data.data);
       setTotalPages(response.data.totalPages);
     } catch (error) {

@@ -71,15 +71,17 @@ const AppRoutes = () => {
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
             if (userRole === 'Admin' && layout !== 'admin') {
-              return <Route key={key} path={path} element={<Navigate to="/admin" />} />;
+              return <Route key={key} path={path} element={<Navigate to='/admin' />} />;
             }
-            if (!hasAccess(layout) && isPrivate) {
+            if (hasAccess(layout)) {
+              return <Route key={key} path={path} element={getLayout(layout, element)} />;
+            }
+            if (!isPrivate) {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;
             }
-
-            return <Route key={key} path={path} element={getLayout(layout, element)} />;
           })}
-          <Route path="*" element={<NotFoundPage />} />
+
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </>
     </Suspense>
