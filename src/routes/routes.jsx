@@ -267,7 +267,7 @@ export const routes_here = [
   {
     path: '/:name/chat/:id/:chatId?',
     element: <ChatLayout />,
-    layout: 'shop',
+    layout: 'user',
     isPrivate: true,
   },
 ];
