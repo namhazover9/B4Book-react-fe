@@ -27,16 +27,19 @@ const Wishlist = lazy(() => import('@pages/UserRole/Wishlist'));
 const RegisterShop = lazy(() => import('@pages/UserRole/RegisterShop'));
 const OrderList = lazy(() => import('@pages/UserRole/OrderList'));
 const SaleData = lazy(() => import('@pages/SellerRole/SellData'));
+const Feedback = lazy(() => import('@pages/UserRole/FeedBack'));
 // admin Role
 const AccountManager = lazy(() => import('@pages/AdminRole/AccountManager'));
 const ApprovedShop = lazy(() => import('@pages/AdminRole/ApprovedShop'));
 const ApprovedProduct = lazy(() => import('@pages/AdminRole/ApproveProduct'));
+const WithdrawalAdmin = lazy(() => import('@pages/AdminRole/WithdrawalAdmin'));
 // const AdminPage = lazy(() => import('@pages/AdminRole/AdminPage'));
 const Dashboard = lazy(() => import('@pages/Dashboard/ECommerce'));
 const ProfileAdmin = lazy(() => import('@pages/Dashboard/Profile'));
 const AdminSetting = lazy(() => import('@pages/Dashboard/Settings'));
 
 // const SalePage = lazy(() => import("@pages/SaleRole/SalePage"));
+const Withdrawal = lazy(() => import('@pages/SellerRole/Withdrawal'));
 
 //Chat Page
 const ChatPage = lazy(() => import('@pages/SellerRole/ChatPage'));
@@ -103,6 +106,12 @@ export const routes_here = [
     isPrivate: true,
   },
   {
+    path: '/admin/allWithdrawals',
+    element: <WithdrawalAdmin />,
+    layout: 'admin',
+    isPrivate: true,
+  },
+  {
     path: '/cart',
     element: <Cart />,
     layout: 'customer',
@@ -113,6 +122,12 @@ export const routes_here = [
     element: <Wishlist />,
     layout: 'customer',
     isPrivate: true,
+  },
+  {
+    path: '/feedbackProduct/:orderId/:id',
+    element: <Feedback />,
+    layout: 'customer',
+    isPrivate: false,
   },
   {
     path: '/products',
@@ -169,8 +184,20 @@ export const routes_here = [
     isPrivate: false,
   },
   {
+    path: '/shop/:name/voucher/:id',
+    element: <DiscountPage />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
     path: '/shop/:name/profile/:id',
     element: <ProfileOfSeller />,
+    layout: 'seller',
+    isPrivate: false,
+  },
+  {
+    path: '/shop/:name/withdrawals/:id',
+    element: <Withdrawal />,
     layout: 'seller',
     isPrivate: false,
   },
@@ -218,6 +245,7 @@ export const routes_here = [
     layout: 'user',
     isPrivate: false,
   },
+
   {
     path: '/orderconfirm',
     element: <OrderConfirm />,
@@ -237,7 +265,7 @@ export const routes_here = [
   //   isPrivate: true,
   // },
   {
-    path: '/shop/:name/chat/:id/:chatId?',
+    path: '/:name/chat/:id/:chatId?',
     element: <ChatLayout />,
     layout: 'shop',
     isPrivate: true,

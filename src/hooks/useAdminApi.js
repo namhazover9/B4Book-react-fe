@@ -42,6 +42,20 @@ const adminApi = {
     const url = `${ADMIN_API_URL}/approvedProduct/${id}`;
     return axiosClient.put(url);
   },
+
+  getAllWithdrawals: (status) => {
+    const queryParams = new URLSearchParams({
+      status: status // Truyền sort dưới dạng status (nếu API yêu cầu)
+    }).toString();
+
+    const url = `${ADMIN_API_URL}/allWithdrawals?${queryParams}`;
+    return axiosClient.get(url);
+  },
+
+  updateWithdrawRequest: (requestId, status) => {
+    const url = `${ADMIN_API_URL}/withdrawals/update`;
+    return axiosClient.patch(url, { requestId, status }); // Gửi yêu cầu PATCH với dữ liệu body
+  },
 };
 
 export default adminApi;

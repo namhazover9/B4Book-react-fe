@@ -1,25 +1,25 @@
 import axios from 'axios';
-const token = localStorage.getItem('access_token');
+
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'content-type': 'application/json',
-    'token':"Bearer "+token
   },
   withCredentials: true,
 });
 
-export { axiosClient };
+// Add a request interceptor to dynamically set the token
+axiosClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers['token'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-// // Hàm kiểm tra kết nối
-// export const testBackendConnection = async () => {
-//     console.log(import.meta.env.VITE_API_BASE_URL);
-//   try {
-//     const response = await axiosClient.get("/auth/google"); // Thay /ping bằng endpoint test của bạn
-//     console.log("Kết nối thành công:", response.data);
-//     return true;
-//   } catch (error) {
-//     console.error("Kết nối thất bại:", error.message);
-//     return false;
-//   }
-// };
+export { axiosClient };

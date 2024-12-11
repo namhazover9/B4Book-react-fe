@@ -73,14 +73,14 @@ function ForgotPassword() {
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .trim()
-      .required('* Email bạn là gì ?')
-      .email('* Email không hợp lệ !'),
+      .required('* Your Email ?')
+      .email('* Invalid Email !'),
     newPassword: Yup.string()
       .trim()
-      .required('* Mật khẩu của bạn là gì ?'),
+      .required('* Your Password ?'),
     verifyCode: Yup.string()
       .trim()
-      .required('* Nhập mã xác nhận')
+      .required('* Enter OTP')
   });
 
   return (
@@ -91,8 +91,8 @@ function ForgotPassword() {
           <Navigate to={constants.ROUTES.LOGIN} />
         </Delay>
       )}
-      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-center text-2xl font-bold mb-6">Thay đổi mật khẩu</h1>
+      <div className="w-full max-w-md bg-[#eee5da] shadow-lg rounded-lg p-6">
+        <h1 className="text-center text-2xl font-bold mb-6 text-[#f18966]">Change Password</h1>
         <Formik
           initialValues={initialValue}
           validationSchema={validationSchema}
@@ -110,7 +110,7 @@ function ForgotPassword() {
                   placeholder="Email *"
                   size="large"
                   suffix={
-                    <Tooltip title="Email của bạn">
+                    <Tooltip title="Your Email">
                       <InfoCircleOutlined style={{ color: suffixColor }} />
                     </Tooltip>
                   }
@@ -121,7 +121,7 @@ function ForgotPassword() {
                   component={InputField}
                   className="w-full"
                   type="password"
-                  placeholder="Mật khẩu mới *"
+                  placeholder="New Password *"
                   size="large"
                   iconRender={(visible) =>
                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -133,7 +133,7 @@ function ForgotPassword() {
                     name="verifyCode"
                     component={InputField}
                     className="flex-1"
-                    placeholder="Mã xác nhận *"
+                    placeholder="Verified Code *"
                     size="large"
                     suffix={
                       <Tooltip title="Click gửi mã để nhận mã qua email">
@@ -142,27 +142,27 @@ function ForgotPassword() {
                     }
                   />
                   <Button
-                    className="w-full"
-                    type="primary"
+                    className="w-full bg-[#679089] text-white font-semibold"
+
                     size="large"
                     onClick={onSendCode}
                     loading={isSending}>
-                    Gửi mã
+                    Send OTP
                   </Button>
                 </div>
                 {/* Nút Submit */}
                 <Button
-                  className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600"
+                  className="w-full bg-[#679089] text-white font-semibold py-2 rounded hover:bg-[#679089]"
                   size="large"
-                  type="primary"
+
                   htmlType="submit"
                   loading={isSubmitting}>
-                  Thay đổi mật khẩu
+                  Confirm Change
                 </Button>
                 <div className="text-center text-gray-600">
-                  Quay lại <Link to={constants.ROUTES.LOGIN} className="text-blue-500">Đăng nhập</Link>
-                  &nbsp; Hoặc &nbsp;
-                  <Link to={constants.ROUTES.SIGNUP} className="text-blue-500">Đăng ký</Link>
+                  Back to <Link to={constants.ROUTES.LOGIN} className="text-blue-500">Login</Link>
+                  &nbsp; or &nbsp;
+                  <Link to={constants.ROUTES.SIGNUP} className="text-blue-500">Sign up</Link>
                 </div>
               </Form>
             );
