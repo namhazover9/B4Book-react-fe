@@ -271,7 +271,7 @@ export default function ProductPage() {
 
   return (
     <div className='container mx-auto'>
-      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#eee5da] to-transparent'>
+      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#f8f4ef] to-transparent'>
         <h1 className='hidden sm:block text-2xl text-red-500 font-medium'>
           <h1 className='text-lg text-black sm:hidden md:block font-bold'>Welcome to</h1> <span className=' text-[#F18966] sm:hidden md:block  font-bold'>Books Page!</span>
         </h1>
@@ -442,7 +442,7 @@ export default function ProductPage() {
                             >
                               <div
                                 id={index}
-                                className='bg-gradient-to-tl from-[#eee5da] to-transparent w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
+                                className='bg-gradient-to-tl from-[#f8f4ef] to-transparent w-11/12 sm:w-full h-auto p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-md sm:mb-4'
                               >
                                 <div className='relative group overflow-hidden rounded-lg mb-4'>
                                   <img

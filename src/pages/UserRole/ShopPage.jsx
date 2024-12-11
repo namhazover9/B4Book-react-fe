@@ -83,7 +83,7 @@ export default function ShopPage() {
 
   return (
     <div className='container mx-auto'>
-      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#eee5da] to-transparent'>
+      <div className='header my-5 p-5 sm:p-10 flex justify-center sm:justify-between items-center bg-gradient-to-tl from-[#f8f4ef] to-transparent'>
         <h1 className='hidden sm:block text-2xl text-[#f18966] font-bold'>
           <span className='text-lg text-black sm:hidden md:block'>Welcome to</span> Shops Page!
         </h1>
@@ -137,7 +137,7 @@ export default function ShopPage() {
                         const imageUrl = shop.images[0] ? shop.images[0] : 'https://res.cloudinary.com/dmyfiyug9/image/upload/v1732181350/VuHoangNam_wbngk0.jpg';
                         return (
                           <div className='' key={index}>
-                            <div className="flex sm:flex-col items-start sm:items-center justify-between sm:justify-start md:w-5/6 lg:w-11/12 mx-auto hover:shadow-lg duration-300 ease-in-out rounded-md mb-4 bg-gradient-to-tl from-[#eee5da] to-transparent">
+                            <div className="flex sm:flex-col items-start sm:items-center justify-between sm:justify-start md:w-5/6 lg:w-11/12 mx-auto hover:shadow-lg duration-300 ease-in-out rounded-md mb-4 bg-gradient-to-tl from-[#f8f4ef] to-transparent">
                               <div className='relative group overflow-hidden w-1/2 sm:w-11/12 m-2 rounded-lg'>
                                 <div className="w-full h-55"> 
                                   <img
