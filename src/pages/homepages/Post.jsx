@@ -60,8 +60,8 @@ const BlogSection = () => {
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
         <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-3xl font-bold'>Blog Posts</h2>
-          <button className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+          <h2 className='text-3xl font-bold text-[#f18966]'>Blog Posts</h2>
+          <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
             View All <ArrowRightOutlined className='w-4 h-4' />
           </button>
         </div>

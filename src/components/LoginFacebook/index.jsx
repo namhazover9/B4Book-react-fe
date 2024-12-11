@@ -47,7 +47,7 @@ function LoginFacebook({ title = 'Facebook', className = '' }) {
       appId={import.meta.env.VITE_FACEBOOK_APP_ID}
       fields='name,email,picture'
       callback={responseFacebook}
-      cssClass={`flex items-center justify-between px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-md shadow-lg cursor-pointer ${className}`}
+      cssClass={`flex w-full items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-md shadow-lg cursor-pointer ${className}`}
       icon='fa-facebook'
       textButton={title}
     />

@@ -5,10 +5,11 @@ import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import shopApi from '../../hooks/useShopApi';
+import { useParams } from 'react-router-dom';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
-
+  const shopName = useParams().name;
   const normFileAddProduct = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -43,8 +44,8 @@ export default function ProfileOfSeller() {
     <div>
       <Content className='mx-2 lg:mx-5'>
         <Breadcrumb className='mb-2 lg:my-5 lg:mx-3 text-base'>
-          <Breadcrumb.Item>Shop Page</Breadcrumb.Item>
-          <Breadcrumb.Item>Profile of NameShop</Breadcrumb.Item>
+          <Breadcrumb.Item>Your Profile</Breadcrumb.Item>
+          <Breadcrumb.Item className='text-[#f18966] font-bold'>{shopName}</Breadcrumb.Item>
         </Breadcrumb>
         <div className='h-screen'>
           <div className='flex flex-col items-center relative mt-5 lg:-mt-8'>

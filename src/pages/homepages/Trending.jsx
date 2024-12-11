@@ -2,15 +2,6 @@
 import { Button, Carousel } from 'antd';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import pic1 from '../../assets/images/BestSelling/1.jpg';
-import pic2 from '../../assets/images/BestSelling/4.jpg';
-import pic3 from '../../assets/images/BestSelling/7.jpg';
-import pic4 from '../../assets/images/BestSelling/9.jpg';
-import pic5 from '../../assets/images/BestSelling/12.jpg';
-import pic6 from '../../assets/images/BestSelling/13.jpg';
-import pic7 from '../../assets/images/BestSelling/15.jpg';
-import pic8 from '../../assets/images/BestSelling/16.jpg';
-import pic9 from '../../assets/images/BestSelling/30.jpg';
 import store1 from '../../assets/images/BestSelling/h6_banner4.jpg';
 import productsApi from '../../hooks/useProductsApi';
 import { useEffect, useState } from 'react';
@@ -41,9 +32,9 @@ const BookShowcase = () => {
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
         <div className='flex justify-between items-center mb-4'>
-          <h2 className='text-3xl font-bold'>Trending Now</h2>
+          <h2 className='text-3xl font-bold text-[#f18966]'>Trending Now</h2>
           <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-          <button className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+          <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
             View All <ArrowRightOutlined className='w-4 h-4' />
           </button>
         </div>
