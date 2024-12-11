@@ -238,6 +238,7 @@ export default function SellerPage() {
         <span className={isApproved ? 'text-green-500' : 'text-red-500'}>
           {isApproved ? 'Approve' : 'Unapproved'}
         </span>
+        
       ),
     },
     
@@ -414,6 +415,7 @@ export default function SellerPage() {
                       stock: product.stock,
                       salesNumber: product.salesNumber,
                       price: product.price,
+                      isApproved: product.isApproved,
                     }))
                   : []
               }
