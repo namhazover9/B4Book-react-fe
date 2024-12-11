@@ -356,6 +356,7 @@ export default function ProductPage() {
               <Slider
                 range
                 defaultValue={priceRange}
+                onChange={handlePriceRangeChange}
                 max={200000}
                 className='w-full md:w-5/6 mx-auto'
                 disabled={disabled}

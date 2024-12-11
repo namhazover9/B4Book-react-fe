@@ -7,16 +7,11 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import shopApi from '../../hooks/useShopApi';
-import { useParams } from 'react-router-dom';
 import { message } from 'antd';
-import { use } from 'react';
-import { desc, s, text } from 'framer-motion/client';
-import { set } from 'react-hook-form';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [shop, setShop] = useState({});
-  const shopName = useParams().name;
   const [isModalAddressOpen, setIsModalAddressOpen] = useState(false);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
   const [newAddress, setNewAddress] = useState({ street: '', city: '', country: '' });
@@ -148,7 +143,7 @@ export default function ProfileOfSeller() {
     const fetchShop = async () => {
       try {
         const response = await shopApi.shopInfo();
-
+        console.log(response.data);
         setShop(response.data);
       } catch (error) {
         console.log(error);
@@ -160,7 +155,6 @@ export default function ProfileOfSeller() {
 
   // Lấy ảnh đầu tiên từ mảng images (nếu có)
   const shopImage = shop.images && shop.images[0] ? shop.images[0] : '';
-
   const validationSchema = Yup.object().shape({
     shopEmail: Yup.string().email('Invalid email format').required('Email is required'),
     shopName: Yup.string().required('Shop name is required'),
@@ -220,6 +214,7 @@ export default function ProfileOfSeller() {
                       shopName: shop.shopName || '',
                       shopAddress: (shop.address && shop.address.length > 0) ? `${shop.address[0].street}, ${shop.address[0].city}, ${shop.address[0].country}` : '', // Hiển thị địa chỉ đầu tiên
                       phoneNumber: shop.phoneNumber || '',
+                      uploadImage: shop.images  || [],
                     }}
                     validationSchema={validationSchema}
                     onSubmit={async (values, { setSubmitting, setFieldError }) => {
@@ -229,7 +224,6 @@ export default function ProfileOfSeller() {
                         formData.append('shopEmail', values.shopEmail);
                         formData.append('shopName', values.shopName);
                         formData.append('phoneNumber', values.phoneNumber);
-                
 
                         // Make the API call to post the new product
                         console.log('Form Data:', Object.fromEntries(formData));

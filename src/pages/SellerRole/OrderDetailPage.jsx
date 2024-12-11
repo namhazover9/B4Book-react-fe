@@ -17,8 +17,9 @@ import { Breadcrumb, Button, Carousel, message, Steps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import orderApi from '../../hooks/useOrderApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import comLoading from '../../components/loading';
+import chatApi from '../../hooks/useChatApi';
 
 // Carousel
 const contentStyle = {
@@ -52,10 +53,10 @@ const CustomArrow = ({ className, style, onClick }) => {
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
-  const { id } = useParams();
+  const { id, name } = useParams();
   const [loading, setLoading] = useState(true);
   const [orderDetail, setOrderDetail] = useState(null);
-
+  const navigate = useNavigate();
   const statuses = [
     { title: 'Pending', icon: <LoadingOutlined /> },
     { title: 'Confirmed', icon: <CheckCircleOutlined /> },
@@ -103,7 +104,12 @@ export default function OrderDetailPage() {
 
       setCurrentStep(orderStatus); // Gán trạng thái từ API
       setCompletedSteps(
-        statuses.slice(0, statuses.findIndex((item) => item.title === orderStatus)).map((item) => item.title)
+        statuses
+          .slice(
+            0,
+            statuses.findIndex((item) => item.title === orderStatus),
+          )
+          .map((item) => item.title),
       ); // Cập nhật các bước đã hoàn thành
       setOrderDetail(response.data);
     } catch (error) {
@@ -119,16 +125,25 @@ export default function OrderDetailPage() {
   }, [orderId]);
 
   if (loading) {
-    return <div><comLoading/></div>;
+    return (
+      <div>
+        <comLoading />
+      </div>
+    );
   }
 
   if (!orderDetail) {
     return <div>Order detail not found.</div>;
   }
 
-  const { customer, shops, paymentMethod, createdAt, shippingAddress } =
-    orderDetail.data;
+  const { customer, shops, paymentMethod, createdAt, shippingAddress } = orderDetail.data;
 
+  const handleCreateChat = async () => {
+    const response = await chatApi.createChat(customer._id);
+    if (response.status === 200) {
+      navigate(`/${name}/chat/${id}/:chatId?`);
+    }
+  };
   // Hàm chuyển trạng thái
   const handleNextStatus = async () => {
     if (currentStep === 'Delivered') {
@@ -139,9 +154,7 @@ export default function OrderDetailPage() {
     try {
       // Gọi API để cập nhật trạng thái
       const response = await orderApi.updateStatusOrder(orderId, id);
-      const updatedShop = response.data.data.shops.find(
-        (shop) => shop.shopId === id
-      );
+      const updatedShop = response.data.data.shops.find((shop) => shop.shopId === id);
       const updatedStatus = updatedShop.status; // Trạng thái mới từ backend
 
       // Cập nhật trạng thái tiếp theo và UI
@@ -186,8 +199,19 @@ export default function OrderDetailPage() {
                       }
                       alt='Customer Image'
                     />
-                    <h2 className='text-sm font-medium w-2/3 text-end'>Order ID: <span className='text-[#F18966] italic'>#{orderId}</span></h2>
+                    <div className='flex flex-col items-end w-2/3'>
+                      <h2 className='text-sm font-medium text-end'>
+                        Order ID: <span className='text-[#F18966] italic'>#{orderId}</span>
+                      </h2>
+                      <button
+                        onClick={handleCreateChat}
+                        className='bg-[#679089] text-white px-3 py-1.5 rounded-full border-2 hover:bg-white hover:border-2 border-[#679089] hover:text-[#679089] duration-300 ease-in-out mt-2'
+                      >
+                        Chat with customer!
+                      </button>
+                    </div>
                   </div>
+
                   <div className='lg:w-full mx-auto border bottom-2 rounded-lg py-4 px-2'>
                     <div className='flex flex-col justify-between lg:items-center mb-4 lg:mb-2'>
                       <div className='w-full lg:w-11/12 flex items-center justify-between mb-5'>
@@ -204,63 +228,66 @@ export default function OrderDetailPage() {
                       </div>
                       <div className='w-full lg:w-11/12 flex items-center justify-between'>
                         <h4 className='h4-info-user'>Address:</h4>
-                        <p className='p-info-user'>{shippingAddress?.address + ', ' + shippingAddress?.city || 'No address'}</p>
+                        <p className='p-info-user'>
+                          {shippingAddress?.address + ', ' + shippingAddress?.city || 'No address'}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="info-order w-11/12 lg:w-5/6 mx-auto">
+            <div className='info-order w-11/12 lg:w-5/6 mx-auto'>
               <div className='w-full bg-white rounded-t-xl rounded-b-lg lg:shadow-lg mx-auto bottom-5 lg:h-80'>
-                <div className="bg-[#F18966] py-1 rounded-r-xl rounded-l-xl text-center text-white mb-3">
+                <div className='bg-[#F18966] py-1 rounded-r-xl rounded-l-xl text-center text-white mb-3'>
                   Information Order
                 </div>
                 <div className='flex flex-col justify-between items-center pl-4 lg:pl-0 lg:mt-0 lg:mb-5 border lg:border-0 p-2 rounded-lg'>
                   <div className='w-full lg:w-11/12 flex flex-col lg:flex-row items-start justify-between lg:items-center space-y-2 lg:space-y-0 mt-2 lg:mt-0 mb-3.5'>
                     <h4 className='h4-info-user w-2/5 ml-2 lg:ml-0 truncate'>Payment Method:</h4>
-                    <div className="border-2 flex space-x-2 px-3 py-1 rounded-3xl">
+                    <div className='border-2 flex space-x-2 px-3 py-1 rounded-3xl'>
                       <WalletOutlined className='text-[#679089]' />
                       <p className='p-info-user'>{paymentMethod}</p>
                     </div>
                   </div>
                   <div className='w-full lg:w-11/12 flex flex-col lg:flex-row items-start justify-between lg:items-center space-y-2 lg:space-y-0 mb-3.5'>
                     <h4 className='h4-info-user w-2/5 ml-2 lg:ml-0 truncate'>Order Date:</h4>
-                    <div className="border-2 flex space-x-2 px-3 py-1 rounded-3xl">
+                    <div className='border-2 flex space-x-2 px-3 py-1 rounded-3xl'>
                       <ClockCircleOutlined className='text-[#679089]' />
                       <p className='p-info-user'>{createdAt}</p>
                     </div>
                   </div>
                   <div className='w-full lg:w-11/12 flex flex-col lg:flex-row items-start justify-between lg:items-center space-y-2 lg:space-y-0 mb-3.5'>
                     <h4 className='h4-info-user w-2/5 ml-2 lg:ml-0 truncate'>Shipping Date:</h4>
-                    <div className="border-2 flex space-x-2 px-3 py-1 rounded-3xl">
+                    <div className='border-2 flex space-x-2 px-3 py-1 rounded-3xl'>
                       <FieldTimeOutlined className='text-[#679089]' />
                       <p className='p-info-user'>{shops?.[0].shippedDate || 'No shipping date'}</p>
                     </div>
                   </div>
                   <div className='w-full lg:w-11/12 flex flex-col lg:flex-row items-start justify-between lg:items-center space-y-2 lg:space-y-0 mb-3.5'>
                     <h4 className='h4-info-user w-2/5 ml-2 lg:ml-0 truncate'>Delivered Date:</h4>
-                    <div className="border-2 flex space-x-2 px-3 py-1 rounded-3xl">
+                    <div className='border-2 flex space-x-2 px-3 py-1 rounded-3xl'>
                       <FieldTimeOutlined className='text-[#679089]' />
-                      <p className='p-info-user'>{shops?.[0].deliveredDate || 'No delivered date'}</p>
+                      <p className='p-info-user'>
+                        {shops?.[0].deliveredDate || 'No delivered date'}
+                      </p>
                     </div>
                   </div>
                   <div className='w-full lg:w-11/12 flex flex-col lg:flex-row items-start justify-between lg:items-center space-y-2 lg:space-y-0 mb-2 lg:mb-5'>
                     <h4 className='h4-info-user w-2/5 ml-2 lg:ml-0 truncate'>Total price:</h4>
-                    <div className="border-2 flex space-x-2 px-3 py-1 rounded-3xl">
+                    <div className='border-2 flex space-x-2 px-3 py-1 rounded-3xl'>
                       <BankOutlined className='text-[#679089]' />
-                      <p className='p-info-user'>{shops &&
-                        shops.length > 0 &&
-                        shops[0].orderItems &&
-                        shops[0].orderItems.length > 0 && (
-                          <div className=''>
-                            {shops[0].totalShopPrice + ' $'}
-                          </div>
-                        )}</p>
+                      <p className='p-info-user'>
+                        {shops &&
+                          shops.length > 0 &&
+                          shops[0].orderItems &&
+                          shops[0].orderItems.length > 0 && (
+                            <div className=''>{shops[0].totalShopPrice + ' $'}</div>
+                          )}
+                      </p>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -298,8 +325,8 @@ export default function OrderDetailPage() {
                     currentStep === status.title
                       ? 'process'
                       : completedSteps.includes(status.title)
-                        ? 'finish'
-                        : 'wait',
+                      ? 'finish'
+                      : 'wait',
                 }))}
               />
             </div>
@@ -344,9 +371,14 @@ export default function OrderDetailPage() {
                               </div>
                               <div className='ml-2 sm:ml-0 px-2 pb-2 w-11/12 mx-auto'>
                                 <h3 className='text-base font-semibold h-14'>{items.title}</h3>
-                                <div className="flex justify-between items-center">
+                                <div className='flex justify-between items-center'>
                                   <p className='text-[#F18966] font-bold'>{items.price} $</p>
-                                  <p className='text-xs'>Quantity: <span className='text-[#679089] font-medium'>{items.quantity}</span></p>
+                                  <p className='text-xs'>
+                                    Quantity:{' '}
+                                    <span className='text-[#679089] font-medium'>
+                                      {items.quantity}
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
                             </div>

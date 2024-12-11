@@ -46,9 +46,9 @@ const SideBarChat = () => {
                 // Cập nhật role dựa trên dữ liệu trả về
                 const userRole = contactList[0]?.role// Mặc định là customer nếu không có type
                 if (userRole === 'shop') {
-                    setRole('shop');
+                    setRole('customer');
                 } else { // Cập nhật state role}
-                    setRole("customer");
+                    setRole("shop");
                 }
             }
         } catch (error) {
@@ -70,7 +70,6 @@ const SideBarChat = () => {
 
     // Hàm để xác định URL quay lại tùy theo role
     const handleBackNavigation = () => {
-        console.log(role);
         if(role === null){
             if(id === userId){
               setRole("customer");
