@@ -43,7 +43,7 @@ const productsApi = {
   },
 
   exportFileProducts: () => {
-    const url =`${ACCOUNT_API_ENDPOINT}/exportFile`; // Chỉnh lại URL đúng format
+    const url =`${PRODUCT_API_ENDPOINT}/exportFile`; // Chỉnh lại URL đúng format
     return axiosClient.get(url,{ responseType: 'blob' });
   },
 
@@ -59,7 +59,7 @@ const productsApi = {
   },
 
   removeImage: (id, imageUrl) => {
-    const url = `${ACCOUNT_API_ENDPOINT}/${id}/remove-image`;
+    const url = `${PRODUCT_API_ENDPOINT}/${id}/remove-image`;
     return axiosClient.delete(url, {
       data: { imageUrl }, // Gửi URL của hình ảnh cần xóa
     });
