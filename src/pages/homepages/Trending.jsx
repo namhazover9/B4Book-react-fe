@@ -7,18 +7,18 @@ import productsApi from '../../hooks/useProductsApi';
 import { useEffect, useState } from 'react';
 
 const BookShowcase = () => {
-  const [books, setbooks] = useState([]); 
-  
+  const [books, setbooks] = useState([]);
+
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await productsApi.getProductHomePage();
-      console.log(response.data.trendingProducts);  
+      console.log(response.data.trendingProducts);
 
       setbooks(Array.isArray(response.data.trendingProducts) ? response.data.trendingProducts : []);
     };
     fetchBooks();
   }, []);
-  
+
 
   const banner = {
     id: 1,
@@ -27,7 +27,7 @@ const BookShowcase = () => {
     detail: '20%',
     contact: 'Shop Now',
   };
-  
+
   return (
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
       <div className='max-w-6xl mx-auto px-4 py-5'>
@@ -64,7 +64,7 @@ const BookShowcase = () => {
               ]}
             >
               {books.map((book) => (
-                
+
                 <div key={book._id} className='w-1/4 p-2 '>
                   <div className='group relative '>
                     <div className='relative overflow-hidden rounded-2xl '>

@@ -18,6 +18,7 @@ import { Content } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import orderApi from '../../hooks/useOrderApi';
 import { useParams } from 'react-router-dom';
+import comLoading from '../../components/loading';
 
 // Carousel
 const contentStyle = {
@@ -38,10 +39,10 @@ const CustomArrow = ({ className, style, onClick }) => {
       style={{
         ...style,
         zIndex: 1,
-        marginTop: isSmallScreen ? '-20px' : undefined,
-        marginBottom: isSmallScreen ? '-20px' : undefined,
-        marginRight: !isSmallScreen && isNext ? '-20px' : undefined,
-        marginLeft: !isSmallScreen && !isNext ? '-20px' : undefined,
+        marginTop: isSmallScreen ? '-25px' : undefined,
+        marginBottom: isSmallScreen ? '-25px' : undefined,
+        marginRight: !isSmallScreen && isNext ? '-25px' : undefined,
+        marginLeft: !isSmallScreen && !isNext ? '-25px' : undefined,
         color: 'red',
       }}
       onClick={onClick}
@@ -118,7 +119,7 @@ export default function OrderDetailPage() {
   }, [orderId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><comLoading/></div>;
   }
 
   if (!orderDetail) {
@@ -171,7 +172,7 @@ export default function OrderDetailPage() {
           <Breadcrumb.Item>Order Details</Breadcrumb.Item>
           <Breadcrumb.Item className='text-[#f18966] font-bold'>Tracking</Breadcrumb.Item>
         </Breadcrumb>
-        <div className='lg:mx-1 w-full lg:p-3 min-h-96 bg-white rounded-lg flex flex-col items-center'>
+        <div className='lg:mx-1 w-full lg:p-3 min-h-96 bg-white rounded-lg flex flex-col items-center pb-8'>
           <div className='profile-user-order w-full lg:w-11/12 lg:my-4 mt-4 flex flex-col lg:flex-row justify-center lg:items-start lg:space-x-8'>
             <div className='info-user w-full lg:w-3/4'>
               <div className='w-full bg-white rounded-lg lg:shadow-lg mx-auto bottom-5 lg:h-80'>
@@ -320,7 +321,7 @@ export default function OrderDetailPage() {
                     {
                       breakpoint: 768,
                       settings: {
-                        slidesToShow: 3,
+                        slidesToShow: 2,
                         slidesToScroll: 1,
                       },
                     },
@@ -333,7 +334,7 @@ export default function OrderDetailPage() {
                       shop.orderItems && shop.orderItems.length > 0 ? (
                         shop.orderItems.map((items) => (
                           <div key={items._id} className='' style={contentStyle}>
-                            <div className='flex items-center sm:flex-col border border-solid border-gray-300 p-1 rounded-xl mx-0'>
+                            <div className='flex items-center sm:flex-col border border-solid border-gray-300 p-1 rounded-xl mx-0 sm:mx-2 my-2 sm:my-0'>
                               <div className='overflow-hidden rounded-lg sm:mb-2 h-full w-1/2 sm:w-full lg:w-full'>
                                 <img
                                   src={items.images[0]}
@@ -341,16 +342,7 @@ export default function OrderDetailPage() {
                                   className='w-full h-52 object-cover transform transition-transform duration-500 ease-in-out hover:scale-105'
                                 />
                               </div>
-                              <div className='ml-2 sm:ml-0 px-2 pb-2'>
-                                {/* <h4 className='w-11/12 text-base font-medium truncate'>{items.title}</h4>
-                                <p className='text-gray-600 font-medium text-xs italic'>
-                                  {items.author}
-                                </p>
-                                <p className='text-[#f18966] text-base font-medium'>${items.price}</p>
-                                <p className='text-gray-600 font-medium text-xs'>
-                                  Quantity:{' '}
-                                  <span className='text-red-500 text-sm'>{items.quantity}</span>
-                                </p> */}
+                              <div className='ml-2 sm:ml-0 px-2 pb-2 w-11/12 mx-auto'>
                                 <h3 className='text-base font-semibold h-14'>{items.title}</h3>
                                 <div className="flex justify-between items-center">
                                   <p className='text-[#F18966] font-bold'>{items.price} $</p>

@@ -14,10 +14,12 @@ export default function SideBarSeller({ onToggle, isOpen }) {
         { title: "Profile", icon: <ProfileOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/profile/${shopDetail?._id}` },
         { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/orders/${shopDetail?._id}` },
-        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: "/shop-HoangNam/sale-data" },
+
+        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/saleData/${shopDetail?._id}` },
+
         { title: "Withdrawal", icon: <WalletOutlined className='text-2xl' />, path:  `/shop/${shopDetail?.shopName}/withdrawals/${shopDetail?._id}`},   
         { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}`},
-        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
+        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
         { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl' />, path: "/" },
     ];
 
@@ -48,9 +50,8 @@ export default function SideBarSeller({ onToggle, isOpen }) {
             <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-gradient-to-br from-[#679089] via-[#679079] to-[#679069] hidden lg:block rounded-l-lg`}>
                 <div className="w-64 h-20">
                     <div className="w-3/5 flex justify-between items-center mx-2">
-                        <img src={shopDetail?.images[0] || "https://via.placeholder.com/150"} // Hiển thị ảnh đầu tiên
+                        <img src={shopDetail?.images[0] || "https://via.placeholder.com/150"} 
                             alt="Shop" className={`cursor-pointer duration-500 rounded-full w-16 h-16 my-2`} />
-                        <p className={`shop-name ml-2 mb-0 text-black text-base origin-left font-semibold italic duration-300 truncate ${!isOpen && "scale-0"}`}>{shopDetail?.shopName}</p>
                     </div>
                 </div>
                 <RightOutlined className={`${isOpen && "rotate-180"} absolute text-3xl cursor-pointer -right-4 top-16 w-8 border-2 bg-slate-50 text-slate-500 border-slate-50 rounded-full`} onClick={onToggle} />

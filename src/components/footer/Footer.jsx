@@ -14,14 +14,14 @@ const Footer = () => {
       {/* Main Container */}
       <div className='container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 '>
         {/* Logo and Contact Info */}
-        <div className='space-y-4 lg:justify-start mr-15'>
+        <div className='space-y-4 lg:justify-start'>
           <div className='space-x-4 sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
             <div className='rounded-full bg-gray-100 p-4 flex items-center justify-center'>
               <img src='https://res.cloudinary.com/dmyfiyug9/image/upload/v1733819443/lgbf_qyw8ac.png' alt='Logo' className='w-16 h-16' />
             </div>
             
           </div>
-          <p className='text-gray-300 sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
+          <p className='text-gray-300 hidden sm:flex sm:justify-center sm:items-center sm:text-center justify-center items-center text-center'>
             Got Questions? Call us 24/7!
           </p>
           <p className='text-lg sm:text-xl font-semibold text-[#f18966] sm:flex sm:justify-center sm:items-center sm:text-center flex justify-center items-center text-center'>
@@ -89,11 +89,11 @@ const Footer = () => {
             Copyright © 2024 <span className="text-[#f18966]">Big Four</span>. All rights reserved.
           </p>
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center order-1 lg:order-2">
           <img
             src={footer}
             alt="Payment Methods"
-            className="h-10"
+            className="h-10 mb-5"
           />
         </div>
       </div>

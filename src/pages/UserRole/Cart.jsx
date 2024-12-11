@@ -91,7 +91,13 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     }
   }, [cartItems, onTotalPriceChange, onCartItemsChange]);
 
-  const totalPriceAfterDiscount = totalPriceBeforeDiscount - discount;
+  const totalPriceAfterDiscount = cartItems.reduce((total, item) => {
+    if (item.select) {
+      const itemTotal = item.price * item.quantity;
+      return total + itemTotal;
+    }
+    return total - discount;
+  }, 0) - discount;
 
   // Handle quantity change
   const handleQuantityChange = async (id, quantity) => {
@@ -165,17 +171,19 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
   const handleSelectItems = (selectedItems) => {
     if (selectedItems.length === 0) {
       message.warning('Please select at least one item to checkout');
+
       return;
-    }else{
+    } else {
       dispatch(setSelectedItems(selectedItems));
       navigate('/order');
     }
-    
+
   };
   const columns = [
     {
-      title: 'Select',
+      title: '',
       key: 'select',
+      className: 'w-[4.5em] ',
       render: (_, record) => (
         <Checkbox
           checked={record.select}
@@ -188,25 +196,27 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
       title: 'Image',
       dataIndex: 'images',
       key: 'image',
+      className: 'w-[8em] ',
       render: (images) => <img src={images[0]} alt='Product' className='w-12 h-12 object-cover' />,
     },
     {
       title: 'Product Name',
       dataIndex: 'title',
       key: 'title',
-      className: 'min-w-[120px]',
+      className: 'min-w-[120px] lg:w-[15em]',
     },
     {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
       render: (price) => `$${price}`,
-      className: 'min-w-[80px]',
+      className: 'min-w-[80px] w-[10em] ',
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      className: 'w-[7em] ',
       render: (_, record) => (
         <InputNumber
           min={1}
@@ -237,6 +247,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
     {
       title: 'Actions',
       key: 'actions',
+      className: '',
       render: (_, record) => (
         <Popconfirm
           title='Are you sure you want to remove this item?'
@@ -246,7 +257,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           getPopupContainer={(triggerNode) => triggerNode.parentNode}
         >
           <Button type='danger'>
-            <CloseOutlined />
+            <DeleteOutlined className='text-lg text-black hover:text-red-700  m-4' />
           </Button>
         </Popconfirm>
       ),
@@ -282,30 +293,32 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
   if (!showUI)
     return (
-      <div className='min-h-screen bg-gray-100 p-4 flex flex-col items-center'>
-        <div className='w-full max-w-4xl bg-white p-4 shadow-md rounded-lg'>
-          <h1 className='text-2xl font-bold mb-4 flex items-center justify-center'>
+      <div className='min-h-screen bg-[#EEE5DA] p-4 flex flex-col items-center'>
+        <div className='w-full max-w-4xl bg-[#F8F8F6] p-4 shadow-md rounded-xl'>
+          <h1 className='text-2xl text-[#679089] font-bold mb-4 flex items-center justify-center mt-5'>
             Shopping Cart
           </h1>
-          <div className='mb-5 p-0'>
+          {/* <div className=' p-0'>
             <Link to='/'>
               <Button>Back</Button>
             </Link>
-          </div>
-          <Popconfirm
-            title='Are you sure you want to remove this item?'
-            onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
-            okText='Yes'
-            cancelText='No'
-            getPopupContainer={(triggerNode) => triggerNode.parentNode}
-          >
-            <button
-              type='primary'
-              className='bg-red-500 hover:bg-red-600 w-10 h-10 sm:w-auto flex items-center justify-center rounded-lg'
+          </div> */}
+          <div className='flex justify-end pb-4'>
+            <Popconfirm
+              title='Are you sure you want to remove all items?'
+              onConfirm={() => clearUserCart()} // Gọi API xóa khi xác nhận
+              okText='Yes'
+              cancelText='No'
+              getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >
-              <DeleteOutlined className='text-xl text-white m-4' />
-            </button>
-          </Popconfirm>
+              <button
+                type='primary'
+                className=' w-15 h-15 sm:w-auto flex items-center justify-center rounded-lg'
+              >
+                <p className='text-red-400 hover:text-red-700'>Delete All</p>
+              </button>
+            </Popconfirm>
+          </div>
           {loading ? (
             <div className='flex justify-center items-center py-10'>
               <Spin size='large' tip='Đang tải dữ liệu...' />
@@ -315,27 +328,49 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
               <p className='text-lg text-gray-500'>Cart is empty</p>
             </div>
           ) : (
-            groupedItems.map((group, index) => (
-              <div key={index}>
-                <div className='flex items-center mb-2'>
-                  <Checkbox
-                    checked={group.shopSelect}
-                    onChange={(e) => handleShopSelectChange(group.shopId, e.target.checked)}
-                  >
-                    {group.shopName} Shop
-                  </Checkbox>
+            <div>
+              {groupedItems.map((group, index) => (
+                <div key={index}>
+                  <div className='flex items-center pl-4 p-2 bg-[#eee5da] rounded-t-lg py-2'>
+                    <Checkbox
+                      checked={group.shopSelect}
+                      onChange={(e) => handleShopSelectChange(group.shopId, e.target.checked)}
+                    >
+                      <span className='text-md font-bold '>{group.shopName} Shop</span>
+                    </Checkbox>
+                  </div>
+                  <Table
+                    dataSource={group.products}
+                    columns={columns}
+                    rowKey='_id'
+                    pagination={false}
+                    showHeader={false}
+                    rowClassName={''}
+                    scroll={{ x: 'max-content' }}
+                    className="table-auto w-full border-collapse text-left text-sm bg-gray-100 text-gray-900 rounded-b-lg"
+                    components={{
+                      header: {
+                        cell: ({ children, ...restProps }) => (
+                          <th {...restProps} style={{ backgroundColor: '#E6DBCD', color: 'black' }}>
+                            {children}
+                          </th>
+                        ),
+                      },
+                      body: {
+                        row: ({ children, ...restProps }) => (
+                          <tr {...restProps} className="bg-white hover:bg-[#e6e4e0]  transition-colors duration-200">
+                            {children}
+                          </tr>
+                        ),
+                      },
+                    }}
+                  />
+                  {index < groupedItems.length - 1 && <Divider />}
                 </div>
-                <Table
-                  dataSource={group.products}
-                  columns={columns}
-                  rowKey='_id'
-                  pagination={false}
-                  bordered
-                  scroll={{ x: 'max-content' }}
-                />
-                {index < groupedItems.length - 1 && <Divider />}
-              </div>
-            ))
+              ))}
+            </div>
+
+
           )}
 
           {discount > 0 && (
@@ -347,18 +382,18 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
           )}
 
           {cartItems.length > 0 && (
-            <div className='flex flex-col sm:flex-row justify-between items-center gap-4 mt-4'>
-              <h2 className='text-xl font-bold'>
+            <div className='flex flex-col sm:flex-row justify-between items-center  gap-4 mt-8'>
+              <h2 className='text-md font-bold bg-[#E6DBCD] text-gray-900 rounded-lg p-2 px-3'>
                 Total Price: ${totalPriceAfterDiscount.toFixed(2)}
               </h2>
-              <Button
+              <button
                 type='primary'
-                className='bg-red-500 hover:bg-red-600 w-full sm:w-auto'
+                className='bg-[#679089] text-white hover:opacity-90 rounded-xl w-1/2 sm:w-auto p-2 px-3'
                 // onClick={handleCheckout}
                 onClick={() => handleSelectItems(selectedItems)}
               >
-                  Order
-              </Button>
+                CheckOut
+              </button>
             </div>
           )}
 

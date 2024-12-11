@@ -14,6 +14,7 @@ import ShopingCartApi from '../../hooks/useShopingCart'; // Import API
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../reducers/carts';
+import WishlistApi from '../../hooks/useWishlistApi';
 
 const Details = () => {
   const { id } = useParams(); // Lấy id từ URL
@@ -25,7 +26,7 @@ const Details = () => {
   const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
   const [feedbacks, setFeedbacks] = useState([]); // Lưu trữ danh sách feedback
   const [feedbackLoading, setFeedbackLoading] = useState(true); // Trạng thái tải feedback
-
+  let [stockList, setStockList] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -208,11 +209,49 @@ const Details = () => {
         return <div>Select a tab</div>;
     }
   };
+  const CheckStock = () => {
+    const cartItem = cartItems.find((item) => item.product === product._id);
+    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+    if (currentCartQuantity + quantity > product.stock) {
+      return (
+        <Tag color='red'>OUT STOCK</Tag>
+      )
+    }
+    else {
+      return (<Tag color='green'>IN STOCK</Tag>)
+    }
+  }
+
+  const handleAddToWishlist = async () => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your wishlist.</span>
+        </div>,
+      );
+      return;
+    }
+
+    const respone = await WishlistApi.addProductToWishList(product._id);
+    if (respone.status === 200) {
+      message.success('Add product to wishlist successfully');
+    } else {
+      message.error('Product already added to wishlist');
+    }
+  };
+
 
   return (
-    <div className=' bg-gray-100  p-6 flex flex-col items-center'>
+    <div className=' bg-gray-100  p-6 flex flex-col text-black items-center text-xl'>
       <div className='container mx-auto w-[75%] h-[75%] px-6 py-4 bg-white rounded-2xl shadow-md pt-6'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
           {/* Left Section: Product Image */}
           <div className='relative max-w-screen-lg'>
             <Carousel autoplay arrows dots={false} swipeToSlide autoplaySpeed={3000}>
@@ -234,15 +273,15 @@ const Details = () => {
           </div>
 
           {/* Right Section: Product Details */}
-          <div className='space-y-4 bg-white p-5'>
-            <div>
-              <Tag color='green'>IN STOCK</Tag>
-              <h1 className='text-xl font-bold md:text-2xl'>{product.title}</h1>
+          <div className='space-y-4 bg-[#E6DBCD] shadow-md p-5 rounded-xl'>
+            <div className='space-y-3'>
+              {CheckStock()}
+              <h1 className='text-xl font-bold md:text-3xl'>{product.title}</h1>
 
-              <p className='text-gray-500'>
+              <p className=' mt-9'>
                 Author: <span className='font-medium'>{product.author || 'Unknown'}</span>
               </p>
-              <p className='text-gray-500'>
+              <p className=''>
                 Publisher: <span className='font-medium'>{product.publisher || 'Unknown'}</span>
               </p>
             </div>
@@ -273,16 +312,20 @@ const Details = () => {
                 className='w-20'
               />
 
-              <Button type='primary' className='bg-blue-500 text-sm' onClick={handleAddToCart}>
+              <button type='primary' className='bg-[#679089] text-sm text-white hover:bg-[#5d948a] p-[0.4em] px-2 rounded-md' onClick={handleAddToCart}>
                 Add to Cart
-              </Button>
-              <button>
-                <HeartOutlined className=' hover:text-red-600' />
               </button>
+              <button className='text-md hover:text-xl'>
+                <HeartOutlined
+                  onClick={handleAddToWishlist}
+                  className='text-red-400 hover:text-red-700 w-6 h-6'
+                />
+              </button>
+
             </div>
             {/* Categories and Tags */}
             <div className='mt-4'>
-              <p className='text-sm text-gray-500'>
+              <p className='text-md '>
                 Categories:{' '}
                 <span className='font-medium'>
                   {Array.isArray(product.category) && product.category.length > 0
@@ -290,19 +333,9 @@ const Details = () => {
                     : 'N/A'}
                 </span>
               </p>
-
-              <p className='text-sm text-gray-500'>
-                Tags: <span className='font-medium'>{product.tags?.join(', ') || 'N/A'}</span>
-              </p>
             </div>
 
-            {/* Social Media Icons */}
-            <div className='mt-4 flex space-x-4'>
-              <FacebookOutlined className='text-blue-600 text-xl' />
-              <TwitterOutlined className='text-blue-400 text-xl' />
-              <LinkedinOutlined className='text-blue-700 text-xl' />
-              <PinterestOutlined className='text-red-600 text-xl' />
-            </div>
+
           </div>
         </div>
 
@@ -311,21 +344,19 @@ const Details = () => {
           <div className='border-b'>
             <nav className='-mb-px flex space-x-8'>
               <button
-                className={`py-2 px-1 border-b-2 text-sm font-medium ${
-                  activeTab === 'description'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-blue-500'
-                }`}
+                className={`py-2 px-1 border-b-2 text-sm font-medium ${activeTab === 'description'
+                  ? 'border-blue-500 text-blue-500'
+                  : 'border-transparent text-gray-500 hover:text-blue-500'
+                  }`}
                 onClick={() => setActiveTab('description')}
               >
                 Description
               </button>
               <button
-                className={`py-2 px-1 border-b-2 text-sm font-medium ${
-                  activeTab === 'reviews'
-                    ? 'border-gray-500 text-gray-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-500'
-                }`}
+                className={`py-2 px-1 border-b-2 text-sm font-medium ${activeTab === 'reviews'
+                  ? 'border-gray-500 text-gray-500'
+                  : 'border-transparent text-gray-500 hover:text-gray-500'
+                  }`}
                 onClick={() => setActiveTab('reviews')}
               >
                 Reviews (5)

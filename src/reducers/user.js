@@ -6,6 +6,7 @@ const getUserRequest = () => {
   return async (dispatch) => {
     try {
       const response = await userApi.getUser();
+      console.log(response.data);
       const { user } = response.data;
       dispatch(getUser(user));
     } catch (error) {

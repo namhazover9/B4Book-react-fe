@@ -26,12 +26,11 @@ export default function OrderPageOfSeller() {
           name: order.customer?.userName || 'Unknown',
           email: order.customer?.email || 'N/A',
           phoneNumber: order.customer?.phoneNumber || 'N/A',
-          status: order.shops?.status || 'Unknown',
+          status: order.shops[0]?.status || 'Unknown',
           totalPrice: `$${order.totalOrderPrice || 0}`,
         })),
       );
     } catch (error) {
-      message.error('No orders found');
     } finally {
       setLoading(false);
     }

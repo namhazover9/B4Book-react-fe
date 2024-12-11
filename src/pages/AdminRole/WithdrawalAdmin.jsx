@@ -1,5 +1,5 @@
 import { CloudDownloadOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
-import { Breadcrumb, Input, message, Select, Table } from 'antd';
+import { Breadcrumb, Input, message, Select, Table, Modal, Button } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { text } from 'framer-motion/client';
 import React, { useEffect, useState } from 'react';
@@ -8,21 +8,44 @@ import adminApi from '../../hooks/useAdminApi';
 import shopApi from '../../hooks/useShopApi';
 
 export default function withdrawalA() {
-
   const [withdrawals, setWithdrawals] = useState([]); // Dữ liệu bảng
   const [loading, setLoading] = useState(false); // Trạng thái loading
   const id = useParams().id;
   const shopName = useParams().name;
   const [selectedStatus, setSelectedStatus] = useState('All Withdrawals');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái modal
+  const [currentRecord, setCurrentRecord] = useState(null); // Lưu thông tin dòng hiện tại
+
+  const handleEdit = (record) => {
+    setCurrentRecord(record); // Lưu dòng được chọn
+    setIsModalVisible(true); // Mở modal
+  };
+
+  const handleUpdateStatus = async (status) => {
+    if (!currentRecord) return;
+    try {
+      await adminApi.updateWithdrawRequest(currentRecord.id, status); // Gọi API
+      message.success(`Withdrawal request ${status.toLowerCase()} successfully`);
+      setIsModalVisible(false); // Đóng modal
+      fetchWithdrawals(); // Làm mới dữ liệu
+    } catch (error) {
+      console.error('Error updating withdrawal:', error);
+      message.error('Failed to update withdrawal');
+    }
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false); // Đóng modal
+  };
 
   const fetchWithdrawals = async () => {
     setLoading(true);
     try {
       const response = await adminApi.getAllWithdrawals(selectedStatus);
-      
-      const withdrawalList =  response.data.withdrawRequests || []; // Kiểm tra để đảm bảo `orders` là mảng
+
+      const withdrawalList = response.data.withdrawRequests || []; // Kiểm tra để đảm bảo `orders` là mảng
       setWithdrawals(
         withdrawalList.map((withdrawal, index) => ({
           key: index + 1,
@@ -34,7 +57,6 @@ export default function withdrawalA() {
           amount: `$${withdrawal.amount || 0}`,
         })),
       );
-
     } catch (error) {
       console.log(error);
       message.error('No withdrawal found');
@@ -66,11 +88,10 @@ export default function withdrawalA() {
   //   navigate(`/shop/${shopName}/orders/order-detail/${orderId}`);
   // };
 
-
   const handleSearchChange = (e) => {
     const keyword = e.target.value;
     setSearchKeyword(keyword);
-    
+
     if (keyword.trim() === '') {
       // Nếu từ khóa tìm kiếm trống, gọi lại fetchOrders để lấy tất cả các đơn hàng
       fetchWithdrawals();
@@ -81,7 +102,7 @@ export default function withdrawalA() {
   };
 
   const handleStatusChange = (value) => {
-    const {status} = value.split('-');
+    const { status } = value.split('-');
     setSelectedStatus(status);
   };
 
@@ -139,7 +160,38 @@ export default function withdrawalA() {
       key: 'status',
       width: 100,
       ...alignCenter,
-    }
+      render: (status) => {
+        const statusStyle = {
+          color: status === 'Rejected' ? 'red' : status === 'Paid' ? 'green' : status === 'Pending' ? 'blue' : 'black',
+        };
+    
+        return <span style={statusStyle}>{status}</span>;
+      },
+    },
+    
+    {
+      title: 'Action',
+      key: 'action',
+      width: 100,
+      align: 'center',
+      render: (_, record) => {
+        const isDisabled = record.status === 'Rejected' || record.status === 'Paid';
+        return (
+          <EditOutlined
+            onClick={() => {
+              if (!isDisabled) handleEdit(record); // Chỉ gọi handleEdit nếu nút không bị disabled
+            }}
+            size='small'
+            type='primary'
+            style={{
+              color: isDisabled ? '#d9d9d9' : '#1890ff',
+              cursor: isDisabled ? 'not-allowed' : 'pointer',
+            }}
+          />
+        );
+      },
+    },
+    
   ];
 
   const onChange = (sorter) => {
@@ -155,34 +207,46 @@ export default function withdrawalA() {
           onChange={handleSearchChange} // Gọi hàm handleSearchChange tại đây
           style={{ width: '300px', marginRight: '10px' }}
         />
-        
-            <Select
-              defaultValue='Default sorting'
-              value={selectedStatus}
-              onChange={(value) => setSelectedStatus(value)} // Cập nhật selectedSort
-              className='w-52 mr-2'
-              options={[
-                { value: 'All Withdrawals', label: 'All Withdrawals' },
-                { value: 'Pending', label: 'Pending' },
-                { value: 'Paid', label: 'Paid' },
-                { value: 'Rejected', label: 'Rejected' },
-              ]}
-            />
-          
+
+        <Select
+          defaultValue='Default sorting'
+          value={selectedStatus}
+          onChange={(value) => setSelectedStatus(value)} // Cập nhật selectedSort
+          className='w-52 mr-2'
+          options={[
+            { value: 'All Withdrawals', label: 'All Withdrawals' },
+            { value: 'Pending', label: 'Pending' },
+            { value: 'Paid', label: 'Paid' },
+            { value: 'Rejected', label: 'Rejected' },
+          ]}
+        />
       </div>
-          <div className='data-shop-page my-4 lg:my-6'>
-            <Table
-              columns={columns}
-              dataSource={withdrawals}
-              onChange={onChange}
-              scroll={{
-                x: 'max-content',
-                y: 500,
-              }}
-            />
-          </div>
-        
-      </Content>
-    
+      <div className='data-shop-page my-4 lg:my-6'>
+        <Table
+          columns={columns}
+          dataSource={withdrawals}
+          onChange={onChange}
+          scroll={{
+            x: 'max-content',
+            y: 500,
+          }}
+        />
+      </div>
+      <Modal
+        title='Update Withdrawal Request'
+        visible={isModalVisible}
+        onCancel={handleModalCancel}
+        footer={[
+          <Button key='reject' onClick={() => handleUpdateStatus('Rejected')}>
+            Reject
+          </Button>,
+          <Button key='approve' type='primary' onClick={() => handleUpdateStatus('Paid')}>
+            Approve
+          </Button>,
+        ]}
+      >
+        <p>Do you want to approve or reject this request?</p>
+      </Modal>
+    </Content>
   );
 }
