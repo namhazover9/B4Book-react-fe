@@ -2,30 +2,19 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import productsApi from '../../hooks/useProductsApi';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // console.log(sortedBooks);
 
 export default function FavouriteBook() {
   const [books, setbooks] = useState([]);
-  const navigate = useNavigate();
-  const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
-  let [stockList, setStockList] = useState([]);
-  const dispatch = useDispatch();
-  const [quantity, setQuantity] = useState(1);
-  const [addingToCart, setAddingToCart] = useState(false);
-  const userId = useSelector((state) => state.user._id);
+
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await productsApi.getProductHomePage();
       setbooks(
         Array.isArray(response.data.favouriteProducts) ? response.data.favouriteProducts : [],
       );
-      stockList = response.data.favouriteProducts.map((book) => ({
-        productId: book._id,
-        stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
-      }));
-      setStockList(stockList);
     };
     fetchBooks();
   }, []);
@@ -34,9 +23,11 @@ export default function FavouriteBook() {
       <div className='flex justify-between items-center mx-4'>
         <p className='m-0 text-3xl font-bold text-[#f18966]'>Our Favourite Reads</p>
         <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-        <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
-          View All <ArrowRightOutlined className='w-4 h-4' />
-        </button>
+        <Link to={'/products'}>
+          <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
+            View All <ArrowRightOutlined className='w-4 h-4' />
+          </button>
+        </Link>
       </div>
       <div className='mx-4 mt-6 mb-2 border border-solid rounded-lg'>
         <div className='flex justify-center m-2 sm:flex-row'>
@@ -46,15 +37,22 @@ export default function FavouriteBook() {
                 <div className='bg-white p-3 rounded-lg transition duration-500 ease-in-out hover:shadow-lg mb-3'>
                   <div className='flex'>
                     <img className='w-1/3 rounded-lg' src={book.images[0]} alt={book.title} />
-                    <div className='flex flex-col justify-between ml-4'>
-                      <h2 className='text-lg font-bold'>{book.title}</h2>
+                    <div className='flex flex-col justify-between ml-4 my-2'>
+                      <h2 className='text-lg font-bold mb-0'>{book.title}</h2>
+                      <p className='text-gray-400 font-medium mb-0'>{book.author}</p>
                       <div className='flex items-center'>
-                        <div className='flex items-center'>
-                          <div className='text-yellow-500 mr-2'>★★★★★</div>
-                        </div>
-                        <span className='text-gray-600'>{book.rating}</span>
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={`text-xl ${
+                              index < book.ratingResult ? 'text-yellow-500' : 'text-gray-300'
+                            }`}
+                          >
+                            ★
+                          </span>
+                        ))}
+                        <span className='text-gray-600 ml-1 mt-0.5'>{book.ratingResult}</span>
                       </div>
-                      <p className='text-gray-400 font-medium'>{book.author}</p>
                       <p className='text-lg font-bold text-red-500'>{book.price}</p>
                     </div>
                   </div>
@@ -82,8 +80,17 @@ export default function FavouriteBook() {
                   <h2 className='text-xl font-bold mb-2'>{books[0]?.title || 'No Title'}</h2>
                   <p className='text-gray-600 mb-2'>{books[0]?.author || 'Unknown Author'}</p>
                   <div className='flex items-center mb-2'>
-                    <div className='text-yellow-500 mr-2'>★★★★★</div>
-                    <span className='text-gray-600'>{books[0]?.ratingResult || '0'}</span>
+                    {[...Array(5)].map((_, index) => (
+                      <span
+                        key={index}
+                        className={`text-xl ${
+                          index < books[0]?.ratingResult ? 'text-yellow-500' : 'text-gray-300'
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span className='text-gray-600 ml-1 mt-0.5'>{books[0]?.ratingResult || '0'}</span>
                   </div>
                   <p className='m-0 text-red-500 text-lg font-bold'>
                     {books[0]?.price || 'Contact for Price'}
@@ -110,8 +117,17 @@ export default function FavouriteBook() {
                   <h2 className='text-xl font-bold mb-2'>{books[1]?.title || 'No Title'}</h2>
                   <p className='text-gray-600 mb-2'>{books[1]?.author || 'Unknown Author'}</p>
                   <div className='flex items-center mb-2'>
-                    <div className='text-yellow-500 mr-2'>★★★★★</div>
-                    <span className='text-gray-600'>{books[1]?.ratingResult || '0'}</span>
+                    {[...Array(5)].map((_, index) => (
+                      <span
+                        key={index}
+                        className={`text-xl ${
+                          index < books[1]?.ratingResult ? 'text-yellow-500' : 'text-gray-300'
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span className='text-gray-600 ml-1 mt-0.5'>{books[1]?.ratingResult || '0'}</span>
                   </div>
                   <p className='m-0 text-red-500 text-lg font-bold'>
                     {books[1]?.price || 'Contact for Price'}
@@ -134,13 +150,22 @@ export default function FavouriteBook() {
                         alt={book.title || 'Unknown Title'}
                       />
                     )}
-                    <div className='flex flex-col justify-between ml-4'>
-                      <h2 className='text-lg font-bold'>{book.title || 'No Title'}</h2>
+                    <div className='flex flex-col justify-between ml-4 my-2'>
+                      <h2 className='text-lg font-bold mb-0'>{book.title || 'No Title'}</h2>
+                      <p className='text-gray-400 font-medium mb-0'>{book.author || 'Unknown Author'}</p>
                       <div className='flex items-center'>
-                        <div className='text-yellow-500 mr-2'>★★★★★</div>
-                        <span className='text-gray-600'>{book.ratingResult || '0'}</span>
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={`text-xl ${
+                              index < book.ratingResult ? 'text-yellow-500' : 'text-gray-300'
+                            }`}
+                          >
+                            ★
+                          </span>
+                        ))}
+                        <span className='text-gray-600 ml-1 mt-0.5'>{book.ratingResult}</span>
                       </div>
-                      <p className='text-gray-400 font-medium'>{book.author || 'Unknown Author'}</p>
                       <p className='text-lg font-bold text-red-500'>
                         {book.price || 'Contact for Price'}
                       </p>
