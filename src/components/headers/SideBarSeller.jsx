@@ -13,9 +13,9 @@ export default function SideBarSeller({ onToggle, isOpen }) {
     const Menus = [
         { title: "Home", icon: <HomeOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/home/${shopDetail?._id}` },
         { title: "Order", icon: <DropboxOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/orders/${shopDetail?._id}` },
-        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: "/shop-HoangNam/sale-data" },
+        { title: "Sale Data", icon: <AreaChartOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/saleData/${shopDetail?._id}` },
         { title: "Discount", icon: <TagsOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/voucher/${shopDetail?._id}` },
-        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: "/shop-HoangNam/chat" },
+        { title: "Chat", icon: <WechatOutlined className='text-2xl' />, path: `/shop/${shopDetail?.shopName}/chat/${shopDetail?._id}` },
         { title: "Setting", icon: <SettingOutlined className='text-2xl' />, path: "/shop-HoangNam/setting" },
         { title: "Switch Customer", icon: <UserSwitchOutlined className='text-2xl' />, path: "/" },
     ];

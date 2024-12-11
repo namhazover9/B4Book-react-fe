@@ -1,89 +1,115 @@
-import React, { useState } from "react";
-import { MenuOutlined } from "@ant-design/icons";
-import { Drawer } from "antd"; // Import Drawer component từ Ant Design
+import React, { useState, useEffect } from "react";
+import { useParams, NavLink } from "react-router-dom";
+import { Drawer, Button } from "antd";
+import { MenuUnfoldOutlined } from "@ant-design/icons";
+import chatApi from "../../hooks/useChatApi";
+import { div } from "framer-motion/client";
 
 const SideBarChat = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { id, name } = useParams();
+    const [contacts, setContacts] = useState([]);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [drawerVisible, setDrawerVisible] = useState(false);
 
-    const contacts = [
-        { name: "Alice", message: "Hoorayy!!", avatar: "https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" },
-        { name: "Martin", message: "That pizza place was amazing! 🍕", avatar: "https://placehold.co/200x/ad922e/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato" },
-        // Add more contacts here...
-    ];
+    const fetchHistoryChat = async () => {
+        try {
+            const response = await chatApi.getAllChats(id);
+            if (response.status === 200) {
+                const contactList = response.data.chats.map((chat) => {
+                    const allMessages = [...chat.customerMessages, ...chat.shopMessages];
+                    const sortedMessages = allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    const lastMessage = sortedMessages.length > 0 ? sortedMessages[sortedMessages.length - 1].content : "No messages yet";
+
+                    return {
+                        id: chat._id,
+                        name: chat.otherInfo?.name || "Unknown",
+                        message: lastMessage,
+                        avartar: chat.otherInfo?.avartar || "https://via.placeholder.com/150",
+                    };
+                });
+                setContacts(contactList);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchHistoryChat();
+
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [id]);
+
+    const ContactList = () => (
+        <div className="overflow-y-auto h-screen p-3">
+            {contacts.map((contact) => (
+                <NavLink
+                    to={`/shop/${name}/chat/${id}/${contact.id}`}
+                    key={contact.id}
+                    onClick={() => isMobile && setDrawerVisible(false)} // Đóng Drawer khi ở mobile
+                >
+                    <div className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                        <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+                            <img
+                                src={contact.avartar}
+                                alt={`${contact.name}'s Avatar`}
+                                className="w-12 h-12 rounded-full"
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <h2 className="text-xl font-semibold text-black-2">{contact.name}</h2>
+                            <p className="text-gray-600 text-lg">{contact.message}</p>
+                        </div>
+                    </div>
+                </NavLink>
+            ))}
+        </div>
+    );
 
     return (
-        <div className="relative h-screen">
-            {/* Menu Header */}
-            <div className="menu-header p-4 h-14 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-                {/* Title */}
-                <h1 className="text-2xl font-semibold">History Chat</h1>
+        <div>
+            {/* Mobile Menu Button */}
+            {isMobile && (
+                <div className="fixed top-4 left-4 z-50">
+                    <Button
+                        type="primary"
+                        icon={<MenuUnfoldOutlined />}
+                        onClick={() => setDrawerVisible(true)}
+                    />
+                </div>
+            )}
 
-                {/* Menu Button: Chỉ ẩn nút này trên màn hình lớn */}
-                <button
-                    className="lg:hidden" // Ẩn nút trên màn hình lớn (lg) và hiển thị trên các màn hình nhỏ
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+            {/* Desktop Sidebar */}
+            {!isMobile && (
+                <div className="w-60 bg-white border-r border-gray-300">
+                    <header className="p-4 border-b border-gray-300 flex justify-between items-center bg-[#EEE5DA]">
+                        <h1 className="text-2xl font-bold text-black-2 ml-6">History Chat</h1>
+                    </header>
+                    <ContactList />
+                </div>
+            )}
+
+            {/* Mobile Drawer */}
+            {isMobile && (
+
+                <Drawer
+                    title="History Chat"
+                    placement="left"
+                    onClose={() => setDrawerVisible(false)}
+                    open={drawerVisible}
+                    bodyStyle={{ padding: 0 }}
                 >
-                    <MenuOutlined className="text-xl" />
-                </button>
-            </div>
+                    <ContactList />
+                </Drawer>
 
-            {/* Drawer Component from Ant Design: Chỉ hiển thị trên màn hình nhỏ hơn lg */}
-            <Drawer
-                title="Contacts"
-                placement="left"
-                closable={false}
-                onClose={() => setIsMenuOpen(false)}
-                visible={isMenuOpen}
-                width={280}
-            >
-                <div className="contact-list overflow-y-auto p-3">
-                    {contacts.map((contact, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
-                        >
-                            <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
-                                <img
-                                    src={contact.avatar}
-                                    alt={`${contact.name}'s Avatar`}
-                                    className="w-12 h-12 rounded-full"
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <h2 className="text-lg font-semibold">{contact.name}</h2>
-                                <p className="text-gray-600">{contact.message}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </Drawer>
-
-            {/* Sidebar: Luôn hiển thị trên màn hình lớn */}
-            <div
-                className={`lg:block ${isMenuOpen ? "block" : "hidden"} lg:w-64 bg-white border-r border-gray-300 h-full p-4`}
-            >
-                {/* Contact List */}
-                <div className="contact-list overflow-y-auto">
-                    {contacts.map((contact, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
-                        >
-                            <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
-                                <img
-                                    src={contact.avatar}
-                                    alt={`${contact.name}'s Avatar`}
-                                    className="w-12 h-12 rounded-full"
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <h2 className="text-lg font-semibold">{contact.name}</h2>
-                                <p className="text-gray-600">{contact.message}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            )}
         </div>
     );
 };

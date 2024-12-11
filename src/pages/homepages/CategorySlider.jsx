@@ -50,7 +50,7 @@ const CarouselComponent = () => {
       if (carouselRef.current) {
         carouselRef.current.next();
       }
-    }, 10000000000000000);
+    }, 5000);
   };
 
   const resetAutoSlide = () => {
