@@ -68,7 +68,6 @@ const ChatPage = () => {
         return participants.customer.senderId === id ? participants.shop.name : participants.customer.name;
     };
 
-
     return (
         <div className="flex-1 relative">
             {/* Background Circle */}
@@ -87,7 +86,7 @@ const ChatPage = () => {
                 ></div>
             </div>
             {/* Chat Header */}
-            <header className="bg-white p-4 text-gray-700 border-b border-gray-300 text-center">
+            <header className="bg-white p-4 h-16 text-gray-700 border-b border-gray-300 text-center">
                 <h1 className="text-2xl font-semibold text-black-2">{getOtherParticipantName()}</h1>
             </header>
 
