@@ -65,6 +65,8 @@ const Checkout = () => {
     }, []),
   );
 
+  
+
   const handleVoucherChange = (storeIndex, voucherCode) => {
     setVoucherCodes((prevVoucherCode) => ({
       ...prevVoucherCode,
