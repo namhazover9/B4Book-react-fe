@@ -9,7 +9,7 @@ import orderApi from '../../hooks/useOrderApi';
 import { useParams } from 'react-router-dom';
 import productsApi from '../../hooks/useProductsApi';
 
-const SaleData = () => {
+const SellData = () => {
   const [totalProduct, setTotalProduct] = useState([]);
   const [totalUser, setTotalUser] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState([]);
@@ -26,7 +26,7 @@ const SaleData = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await orderApi.getTotalBuyers(id);
+      const response = await orderApi.totalRevenueForShop(id);
       setTotalUser(response.data.totalBuyers);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -163,4 +163,4 @@ const SaleData = () => {
   );
 };
 
-export default SaleData;
+export default SellData;
