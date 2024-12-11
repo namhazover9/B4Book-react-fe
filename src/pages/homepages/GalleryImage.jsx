@@ -3,27 +3,27 @@ import Modal from 'react-modal';
 
 const images = [
   {
-    src: './src/assets/images/GalleryImage/gallery1.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914254/gallery1_usdfxw.jpg',
     alt: 'Image 1',
   },
   {
-    src: './src/assets/images/GalleryImage/gallery2.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914254/gallery2_nsgfo5.jpg',
     alt: 'Image 2',
   },
   {
-    src: './src/assets/images/GalleryImage/gallery3.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914254/gallery3_wibuio.jpg',
     alt: 'Image 3',
   },
   {
-    src: './src/assets/images/GalleryImage/gallery4.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914255/gallery4_okwbcm.jpg',
     alt: 'Image 4',
   },
   {
-    src: './src/assets/images/GalleryImage/gallery5.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914255/gallery5_gv0ctx.jpg',
     alt: 'Image 5',
   },
   {
-    src: './src/assets/images/GalleryImage/gallery6.jpg',
+    src: 'https://res.cloudinary.com/ddhuhnzd2/image/upload/v1733914254/gallery2_nsgfo5.jpg',
     alt: 'Image 6',
   },
 ];
