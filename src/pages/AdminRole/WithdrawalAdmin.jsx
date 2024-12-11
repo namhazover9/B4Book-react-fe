@@ -160,7 +160,15 @@ export default function withdrawalA() {
       key: 'status',
       width: 100,
       ...alignCenter,
+      render: (status) => {
+        const statusStyle = {
+          color: status === 'Rejected' ? 'red' : status === 'Paid' ? 'green' : status === 'Pending' ? 'blue' : 'black',
+        };
+    
+        return <span style={statusStyle}>{status}</span>;
+      },
     },
+    
     {
       title: 'Action',
       key: 'action',

@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCart } from '../../reducers/carts';
+import { getUserRequest } from '../../reducers/user';
 
 import CheckboxField from '../../components/Field/CheckboxField';
 import InputField from '../../components/Field/InputField';
@@ -14,7 +15,6 @@ import constants from '../../constants/constants';
 import loginApi from '../../hooks/useLogin';
 import { setIsAuth } from '../../reducers/auth';
 import LoginFacebook from '../../components/LoginFacebook';
-import { u } from 'framer-motion/client';
 
 function Login() {
   const navigate = useNavigate();
@@ -29,22 +29,23 @@ function Login() {
   const userRole = useSelector((state) => state.user.role[0]?.name);;
   const isAuth = useSelector((state) => state.authenticate.isAuth);
 
-  const onLoginSuccess = async (data, role) => {
+  const onLoginSuccess = async (data) => {
     try {
       setIsSubmitting(false);
       message.success('Đăng nhập thành công');
-
       localStorage.setItem(constants.REFRESH_TOKEN, data.refreshToken);
       localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
-      // if (process.env.NODE_ENV === 'production')
-      //   localStorage.setItem(constants.ACCESS_TOKEN_KEY, data.token);
+  
+      // Dispatch để lấy user sau khi đăng nhập
+      dispatch(getUserRequest());
+  
       dispatch(setIsAuth(true));
-      window.location.reload();
-
     } catch (error) {
       message.error('Lỗi đăng nhập.');
     }
   };
+  
+  
 
   // Xử lý điều hướng khi `userRole` thay đổi và `isAuth` là true
   useEffect(() => {

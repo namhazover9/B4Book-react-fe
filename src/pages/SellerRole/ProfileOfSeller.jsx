@@ -1,14 +1,18 @@
 import { CameraOutlined, EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button, Upload, Input, Checkbox, Modal } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
+
 import { Field, Form, Formik } from 'formik';
+import { useSelector, useDispatch } from 'react-redux';
 import shopApi from '../../hooks/useShopApi';
 import { message } from 'antd';
+import { use } from 'react';
 
 export default function ProfileOfSeller() {
   const [isDisabled, setIsDisabled] = useState(false);
+  const [shop, setShop] = useState({});
 
   const normFileAddProduct = (e) => {
     if (Array.isArray(e)) {
@@ -16,6 +20,19 @@ export default function ProfileOfSeller() {
     }
     return e?.fileList;
   };
+
+  useEffect(() => {
+    const fetchShop = async () => {
+      try {
+        const response = await shopApi.shopInfo();
+        setShop(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchShop();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email format').required('Email is required'),
@@ -67,17 +84,18 @@ export default function ProfileOfSeller() {
             <div className='absolute mt-15 lg:mt-20 lg:mx-auto w-11/12 p-3 min-h-96 bg-white rounded-lg'>
               <div className='pt-15 sm:pt-20 pb-5'>
                 <div className='info text-center'>
-                  <h1 className='text-xl font-bold text-[#d0a874]'>Anh hẹn em Pickleball</h1>
-                  <p className='text-sm font-normal text-gray-400'>Hai Chau, Da Nang</p>
+                  <h1 className='text-xl font-bold text-[#d0a874]'>{shop.shopName}</h1>
+                  <p className='text-sm font-normal text-gray-400'>{shop.shopAddress}</p>
                 </div>
                 <div className='field-info'>
                   <Formik
+                    enableReinitialize
                     initialValues={{
-                      email: '',
-                      name: '',
-                      address: '',
-                      phoneNumber: '',
-                      uploadImage: [],
+                      email: shop.shopEmail || '', // Nếu shop.email không tồn tại, mặc định là chuỗi rỗng
+                      name: shop.shopName || '',
+                      address: shop.shopAddress || '',
+                      phoneNumber: shop.phoneNumber || '',
+                      uploadImage: [], // Upload image mặc định trống
                     }}
                     validationSchema={validationSchema}
                     onSubmit={async (values, { setSubmitting, setFieldError }) => {
@@ -243,7 +261,7 @@ export default function ProfileOfSeller() {
                 </div>
                 <div className='withdraw-money w-5/6 mx-auto mt-2 lg:mt-5 flex justify-end items-center'>
                   <h4 className='mr-5'>
-                    wallet: <span className='text-red-500 font-semibold'>1000$</span>
+                    wallet: <span className='text-red-500 font-semibold'>{shop.wallet}$</span>
                   </h4>
                   <button
                     className='px-5 py-2 text-white bg-blue-500 rounded-xl hover:text-blue-500 hover:bg-white border-2 border-white hover:border-blue-500 duration-300 ease-in-out'
@@ -277,7 +295,7 @@ export default function ProfileOfSeller() {
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const response = await shopApi.createWithdrawRequest(values.amount);
-              
+
               message.success(
                 `Withdraw request for ${values.amount}$ has been submitted successfully!`,
               );

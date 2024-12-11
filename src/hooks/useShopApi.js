@@ -58,6 +58,11 @@ const shopApi = {
     const url = `/shop/withdraws`;
     return axiosClient.post(url, { amount });
   },
+
+  shopInfo: () => {
+    const url = `/shop/shopInfo`; 
+    return axiosClient.get(url);
+  },
 };
 
 

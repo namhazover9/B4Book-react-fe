@@ -40,7 +40,7 @@ const AppRoutes = () => {
   // Lấy thông tin người dùng khi xác thực thành công
   useEffect(() => {
     if (isAuth) {
-      console.log('User ID:', isAuth);
+      //console.log('User ID:', isAuth);
       
       dispatch(getUserRequest());
       dispatch(fetchCart());
