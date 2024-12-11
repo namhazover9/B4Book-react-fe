@@ -1,24 +1,45 @@
 // eslint-disable-next-line no-unused-vars
-import { Button, Carousel, } from 'antd';
+import { Button, Carousel, message } from 'antd';
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { ArrowRightOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined } from '@ant-design/icons';
 import store1 from '../../assets/images/BestSelling/h6_banner4.jpg';
 import { useEffect, useState } from 'react';
 import productsApi from '../../hooks/useProductsApi';
+import { addToCart } from '../../reducers/carts';
+import LoadingSpinner from '../../components/loading';
+import { useDispatch, useSelector } from 'react-redux';
+import WishlistApi from '../../hooks/useWishlistApi';
 
 const BookShowcase = () => {
+  const cartItems = useSelector((state) => state.carts.items);
+  let [stockList, setStockList] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const userId = useSelector((state) => state.user._id);
   const [books, setbooks] = useState([]);
-
+  const [addingToCart, setAddingToCart] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await productsApi.getProductHomePage();
-      setbooks(
-        Array.isArray(response.data.bestSellingProducts) ? response.data.bestSellingProducts : [],
-      );
+      const fetchedBooks = Array.isArray(response.data.bestSellingProducts) ? response.data.bestSellingProducts : [];
+      setbooks(fetchedBooks);
+
+      // Sử dụng fetchedBooks trực tiếp để tạo stockList
+      const stockList = fetchedBooks.map((book) => ({
+        productId: book._id,
+        stock: book.stock, // Tùy thuộc vào API, bạn có thể phải điều chỉnh tên trường
+      }));
+
+      setStockList(stockList);
+      console.log('Stock List:', stockList);
     };
+
     fetchBooks();
   }, []);
+
+
+
   const banner = {
     id: 1,
     sologan: ' Why not send the gift of a book to family & friends.',
@@ -26,6 +47,83 @@ const BookShowcase = () => {
     detail: '20%',
     contact: 'Shop Now',
   };
+  const handleAddToCart = (productId, quantity) => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your cart.</span>
+        </div>,
+      );
+      return;
+    }
+
+    // Tìm thông tin tồn kho từ stockList
+    const stockItem = stockList.find((item) => item.productId === productId);
+    const stock = stockItem ? stockItem.stock : 0; // Lấy stock của sản phẩm từ stockList
+    console.log('Stock:', stock);
+    // Kiểm tra số lượng sản phẩm trong giỏ hàng hiện tại
+    const cartItem = cartItems.find((item) => item.product === productId);
+    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+
+    // Kiểm tra tồn kho, nếu số lượng thêm vào giỏ vượt quá tồn kho, thì thông báo lỗi
+    if (currentCartQuantity + quantity > stock) {
+      message.error(
+        `You already have ${stock} items in your shopping cart. The selected quantity cannot be added to the cart because it would exceed your purchase limit.`,
+      );
+      return;
+    }
+
+    const cartData = {
+      productId: productId,
+      quantity: quantity,
+    };
+
+    dispatch(addToCart(cartData))
+      .then(() => {
+        message.success('Product successfully added to cart!');
+      })
+      .catch((error) => {
+        console.error('Error adding product to cart:', error);
+        message.error('Failed to add product to cart. Please try again.');
+      });
+  };
+
+  const handleAddToWishlist = async (productId) => {
+    if (!userId) {
+      message.warning(
+        <div className='p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 rounded-md shadow-md flex items-center'>
+          <span className='mr-2 font-medium'>Please</span>
+          <button
+            onClick={() => navigate('/login')}
+            className='text-blue-600 underline font-semibold hover:text-blue-800'
+          >
+            login
+          </button>
+          <span className='ml-2'>to add products to your wishlist.</span>
+        </div>,
+      );
+      return;
+    }
+    const respone = await WishlistApi.addProductToWishList(productId);
+    if (respone.status === 200) {
+      message.success('Add product to wishlist successfully');
+    } else {
+      message.error('Product already added to wishlist');
+    }
+  };
+
+  const navigate = useNavigate();
+  const handleViewAll = () => {
+    navigate('/products', { state: { sort: 'popularity' } });
+  };
+
 
   return (
     <div className='w-full bg-white px-4 sm:px-10 lg:px-20'>
@@ -33,8 +131,10 @@ const BookShowcase = () => {
         <div className='flex justify-between items-center mb-4'>
           <h2 className='text-3xl font-bold text-[#f18966]'>Best Selling</h2>
           <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-          <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
-            View All <ArrowRightOutlined className='w-4 h-4' />
+          <button onClick={handleViewAll} className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+            <Link to='/products'>
+              View All <ArrowRightOutlined className='w-4 h-4' />
+            </Link>
           </button>
         </div>
 
@@ -62,26 +162,40 @@ const BookShowcase = () => {
                 },
               ]}
             >
-              {books.map((book) => (
+              {books.map((book, index) => (
                 <div key={book._id} className='w-1/4 p-2 '>
                   <div className='group relative '>
                     <div className='relative overflow-hidden rounded-2xl '>
                       <img
                         src={book.images[0]}
-                        className='w-full h-90 object-cover transition-all ease-in-out duration-300 '
+                        className='w-90 h-60 object-cover transition-all ease-in-out duration-300 '
                       />
                       <div className='absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-500'>
                         <div className='absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-4'>
                           <button className='flex justify-center p-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 shadow-lg'>
-                            <HeartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                            <HeartOutlined
+                              onClick={() => handleAddToWishlist(book._id)}
+                              className='w-6 h-6 flex justify-center items-center text-black-500'
+                            />
                           </button>
                           <button className='flex justify-center items-center px-2 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transform translate-x-10 group-hover:translate-x-0 duration-300 delay-75 shadow-lg'>
-                            <Link to='/details' className='hover:text-red-500'>
+                            <Link to={`/details/${book._id}`}>
                               <EyeOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
                             </Link>
                           </button>
-                          <button className='flex justify-evenly items-center px-1 py-3 bg-white rounded-full hover:bg-red-500 hover:text-white transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg'>
-                            <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                          <button
+                            className={`flex justify-evenly items-center px-1 py-3 bg-white rounded-full ${addingToCart
+                              ? 'opacity-50 cursor-not-allowed'
+                              : 'hover:bg-red-500 hover:text-white'
+                              } transition-all transform translate-x-10 group-hover:translate-x-0 duration-300 delay-150 shadow-lg`}
+                            onClick={() => handleAddToCart(book._id, quantity)}
+                            disabled={addingToCart}
+                          >
+                            {addingToCart ? (
+                              <Spin size='small' />
+                            ) : (
+                              <ShoppingCartOutlined className='w-6 h-6 flex justify-center items-center text-black-500' />
+                            )}
                           </button>
                         </div>
                       </div>
@@ -125,7 +239,9 @@ const BookShowcase = () => {
                   <div className='text-4xl sm:text-5xl font-bold mb-4'>{banner.detail} Off</div>
                   <h3 className='text-base sm:text-lg mb-2'>{banner.sologan}</h3>
                   <p className='text-sm sm:text-xl text-white/80 hover:text-yellow-400 underline decoration-dotted'>
-                    <button className='hover:underline'>{banner.contact}</button>
+                    <Link to='/products'>
+                      <button className='hover:underline'>{banner.contact}</button>
+                    </Link>
                   </p>
                 </div>
               </div>

@@ -53,9 +53,9 @@ const AppRoutes = () => {
 
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
-    if (layout === 'Admin' && userRole !== 'Admin') return false;
-    if (layout === 'Customer' && userRole !== 'Customer') return false;
-    if (layout === 'Shop' && userRole !== 'Shop') return false;
+    if (layout === 'admin' && userRole !== 'Admin') return false;
+    if (layout === 'customer' && userRole !== 'Customer') return false;
+    if (layout === 'shop' && userRole !== 'Shop') return false;
     return true;
   };
 
@@ -71,15 +71,17 @@ const AppRoutes = () => {
         <Routes>
           {routes_here.map(({ path, element, layout, isPrivate }, key) => {
             if (userRole === 'Admin' && layout !== 'admin') {
-              return <Route key={key} path={path} element={<Navigate to="/admin" />} />;
+              return <Route key={key} path={path} element={<Navigate to='/admin' />} />;
             }
-            if (!hasAccess(layout) && isPrivate) {
+            if (hasAccess(layout)) {
+              return <Route key={key} path={path} element={getLayout(layout, element)} />;
+            }
+            if (!isPrivate) {
               return <Route key={key} path={path} element={<ForbiddenPage />} />;
             }
-
-            return <Route key={key} path={path} element={getLayout(layout, element)} />;
           })}
-          <Route path="*" element={<NotFoundPage />} />
+          
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </>
     </Suspense>

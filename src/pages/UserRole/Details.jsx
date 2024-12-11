@@ -273,8 +273,8 @@ const Details = () => {
           </div>
 
           {/* Right Section: Product Details */}
-          <div className='space-y-4 bg-[#E6DBCD] shadow-md p-5 rounded-xl'>
-            <div className='space-y-3'>
+          <div className='space-y-8 bg-[#E6DBCD] shadow-md p-5 rounded-xl'>
+            <div className='space-y-4'>
               {CheckStock()}
               <h1 className='text-xl font-bold md:text-3xl'>{product.title}</h1>
 
