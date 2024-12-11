@@ -2,7 +2,6 @@ import { ApexOptions } from 'apexcharts';
 import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import shopApi from '../../hooks/useShopApi';
-import { useParams } from 'react-router-dom';
 
 const options: ApexOptions = {
   colors: ['#3C50E0', '#80CAEE'],
@@ -64,7 +63,7 @@ const options: ApexOptions = {
 const ChartTwo: React.FC = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState<number[]>([]);
   const [monthlyRevenue5Percent, setMonthlyRevenue5Percent] = useState<number[]>([]);
-  const {id} = useParams();
+
   interface Series {
     name: string;
     data: number[];
@@ -85,7 +84,7 @@ const ChartTwo: React.FC = () => {
 
   const fetchMonthlyRevenue = async () => {
     try {
-      const response = await shopApi.getTotalRevenueForShop(id);
+      const response = await shopApi.getMonthlyRevenue();
       setMonthlyRevenue(response.data.monthlyRevenue);
       setMonthlyRevenue5Percent(response.data.monthlyRevenue5Percent);
     } catch (error) {

@@ -53,6 +53,15 @@ const shopApi = {
     return axiosClient.get(url);
   },
 
+  getTotalRevenueForShop: (id) => {
+    const url = `/shop/totalRevenueForShop/${id}`; 
+    return axiosClient.get(url);
+  },
+
+  getMonthlyRevenueForShop: (id) => {
+    const url = `/shop/monthlyRevenue/${id}`; 
+    return axiosClient.get(url);
+  },
   // Tạo yêu cầu rút tiền
   createWithdrawRequest: (amount) => {
     const url = `/shop/withdraws`;
@@ -62,6 +71,39 @@ const shopApi = {
   shopInfo: () => {
     const url = `/shop/shopInfo`; 
     return axiosClient.get(url);
+  },
+
+  // API cập nhật thông tin cửa hàng
+  updateShopInfo: (formData) => {
+    const url = `${ACCOUNT_API_ENDPOINT}/updateShopInfo`;
+    // Gửi request PUT với dữ liệu FormData
+    return axiosClient.put(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  newAddress: (newAddress) => {
+    return axiosClient.post('/shop/address/add', newAddress,{
+      headers: {
+        'Content-Type': 'application/json',  // Đảm bảo gửi dữ liệu dưới dạng JSON
+      },
+    }); // Gửi yêu cầu POST đến endpoint registerShop
+  },
+  updateAddress: (addressId, updatedAddress) => {
+    return axiosClient.put(`/shop/address/update/${addressId}`, updatedAddress, {
+      headers: {
+        'Content-Type': 'application/json', // Gửi dữ liệu dưới dạng JSON
+      },
+    });
+  },
+  deleteAddress: (addressId) => {
+    return axiosClient.delete(`/shop/address/delete/${addressId}`, {
+      headers: {
+        'Content-Type': 'application/json', // Đảm bảo dữ liệu gửi đi đúng định dạng
+      },
+    });
   },
 };
 

@@ -47,7 +47,7 @@ export default function SideBarSeller({ onToggle, isOpen }) {
     };
     return (
         <div className="">
-            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-[#679089] hidden lg:block rounded-l-lg`}>
+            <div className={`${isOpen ? "w-52" : "w-20"} duration-300 relative h-full bg-gradient-to-br from-[#679089] via-[#679079] to-[#679069] hidden lg:block rounded-l-lg`}>
                 <div className="w-64 h-20">
                     <div className="w-3/5 flex justify-between items-center mx-2">
                         <img src={shopDetail?.images[0] || "https://via.placeholder.com/150"} 

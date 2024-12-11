@@ -18,10 +18,10 @@ const AccountManager = () => {
     setLoading(true);
     try {
       // Truyền giá trị role và status cho API
-      // const response = await adminApi.getUser({
-      //   role: selectedRole !== 'all' ? selectedRole : '', // Truyền role hoặc để trống
-      //   status: selectedStatus !== 'all' ? selectedStatus : '', // Truyền status hoặc để trống
-      // });
+      const response = await adminApi.getUser({
+        role: selectedRole !== 'all' ? selectedRole : '', // Truyền role hoặc để trống
+        status: selectedStatus !== 'all' ? selectedStatus : '', // Truyền status hoặc để trống
+      });
 
       const { total, customers, shops, users } = response.data;
 

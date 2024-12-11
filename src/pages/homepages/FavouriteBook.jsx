@@ -19,9 +19,9 @@ export default function FavouriteBook() {
   return (
     <div className='bg-white w-full mt-5 px-5 sm:px-10 lg:px-20'>
       <div className='flex justify-between items-center mx-4'>
-        <p className='m-0 text-3xl font-bold'>Our Favourite Reads</p>
+        <p className='m-0 text-3xl font-bold text-[#f18966]'>Our Favourite Reads</p>
         <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-        <button className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+        <button className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
           View All <ArrowRightOutlined className='w-4 h-4' />
         </button>
       </div>

@@ -38,7 +38,6 @@ export default function ApprovedShop() {
         }),
       );
     } catch (error) {
-      message.error('No orders found');
     } finally {
       setLoading(false);
     }

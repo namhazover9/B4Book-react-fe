@@ -53,9 +53,9 @@ const AppRoutes = () => {
 
   // Xác định quyền truy cập
   const hasAccess = (layout) => {
-    if (layout === 'Admin' && userRole !== 'Admin') return false;
-    if (layout === 'Customer' && userRole !== 'Customer') return false;
-    if (layout === 'Shop' && userRole !== 'Shop') return false;
+    if (layout === 'admin' && userRole !== 'Admin') return false;
+    if (layout === 'customer' && userRole !== 'Customer') return false;
+    if (layout === 'shop' && userRole !== 'Shop') return false;
     return true;
   };
 
