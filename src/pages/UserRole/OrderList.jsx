@@ -26,7 +26,6 @@ export default function OrderList() {
         })),
       );
     } catch (error) {
-      message.error('No orders found');
     } finally {
       setLoading(false);
     }
