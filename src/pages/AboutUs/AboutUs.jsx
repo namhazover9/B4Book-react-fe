@@ -10,25 +10,28 @@ const AboutUs = () => {
     <div className='max-w-6xl mx-auto px-4 py-8'>
       {/* Hero Section */}
       <div className='text-center mb-12'>
-        <h1 className='text-4xl font-bold mb-6'>About Us</h1>
+        <h1 className='text-4xl font-bold mb-6 text-[#f18966]'>About Us</h1>
         <div className='w-60 h-60 mx-auto mb-6'>
           <div className='rounded-full bg-gray-100 p-4 flex items-center justify-center'>
-            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1732180483/logo_b4b_ny2iyg.png" className='object-cover w-full h-full' />
+            <img src="https://res.cloudinary.com/dmyfiyug9/image/upload/v1733819443/lgbf_qyw8ac.png" className='object-cover w-full h-full' />
           </div>
         </div>
         <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-          We are a team of 7 members and 1 mentor, we have tried to complete this website.
+        BigFour is a platform for book lovers. You can buy the latest books at reasonable prices and attractive offers. In addition, you can also register as a Book Seller on the platform. We hope you will have a great experience at BigFour.
         </p>
       </div>
 
       {/* Our Story Section */}
       <div className='mb-16'>
-        <h2 className='text-3xl font-bold text-center mb-12'>Our Story</h2>
+        <div className='flex justify-between items-center'>
+          <h2 className='text-3xl font-bold text-left mt-4 text-[#f18966] '>Our Story</h2>
+          <div className='w-2/3 h-px bg-gray-300 my-2 shadow-md' />
+        </div>
 
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
           {/* Retail Stores */}
           <div className='p-6 bg-white rounded-lg shadow-md'>
-            <h3 className='text-xl font-semibold mb-4 text-green-700'>RETAIL STORES</h3>
+            <h3 className='text-xl font-semibold mb-4 text-black'>RETAIL STORES</h3>
             <p className='text-gray-600'>
               Mauris tempus erat laoreet turpis lobortis, eu tincidunt erat fermentum. Aliquam non
               tincidunt urna. Integer tincidunt nec nisl vitae ullamcorper. Proin sed ultrices erat.
@@ -37,7 +40,7 @@ const AboutUs = () => {
 
           {/* E-commerce */}
           <div className='p-6 bg-white rounded-lg shadow-md'>
-            <h3 className='text-xl font-semibold mb-4 text-green-700'>
+            <h3 className='text-xl font-semibold mb-4 text-black'>
               E-COMMERCE AND INTERNET SERVICES
             </h3>
             <p className='text-gray-600'>
@@ -48,7 +51,7 @@ const AboutUs = () => {
 
           {/* Wholesale */}
           <div className='p-6 bg-white rounded-lg shadow-md'>
-            <h3 className='text-xl font-semibold mb-4 text-green-700'>WHOLESALE DISTRIBUTION</h3>
+            <h3 className='text-xl font-semibold mb-4 text-black'>WHOLESALE DISTRIBUTION</h3>
             <p className='text-gray-600'>
               This website is a trading platform to help sellers and customers buy products here, we
               seek income by taking revenue and commission percentage through products.
@@ -94,7 +97,7 @@ const AboutUs = () => {
 
       <div className='mb-16'>
         <div className='flex justify-between items-center'>
-          <h2 className='text-3xl font-bold text-left mt-4 '>What Client Says</h2>
+          <h2 className='text-3xl font-bold text-left mt-4 text-[#f18966] '>What Client Says</h2>
           <div className='w-2/3 h-px bg-gray-300 my-2 shadow-md' />
         </div>
         <div className='gap-12'>
@@ -191,7 +194,7 @@ const AboutUs = () => {
               <Button
                 type="primary"
                 icon={<SendOutlined />}
-                className="bg-red-500 hover:bg-green-600 border-none"
+                className="bg-[#679089] border-none"
               >
                 Subscribe
               </Button>

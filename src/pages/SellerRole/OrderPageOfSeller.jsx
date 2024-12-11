@@ -31,7 +31,6 @@ export default function OrderPageOfSeller() {
         })),
       );
     } catch (error) {
-      message.error('No orders found');
     } finally {
       setLoading(false);
     }

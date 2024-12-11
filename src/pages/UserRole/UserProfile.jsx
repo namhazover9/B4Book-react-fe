@@ -42,10 +42,9 @@ export default function UserProfile() {
     const { address: __, ...rest2 } = obj2 || {};
     return JSON.stringify(rest1) === JSON.stringify(rest2);
   };
-  
+
   const hasChanges = !compareWithoutAddress(userInfo, originalUserInfo);
-  
-  
+
   const handleOpenNewAddressModal = () => {
     setNewAddress({ street: '', city: '', country: '' }); // Reset dữ liệu khi mở modal
     setIsNewAddressModalOpen(true);
@@ -59,7 +58,6 @@ export default function UserProfile() {
     setCurrentEditAddress({ ...address }); // Giữ toàn bộ thông tin địa chỉ, bao gồm cả `_id`
     setIsEditAddressModalOpen(true);
   };
-  
 
   const handleSaveEditAddress = async () => {
     try {
@@ -92,10 +90,10 @@ export default function UserProfile() {
     try {
       // Gọi API xóa địa chỉ
       const response = await userApi.deleteAddress(address._id);
-  
+
       if (response) {
         message.success('Address deleted successfully!');
-  
+
         // Cập nhật state sau khi xóa thành công
         const updatedAddresses = addresses.filter((addr) => addr._id !== address._id);
         setUserInfo({ ...userInfo, address: updatedAddresses });
@@ -116,8 +114,6 @@ export default function UserProfile() {
       onOk: () => handleDeleteAddress(address),
     });
   };
-  
-
 
   const handleAddNewAddress = async () => {
     //console.log(newAddress);
@@ -296,9 +292,15 @@ export default function UserProfile() {
                   <Text strong>Address:</Text>
                 </Col>
                 <Col xs={24} sm={16}>
-                  <Button type='primary' onClick={handleOpenModal}>
-                    Manage Addresses
-                  </Button>
+                  <Input
+                    value={
+                      defaultAddress
+                        ? `${defaultAddress.street}, ${defaultAddress.city}, ${defaultAddress.country}`
+                        : ''
+                    }
+                    readOnly
+                    onClick={handleOpenModal} // Mở modal khi click
+                  />
                 </Col>
 
                 {hasChanges && (
@@ -316,7 +318,6 @@ export default function UserProfile() {
               <Text strong className='text-base'>
                 Expenditure 🤑
               </Text>
-              
             </Card>
           </Col>
         </Row>
@@ -339,8 +340,8 @@ export default function UserProfile() {
                     Edit
                   </Button>,
                   <Button key='delete' danger onClick={() => confirmDeleteAddress(address)}>
-                  Delete
-                </Button>,        
+                    Delete
+                  </Button>,
                 ]}
               >
                 {`${address.street}, ${address.city}, ${address.country}`}

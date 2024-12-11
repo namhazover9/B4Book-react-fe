@@ -42,7 +42,6 @@ export default function ApproveProduct() {
         }),
       );
     } catch (error) {
-      message.error('No orders found');
     } finally {
       setLoading(false);
     }
