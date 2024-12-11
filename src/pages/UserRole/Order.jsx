@@ -19,7 +19,6 @@ const Checkout = () => {
 
   const selectedItems = useSelector((state) => state.carts.selectedItems);
   // console.log('Selected Items', selectedItems);
-  const [productTotal, setProductTotal] = useState(0);
   const [voucherCodes, setVoucherCodes] = useState({});
   const [discountedTotal, setDiscountedTotal] = useState(0);
   const [selectedStore, setSelectedStore] = useState(null);
@@ -192,7 +191,7 @@ const Checkout = () => {
     {
       title: 'Total',
       render: (_, record) => {
-        setProductTotal(Math.round(record.price * record.quantity));
+        const productTotal = record.price * record.quantity;
         return `${productTotal}$`;
       },
     },
@@ -200,7 +199,7 @@ const Checkout = () => {
 
   const handlePlaceOrder = async (values) => {
     const { paymentMethod, cardOption } = values;
-
+  
     if (!selectedAddressId) {
       notification.error({
         message: 'Please add an address',
@@ -215,14 +214,14 @@ const Checkout = () => {
       });
       return;
     }
-
+  
     // Hàm tính tổng giá tiền của cửa hàng
     const calculateStoreTotal = (store) => {
       // Kiểm tra nếu store hoặc products không tồn tại
       if (!store || !store.products || !Array.isArray(store.products)) {
         throw new Error('Dữ liệu cửa hàng không hợp lệ.');
       }
-
+  
       // Tính tổng giá của sản phẩm và cộng thêm chi phí vận chuyển
       const total =
         store.products.reduce((total, product) => {
@@ -232,13 +231,20 @@ const Checkout = () => {
           }
           return total + product.price * product.quantity;
         }, 0) + store.shippingCost;
-
+  
       return total;
     };
-
+  
+    // Lấy tỷ giá USD sang VND
+    const usdToVndRate = 25000; // Bạn có thể lấy tỷ giá hối đoái từ API
+  
+    // Tính tổng giá trị đơn hàng
+    const totalAmountInUSD = calculateTotalAmount(); // Tổng giá trị đơn hàng tính bằng USD
+    const totalAmountInVND = totalAmountInUSD * usdToVndRate; // Chuyển đổi sang VND
+  
     // Lấy thông tin địa chỉ từ Redux hoặc local state
     const selectedAddress = addresses.find((addr) => addr._id === selectedAddressId);
-
+  
     // Tạo orderData theo cấu trúc backend
     const orderData = {
       customer: userId, // Bạn cần thay thế "userId" bằng ID người dùng thực tế từ Redux hoặc session
@@ -261,13 +267,11 @@ const Checkout = () => {
         country: selectedAddress.country,
       },
       paymentMethod: paymentMethod === 'card' ? 'Credit Card' : 'COD',
-      totalOrderPrice: calculateTotalAmount(), // Tính toán tổng giá trị đơn hàng
-      // isPaid: false, // Bạn có thể thay đổi giá trị này khi thanh toán
-      // paidAt: null, // Chưa thanh toán thì để null
+      totalOrderPrice: cardOption === 'vnpay' ? totalAmountInVND : totalAmountInUSD, // Tổng giá trị đơn hàng đã chuyển đổi sang VND
     };
-
+    console.log(totalAmountInVND, "totalAmountInVND");
     console.log('Complete Order Data:', orderData);
-
+  
     try {
       if (paymentMethod === 'card' && cardOption === 'vnpay') {
         const response = await orderApi.createVNPayOrder(orderData);
@@ -309,6 +313,7 @@ const Checkout = () => {
       });
     }
   };
+  
 
   const handleSelectAddress = (addressId) => {
     setSelectedAddressId(addressId); // Cập nhật địa chỉ mặc định được chọn

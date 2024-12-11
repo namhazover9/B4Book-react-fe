@@ -3,6 +3,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import userApi from '../../hooks/userApi';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 const RegisterShop = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -40,8 +41,9 @@ const RegisterShop = () => {
       console.log(response.data);
       navigate('/');
     } catch (err) {
-      setError('Error registering shop: ' + err.message);
-      console.error(err);
+      setError('You have already registered as a shop');
+      console.error("You have already registered as a shop");
+      message.error('You have already registered as a shop');
     }
     setLoading(false);
   };

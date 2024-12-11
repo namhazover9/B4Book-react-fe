@@ -31,15 +31,24 @@ export default function ProductPage() {
 
   const [searchKeyword, setSearchKeyword] = useState(''); // State for the search keyword
   const hardcodedCategories = [
-    'ChristianLiving',
-    'ChurchHistory',
+    'Adventure',
+    'Fantasy',
     'Educational Curriculum',
-    'Fiction & Fantasy',
-    'Religion & Spirituality',
-    'Romance Books',
-    'Literature & Fiction',
-    'Biographies & Memoirs',
+    'Science Fiction',
+    'Mystery & Thriller',
+    'Romance',
+    'Literary Fiction',
+    'Biography/Autobiography',
     'Children Book',
+    'Self-help',
+    'Cookbooks',
+    'History',
+    'Graphic Novels/Comic',
+    'Poetry',
+    'Business',
+    'Philosophy',
+    'Travel',
+    'Novel/Light Novel',
   ];
   const [addingToCart, setAddingToCart] = useState(false);
   const [loading, setLoading] = useState(true);
