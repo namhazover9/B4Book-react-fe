@@ -246,7 +246,7 @@ export default function UserProfile() {
           </Col>
 
           <Col xs={24} md={16} lg={16}>
-            <Card className='mb-4 h-80'>
+            <Card className='mb-4 lg:h-80 h-100'>
               <Row gutter={[16, 16]} className='mb-8 mt-4'>
                 <Col xs={24} sm={8} className='my-px'>
                   <Text strong>Full Name:</Text>
