@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import { Pagination, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import LoadingSpinner from '../../components/loading';
 import shopApi from '../../hooks/useShopApi';
 
@@ -156,7 +156,7 @@ export default function ShopPage() {
                               </div>
                               <div id={index} className='w-1/2 sm:w-11/12 h-auto m-2'>
                                 <div className="">
-                                  <p className='text-xl font-bold mb-2 text-wrap text-[#F18966]'>{shop.shopName}</p>
+                                 <Link to={`/shops/detailShop/${shop._id}`}> <p className='text-xl font-bold mb-2 text-wrap text-[#F18966]'>{shop.shopName}</p></Link>
                                   <p className='text-gray-800 text-xs mb-2 truncate font-bold'>Contact: <span className='text-sm text-black-2'>{shop.phoneNumber}</span></p>
                                   <p className="w-11/12 text-gray-600 text-sm mb-2 mr-2 sm:truncate">
                                     {shop.shopAddress}

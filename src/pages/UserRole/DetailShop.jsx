@@ -27,6 +27,7 @@ export default function DetailShop() {
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.carts.items); // Đảm bảo cartItems là mảng
   let [stockList, setStockList] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
   const dispatch = useDispatch();
   // Fetch dữ liệu khi component mount
   useEffect(() => {
@@ -135,11 +136,18 @@ export default function DetailShop() {
       });
   };
 
+  const toggleDescription = (index) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   return (
-    <section className='bg-gray-100 p-5 sm:p-6 lg:p-10'>
+    <section className='bg-gray-100 sm:p-6 lg:p-10'>
       <div className='w-full'>
-        <div className='w-11/12 flex gap-4 mx-auto'>
-          <div className='bg-white p-2 rounded-xl w-1/3 h-full'>
+        <div className='w-11/12 flex flex-col md:flex-row gap-4 mx-auto'>
+          <div className='bg-white p-2 rounded-xl w-full md:w-1/3 h-full'>
             <div className='w-full h-auto overflow-hidden rounded-lg'>
               <img
                 src={images[0] || 'https://via.placeholder.com/150'} // Hiển thị ảnh đầu tiên
@@ -180,7 +188,7 @@ export default function DetailShop() {
           </div>
 
           {/* Best Sellers */}
-          <div className='w-2/3'>
+          <div className='w-full md:w-2/3'>
             <Card className='mb-4 h-auto'>
               <h1 className='font-semibold text-base'>Top 5 Best Sellers</h1>
               <div className='line h-px w-full bg-gray-200 my-4'></div>
@@ -189,7 +197,7 @@ export default function DetailShop() {
                   <div key={index}>
                     <div className='w-11/12 flex gap-4 items-start'>
                       <div className='w-1/3'>
-                        <div className='relative group overflow-hidden w-1/2 md:w-full m-2'>
+                        <div className='relative group overflow-hidden w-full m-2'>
                           <div className=''>
                             <img
                               src={product.images[0] || 'https://via.placeholder.com/150'}
@@ -231,7 +239,26 @@ export default function DetailShop() {
                       </div>
                       <div className='w-2/3 p-2'>
                         <h1 className='text-[#F18966] text-lg'>{product.title}</h1>
-                        <p className='text-sm mb-0'>{product.description}</p>
+                        <p className='text-sm mb-0 hidden sm:block'>{product.description}</p>
+                        <div className='sm:hidden'>
+                          <div
+                            className={`relative overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+                              expandedItems[index] ? 'max-h-[500px]' : 'max-h-[80px]'
+                            }`}
+                          >
+                            <p className='text-gray-600 text-sm mr-2 text-balance'>
+                              {product.description}
+                            </p>
+                          </div>
+                          {product.description.split(' ').length > 30 && (
+                            <button
+                              className='text-blue-500 underline text-xs'
+                              onClick={() => toggleDescription(index)}
+                            >
+                              {expandedItems[index] ? 'Ẩn bớt' : 'Xem thêm'}
+                            </button>
+                          )}
+                        </div>
                         <div className='flex my-2'>
                           <div className='text-yellow-500 mr-2'>★★★★★</div>
                           <span className='text-[#F18966]'>{product.ratingResult}</span>
@@ -245,6 +272,7 @@ export default function DetailShop() {
                         </p>
                       </div>
                     </div>
+                    <div className='line h-px w-full bg-gray-200 my-4'></div>
                   </div>
                 ))}
               </div>

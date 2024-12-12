@@ -146,6 +146,7 @@ const Cart = ({ onTotalPriceChange, onCartItemsChange, showUI }) => {
 
       if (response.status === 'success') {
         setCartItems(cartItems.filter((item) => item._id !== id)); // Xóa sản phẩm khỏi danh sách
+        dispatch(fetchCart());
         message.success('Product removed from cart');
       } else {
         message.error('Failed to remove product');

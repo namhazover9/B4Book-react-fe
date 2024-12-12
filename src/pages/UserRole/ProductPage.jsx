@@ -20,7 +20,7 @@ export default function ProductPage() {
   const [filterBooks, setFilterBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [priceRange, setPriceRange] = useState([0, 200000]);
+  const [priceRange, setPriceRange] = useState([0, 100]);
   const [bookList, setBookList] = useState([]);
   const [booksPerPage, setBooksPerPage] = useState(10); // Số sách mặc định mỗi trang
   const [quantity, setQuantity] = useState(1); // State để lưu số lượng sản phẩm
@@ -346,7 +346,7 @@ export default function ProductPage() {
                   range
                   value={priceRange}
                   onChange={handlePriceRangeChange} // Xử lý khi người dùng thay đổi thanh trượt
-                  max={200000}
+                  max={100}
                   disabled={disabled}
                 />
                 <div className='flex justify-between mt-2'>
@@ -369,7 +369,7 @@ export default function ProductPage() {
                 range
                 defaultValue={priceRange}
                 onChange={handlePriceRangeChange}
-                max={200000}
+                max={100}
                 className='w-full md:w-5/6 mx-auto'
                 disabled={disabled}
               />
@@ -502,7 +502,7 @@ export default function ProductPage() {
                                     </div>
                                   </div>
                                 </div>
-
+                                <Link to={`/details/${book._id}`}>
                                 <p
                                   className={`text-xl font-bold mb-1 text-[#F18966] ${isTruncated[index] ?? true ? 'truncate' : ''
                                     }`}
@@ -510,7 +510,7 @@ export default function ProductPage() {
                                 >
                                   {book.title}
                                 </p>
-
+                                </Link>
                                 <div className='flex flex-col justify-between items-start mr-5 space-y-1'>
                                   <p className='text-base text-gray-600 truncate'>{book.author}</p>
                                 </div>
