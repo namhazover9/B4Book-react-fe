@@ -131,7 +131,7 @@ const BookShowcase = () => {
         <div className='flex justify-between items-center mb-4'>
           <h2 className='text-3xl font-bold text-[#f18966]'>Best Selling</h2>
           <div className='hidden xl:block w-[700px] h-px bg-gray-300 shadow-md'></div>
-          <button onClick={handleViewAll} className='bg-red-500 text-white px-6 py-2.5 rounded-full hover:bg-red-600 transition-colors flex items-center gap-2 font-medium'>
+          <button onClick={handleViewAll} className='bg-[#679089] text-white px-6 py-2.5 rounded-full hover:bg-[#679079] transition-colors flex items-center gap-2 font-bold'>
             <Link to='/products'>
               View All <ArrowRightOutlined className='w-4 h-4' />
             </Link>
