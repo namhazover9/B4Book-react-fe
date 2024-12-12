@@ -325,7 +325,7 @@ const Checkout = () => {
     setFieldValue('paymentMethod', e.target.value);
   };
   return (
-    <div className='flex items-center justify-center min-h-screen bg-[#EEE5DA] sm:px-5 pb-12 text-gray-800'>
+    <div className='flex items-center justify-center min-h-screen bg-gradient-to-tl from-transparent to-[#e6dbcd] sm:px-5 pb-12 text-gray-800'>
       <div className='flex flex-col md:flex-grow justify-center sm:gap-8 pb-8 my-7 px-5 sm:p-8 bg-[#F8F8F6] shadow-xl rounded-xl md:w-3/4 overflow-auto w-full max-w-7xl'>
         <Formik
           initialValues={{
@@ -336,16 +336,16 @@ const Checkout = () => {
         >
           {({ setFieldValue, values }) => (
             <FormikForm>
-              <h1 className='text-2xl text-[#679089] font-bold mb-4 flex items-center justify-center mt-7 lg:mt-0'>
+              <h1 className='text-2xl text-[#f18966] font-bold mb-4 flex items-center justify-center mt-7 lg:mt-0'>
                 Your Order
               </h1>
 
               <div className='flex flex-wrap gap-7 mt-10 w-full'>
                 {/* Left Section */}
                 <div className='w-full md:w-[60%]  rounded-xl lg:pr-4'>
-                  <div className='border-b border-gray-100 pb-4 sm:mb-6 bg-[#EEE5DA] p-5 mb-7  rounded-xl'>
+                  <div className='border-b border-gray-100 pb-4 sm:mb-6 p-5 mb-7  rounded-xl'>
                     <div className='flex justify-between items-center mb-4'>
-                      <p className='text-base sm:text-lg text-black text-md font-bold '>Address</p>
+                      <p className='text-base sm:text-lg text-md font-bold text-[#f18966] '>Address</p>
                       <Button
                         type='link'
                         onClick={() => setIsModalVisible(true)}
@@ -362,7 +362,7 @@ const Checkout = () => {
                   </div>
                   {stores.map((store, storeIndex) => (
                     <div key={storeIndex} className='mb-5'>
-                      <div className='flex items-center justify-between pl-4 bg-[#EEE5DA] rounded-t-xl pt-2'>
+                      <div className='flex items-center justify-between pl-4 bg-gradient-to-tl from-transparent to-[#e6dbcd] rounded-t-xl pt-2'>
                         <h2 className='text-base m-0 sm:text-lg font-semibold '>
                           {store.name} Shop
                         </h2>
@@ -420,8 +420,8 @@ const Checkout = () => {
                 {/* Right Section */}
                 <div className='w-full md:w-1/3'>
                   {/* Payment Section */}
-                  <div className='flex bg-[#E6DBCD] p-6 rounded-xl mb-5 flex-col space-y-4  h-auto lg:h-80 sm:pt-5'>
-                    <div className='text-base sm:text-lg font-bold '>Payment Method</div>
+                  <div className='flex  p-6 rounded-xl mb-5 flex-col space-y-4  h-auto lg:h-80 sm:pt-5'>
+                    <div className='text-base sm:text-lg font-bold text-[#f18966]'>Payment Method</div>
                     <Field name='paymentMethod'>
                       {({ field }) => (
                         <Radio.Group
@@ -439,7 +439,7 @@ const Checkout = () => {
 
                     {values.paymentMethod === 'card' && (
                       <div>
-                        <div className='text-base sm:text-lg font-bold '>
+                        <div className='text-base sm:text-lg font-bold text-[#f18966] '>
                           Select Payment Gateway
                         </div>
                         <Field name='cardOption'>
@@ -482,8 +482,8 @@ const Checkout = () => {
                     )}
                   </div>
 
-                  <div className='bg-[#E6DBCD] p-6 rounded-lg '>
-                    <h2 className='text-xl font-semibold '>Order Summary</h2>
+                  <div className=' p-6 rounded-lg '>
+                    <h2 className='text-xl font-semibold text-[#f18966]'>Order Summary</h2>
                     <p className='mt-3'>
                       Total Shipping Cost: {Math.round(calculateTotalShippingCost())}$
                     </p>
