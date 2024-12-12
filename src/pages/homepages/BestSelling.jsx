@@ -218,7 +218,7 @@ const BookShowcase = () => {
                             ★
                           </span>
                         ))}
-                        <span className='ml-1 text-gray-500 text-sm'>5</span>
+                        <span className='ml-1 text-gray-500 text-sm'></span>
                       </div>
                     </div>
                   </div>
