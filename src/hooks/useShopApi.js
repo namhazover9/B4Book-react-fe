@@ -64,7 +64,7 @@ const shopApi = {
   },
   // Tạo yêu cầu rút tiền
   createWithdrawRequest: (amount) => {
-    const url = `/shop/withdraws`;
+    const url = `/shop/withdrawals`;
     return axiosClient.post(url, { amount });
   },
 
